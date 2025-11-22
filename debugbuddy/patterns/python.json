@@ -1,84 +1,110 @@
 {
   "language": "python",
-  "version": "1.0",
+  "version": "2.0",
   "errors": [
     {
       "type": "SyntaxError",
       "keywords": ["invalid syntax", "unexpected indent", "EOF while scanning"],
-      "simple": "There's a syntax mistake in your code. This usually means missing brackets, quotes, or wrong indentation.",
-      "fix": "Check line mentioned for:\n• Missing closing brackets ) ] }\n• Missing quotes ' or \"\n• Wrong indentation (Python needs consistent spaces)\n• Missing colons : after if/for/def"
+      "simple": "🔍 There's a syntax mistake in your code - Python can't understand what you wrote.",
+      "fix": "Common issues:\n  • Missing closing brackets ) ] }\n  • Missing quotes ' or \"\n  • Wrong indentation (use 4 spaces, not tabs)\n  • Missing colons : after if/for/def/while",
+      "example": "# ❌ Wrong\nif x > 5\n    print('yes')\n\n# ✅ Correct\nif x > 5:\n    print('yes')",
+      "did_you_mean": ["Check for missing colons", "Look for unclosed brackets", "Verify indentation"]
     },
     {
       "type": "IndentationError",
-      "keywords": ["unexpected indent", "expected an indented block"],
-      "simple": "Your code indentation is wrong. Python uses spaces to group code.",
-      "fix": "Make sure all code blocks have consistent indentation:\n• Use 4 spaces per level (not tabs)\n• Check that all code in the same block is aligned\n• After if/for/def/class, indent the next line"
+      "keywords": ["unexpected indent", "expected an indented block", "unindent"],
+      "simple": "🔍 Your code indentation is inconsistent - Python uses spaces to group code blocks.",
+      "fix": "Fix your indentation:\n  • Use 4 spaces per level (not tabs)\n  • All code in same block must align perfectly\n  • After if/for/def/class, indent the next line\n  • Don't mix tabs and spaces",
+      "example": "# ❌ Wrong\ndef greet():\nprint('hello')  # Not indented!\n\n# ✅ Correct\ndef greet():\n    print('hello')  # 4 spaces",
+      "did_you_mean": ["Add 4 spaces before the line", "Remove extra spaces", "Use consistent spacing"]
     },
     {
       "type": "NameError",
       "keywords": ["name", "is not defined"],
-      "simple": "You're using a variable or function that doesn't exist yet.",
-      "fix": "Check that you:\n• Spelled the name correctly\n• Defined it before using it\n• Imported it if it's from a module\n• Didn't accidentally delete or comment it out"
+      "simple": "🔍 You're trying to use something that doesn't exist yet - Python doesn't know what this is.",
+      "fix": "Check these common causes:\n  • Typo in the variable/function name?\n  • Did you define it before using it?\n  • Need to import it from a module?\n  • Deleted or commented it out accidentally?",
+      "example": "# ❌ Wrong\nprint(message)  # message not defined!\n\n# ✅ Correct\nmessage = 'Hello'\nprint(message)  # Define first\n\n# ✅ Or import it\nfrom config import message\nprint(message)",
+      "did_you_mean": ["Define the variable first", "Check spelling", "Import from module"]
     },
     {
       "type": "TypeError",
-      "keywords": ["unsupported operand", "not callable", "takes", "positional argument"],
-      "simple": "You're trying to use something in the wrong way, like adding a string to a number.",
-      "fix": "Check:\n• Are you mixing strings and numbers?\n• Are you calling something that's not a function?\n• Did you pass the right number of arguments?\n• Are you trying to modify an immutable type?"
+      "keywords": ["unsupported operand", "not callable", "takes", "positional argument", "NoneType"],
+      "simple": "🔍 You're trying to use something in the wrong way - mixing incompatible types or wrong function usage.",
+      "fix": "Common type mistakes:\n  • Can't add string + number (use str() or int())\n  • Calling something that's not a function\n  • Wrong number of function arguments\n  • Trying to modify immutable types (tuples, strings)\n  • Object is None (returned nothing)",
+      "example": "# ❌ Wrong\nage = '25'\nprint(age + 5)  # Can't add string + number\n\n# ✅ Correct\nage = '25'\nprint(int(age) + 5)  # Convert to int\n# OR\nprint(age + str(5))  # Convert to string",
+      "did_you_mean": ["Convert types: str(), int(), float()", "Check function arguments", "Verify return values"]
     },
     {
       "type": "AttributeError",
-      "keywords": ["has no attribute", "'NoneType' object"],
-      "simple": "You're trying to access something that doesn't exist on this object, or the object is None.",
-      "fix": "Common causes:\n• Object is None - check if your function returned something\n• Typo in attribute name\n• Wrong object type\n• Module not imported correctly"
+      "keywords": ["has no attribute", "'NoneType' object", "no attribute"],
+      "simple": "🔍 You're trying to access something that doesn't exist on this object, or the object is None.",
+      "fix": "Debug steps:\n  • Print the object to see what it actually is\n  • Check if it's None (function returned nothing)\n  • Verify the attribute name spelling\n  • Make sure you're using the right object type\n  • Check if module was imported correctly",
+      "example": "# ❌ Wrong\nresult = None\nresult.upper()  # None has no .upper()!\n\n# ✅ Correct\nresult = get_data()\nif result is not None:\n    result.upper()\nelse:\n    print('No data returned')",
+      "did_you_mean": ["Check if object is None", "Print object type", "Verify attribute exists"]
     },
     {
       "type": "ImportError",
       "keywords": ["No module named", "cannot import"],
-      "simple": "Python can't find the module you're trying to import.",
-      "fix": "Try:\n• pip install <module_name>\n• Check if you spelled it correctly\n• Make sure you're in the right virtual environment\n• Check if the file exists if it's your own module"
+      "simple": "🔍 Python can't find the module you're trying to import - it's not installed or doesn't exist.",
+      "fix": "Solutions:\n  • Install it: pip install <module_name>\n  • Check spelling of module name\n  • Verify you're in the right virtual environment\n  • For your own modules, check file location\n  • Check if __init__.py exists in package folder",
+      "example": "# ❌ Error\nimport requests  # Not installed!\n\n# ✅ Fix\n# In terminal:\n# pip install requests\n\n# Then import works:\nimport requests",
+      "did_you_mean": ["Run: pip install <module>", "Check module spelling", "Activate virtual environment"]
     },
     {
       "type": "ModuleNotFoundError",
       "keywords": ["No module named"],
-      "simple": "The module you want doesn't exist or isn't installed.",
-      "fix": "Install it:\n  pip install <module_name>\n\nIf it's your own module:\n• Check the file name\n• Make sure __init__.py exists in the folder\n• Check your PYTHONPATH"
+      "simple": "🔍 The module you want doesn't exist or isn't installed in your environment.",
+      "fix": "Quick fixes:\n  • Install: pip install <module_name>\n  • Check if you're in correct virtual environment\n  • For your own module: verify file exists\n  • Ensure __init__.py exists in package folders\n  • Check PYTHONPATH if using custom locations",
+      "example": "# If error says: No module named 'pandas'\n\n# Fix in terminal:\npip install pandas\n\n# Or for specific version:\npip install pandas==2.0.0",
+      "did_you_mean": ["Install with pip", "Check venv is activated", "Verify file path"]
     },
     {
       "type": "IndexError",
       "keywords": ["list index out of range", "tuple index out of range"],
-      "simple": "You're trying to access an item that doesn't exist in the list.",
-      "fix": "Check:\n• Is your list empty?\n• Are you using the right index number?\n• Remember: Python counts from 0\n• Use len(list) to check size first"
+      "simple": "🔍 You're trying to access a list item that doesn't exist - the index is too high.",
+      "fix": "Remember:\n  • Python counts from 0 (first item is [0])\n  • Check if list is empty before accessing\n  • Use len(list) to check size\n  • Last item is list[-1] or list[len(list)-1]\n  • Can't access list[5] if list only has 3 items",
+      "example": "# ❌ Wrong\nfruits = ['apple', 'banana']\nprint(fruits[5])  # Only 2 items!\n\n# ✅ Correct\nfruits = ['apple', 'banana']\nif len(fruits) > 5:\n    print(fruits[5])\nelse:\n    print('Not enough items')",
+      "did_you_mean": ["Check list length first", "Use len()", "Remember: starts at 0"]
     },
     {
       "type": "KeyError",
       "keywords": ["KeyError"],
-      "simple": "You're trying to access a dictionary key that doesn't exist.",
-      "fix": "Options:\n• Check if key exists: if key in dict:\n• Use get(): dict.get(key, default_value)\n• Print dict.keys() to see what's available\n• Check for typos in the key name"
+      "simple": "🔍 You're trying to access a dictionary key that doesn't exist.",
+      "fix": "Safe ways to access dict keys:\n  • Check first: if key in dict:\n  • Use .get(): dict.get(key, default)\n  • Print dict.keys() to see available keys\n  • Check for typos in key name\n  • Remember: keys are case-sensitive",
+      "example": "# ❌ Wrong\nuser = {'name': 'Alice'}\nprint(user['age'])  # Key doesn't exist!\n\n# ✅ Correct options\n# Option 1: Check first\nif 'age' in user:\n    print(user['age'])\n\n# Option 2: Use .get()\nage = user.get('age', 'Unknown')\nprint(age)  # Returns 'Unknown' if missing",
+      "did_you_mean": ["Use dict.get()", "Check if key exists", "Print dict.keys()"]
     },
     {
       "type": "ValueError",
       "keywords": ["invalid literal", "could not convert"],
-      "simple": "You're trying to convert something to the wrong type.",
-      "fix": "Common issues:\n• int('abc') won't work - can't convert text to number\n• Check if string is actually a number\n• Handle empty strings\n• Use try/except for conversions"
+      "simple": "🔍 You're trying to convert something that can't be converted - wrong data format.",
+      "fix": "Common value errors:\n  • Can't convert 'abc' to int (not a number)\n  • Empty strings can't be converted\n  • Check data before converting\n  • Use try/except for safe conversion\n  • Validate input format",
+      "example": "# ❌ Wrong\nage = input('Age: ')  # User types 'twenty'\nage_num = int(age)  # Can't convert!\n\n# ✅ Correct\nage = input('Age: ')\ntry:\n    age_num = int(age)\nexcept ValueError:\n    print('Please enter a number')\n    age_num = 0",
+      "did_you_mean": ["Use try/except", "Validate input first", "Check string format"]
     },
     {
       "type": "FileNotFoundError",
       "keywords": ["No such file or directory"],
-      "simple": "Python can't find the file you're trying to open.",
-      "fix": "Check:\n• Is the file path correct?\n• Is the file in the right location?\n• Use os.path.exists() to test\n• Try absolute path: /full/path/to/file\n• Check working directory: os.getcwd()"
+      "simple": "🔍 Python can't find the file you're trying to open - wrong path or file doesn't exist.",
+      "fix": "Debugging file paths:\n  • Check if file actually exists\n  • Verify spelling and extension (.txt, .json)\n  • Use absolute path: /full/path/to/file\n  • Check current directory: os.getcwd()\n  • Use os.path.exists() to test\n  • Watch out for Windows vs Linux paths",
+      "example": "# ❌ Wrong\nwith open('data.txt') as f:\n    content = f.read()\n\n# ✅ Correct\nimport os\n\nfile_path = 'data.txt'\nif os.path.exists(file_path):\n    with open(file_path) as f:\n        content = f.read()\nelse:\n    print(f'File not found: {file_path}')\n    print(f'Current dir: {os.getcwd()}')",
+      "did_you_mean": ["Check file exists", "Use absolute path", "Verify current directory"]
     },
     {
       "type": "ZeroDivisionError",
       "keywords": ["division by zero"],
-      "simple": "You can't divide by zero.",
-      "fix": "Add a check before dividing:\n  if denominator != 0:\n      result = numerator / denominator\n\nOr handle with try/except"
+      "simple": "🔍 You can't divide by zero - it's mathematically undefined.",
+      "fix": "Prevent division by zero:\n  • Check denominator before dividing\n  • Handle edge cases\n  • Use try/except for safety\n  • Consider what should happen when divisor is 0",
+      "example": "# ❌ Wrong\ntotal = 100\ncount = 0\naverage = total / count  # Division by zero!\n\n# ✅ Correct\ntotal = 100\ncount = 0\n\nif count > 0:\n    average = total / count\nelse:\n    average = 0  # or None, or handle differently\n    print('No items to average')",
+      "did_you_mean": ["Check if divisor != 0", "Handle zero case", "Use try/except"]
     },
     {
       "type": "RecursionError",
       "keywords": ["maximum recursion depth exceeded"],
-      "simple": "Your function is calling itself too many times.",
-      "fix": "Add a base case:\n  def func(n):\n      if n <= 0:  # Base case\n          return\n      func(n-1)  # Recursive call\n\nOr check if you need recursion at all"
+      "simple": "🔍 Your function is calling itself too many times - missing or wrong base case.",
+      "fix": "Fix infinite recursion:\n  • Add a base case (stopping condition)\n  • Make sure base case is reachable\n  • Verify recursive calls move toward base case\n  • Consider using iteration instead\n  • Increase recursion limit only if necessary",
+      "example": "# ❌ Wrong (no base case)\ndef countdown(n):\n    print(n)\n    countdown(n - 1)  # Never stops!\n\n# ✅ Correct (with base case)\ndef countdown(n):\n    if n <= 0:  # Base case!\n        print('Done')\n        return\n    print(n)\n    countdown(n - 1)",
+      "did_you_mean": ["Add base case", "Check stopping condition", "Use loop instead"]
     }
   ]
 }
