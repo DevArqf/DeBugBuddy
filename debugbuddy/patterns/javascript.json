@@ -1,0 +1,36 @@
+{
+    "language": "javascript",
+    "version": "1.0",
+    "errors": [
+      {
+        "type": "ReferenceError",
+        "keywords": ["is not defined", "cannot access"],
+        "simple": "You're using a variable that doesn't exist or hasn't been declared yet.",
+        "fix": "Check:\n• Did you declare the variable with let/const/var?\n• Is it spelled correctly?\n• Are you trying to use it before declaring it?\n• Is it in scope?"
+      },
+      {
+        "type": "TypeError",
+        "keywords": ["is not a function", "cannot read property", "undefined"],
+        "simple": "You're trying to use something in the wrong way.",
+        "fix": "Common causes:\n• Calling something that's not a function\n• Accessing property of null/undefined\n• Wrong data type\n• Check if object exists before using it"
+      },
+      {
+        "type": "SyntaxError",
+        "keywords": ["Unexpected token", "Unexpected identifier"],
+        "simple": "There's a syntax mistake in your code.",
+        "fix": "Look for:\n• Missing closing brackets ) ] }\n• Missing commas in objects/arrays\n• Missing quotes around strings\n• Using reserved keywords incorrectly"
+      },
+      {
+        "type": "RangeError",
+        "keywords": ["Maximum call stack size exceeded", "Invalid array length"],
+        "simple": "You've exceeded JavaScript's limits.",
+        "fix": "Check for:\n• Infinite recursion (function calling itself)\n• Creating arrays that are too large\n• Add base case to recursive functions"
+      },
+      {
+        "type": "URIError",
+        "keywords": ["URI malformed"],
+        "simple": "The URL or URI you're trying to encode/decode is invalid.",
+        "fix": "Make sure:\n• URL is properly formatted\n• Special characters are encoded\n• Use encodeURIComponent() for URL parts"
+      }
+    ]
+  }

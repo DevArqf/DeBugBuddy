@@ -6,12 +6,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="debugbuddy",
     version="0.1.0",
-    author="DevArqf",
-    author_email="devarqf@gmail.com",
+    author="Your Name",
+    author_email="your.email@example.com",
     description="Your terminal's debugging companion - instant error explanations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/DevArqf/DeBugBuddy",
+    url="https://github.com/yourusername/debugbuddy",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -1,0 +1,84 @@
+{
+  "language": "python",
+  "version": "1.0",
+  "errors": [
+    {
+      "type": "SyntaxError",
+      "keywords": ["invalid syntax", "unexpected indent", "EOF while scanning"],
+      "simple": "There's a syntax mistake in your code. This usually means missing brackets, quotes, or wrong indentation.",
+      "fix": "Check line mentioned for:\n• Missing closing brackets ) ] }\n• Missing quotes ' or \"\n• Wrong indentation (Python needs consistent spaces)\n• Missing colons : after if/for/def"
+    },
+    {
+      "type": "IndentationError",
+      "keywords": ["unexpected indent", "expected an indented block"],
+      "simple": "Your code indentation is wrong. Python uses spaces to group code.",
+      "fix": "Make sure all code blocks have consistent indentation:\n• Use 4 spaces per level (not tabs)\n• Check that all code in the same block is aligned\n• After if/for/def/class, indent the next line"
+    },
+    {
+      "type": "NameError",
+      "keywords": ["name", "is not defined"],
+      "simple": "You're using a variable or function that doesn't exist yet.",
+      "fix": "Check that you:\n• Spelled the name correctly\n• Defined it before using it\n• Imported it if it's from a module\n• Didn't accidentally delete or comment it out"
+    },
+    {
+      "type": "TypeError",
+      "keywords": ["unsupported operand", "not callable", "takes", "positional argument"],
+      "simple": "You're trying to use something in the wrong way, like adding a string to a number.",
+      "fix": "Check:\n• Are you mixing strings and numbers?\n• Are you calling something that's not a function?\n• Did you pass the right number of arguments?\n• Are you trying to modify an immutable type?"
+    },
+    {
+      "type": "AttributeError",
+      "keywords": ["has no attribute", "'NoneType' object"],
+      "simple": "You're trying to access something that doesn't exist on this object, or the object is None.",
+      "fix": "Common causes:\n• Object is None - check if your function returned something\n• Typo in attribute name\n• Wrong object type\n• Module not imported correctly"
+    },
+    {
+      "type": "ImportError",
+      "keywords": ["No module named", "cannot import"],
+      "simple": "Python can't find the module you're trying to import.",
+      "fix": "Try:\n• pip install <module_name>\n• Check if you spelled it correctly\n• Make sure you're in the right virtual environment\n• Check if the file exists if it's your own module"
+    },
+    {
+      "type": "ModuleNotFoundError",
+      "keywords": ["No module named"],
+      "simple": "The module you want doesn't exist or isn't installed.",
+      "fix": "Install it:\n  pip install <module_name>\n\nIf it's your own module:\n• Check the file name\n• Make sure __init__.py exists in the folder\n• Check your PYTHONPATH"
+    },
+    {
+      "type": "IndexError",
+      "keywords": ["list index out of range", "tuple index out of range"],
+      "simple": "You're trying to access an item that doesn't exist in the list.",
+      "fix": "Check:\n• Is your list empty?\n• Are you using the right index number?\n• Remember: Python counts from 0\n• Use len(list) to check size first"
+    },
+    {
+      "type": "KeyError",
+      "keywords": ["KeyError"],
+      "simple": "You're trying to access a dictionary key that doesn't exist.",
+      "fix": "Options:\n• Check if key exists: if key in dict:\n• Use get(): dict.get(key, default_value)\n• Print dict.keys() to see what's available\n• Check for typos in the key name"
+    },
+    {
+      "type": "ValueError",
+      "keywords": ["invalid literal", "could not convert"],
+      "simple": "You're trying to convert something to the wrong type.",
+      "fix": "Common issues:\n• int('abc') won't work - can't convert text to number\n• Check if string is actually a number\n• Handle empty strings\n• Use try/except for conversions"
+    },
+    {
+      "type": "FileNotFoundError",
+      "keywords": ["No such file or directory"],
+      "simple": "Python can't find the file you're trying to open.",
+      "fix": "Check:\n• Is the file path correct?\n• Is the file in the right location?\n• Use os.path.exists() to test\n• Try absolute path: /full/path/to/file\n• Check working directory: os.getcwd()"
+    },
+    {
+      "type": "ZeroDivisionError",
+      "keywords": ["division by zero"],
+      "simple": "You can't divide by zero.",
+      "fix": "Add a check before dividing:\n  if denominator != 0:\n      result = numerator / denominator\n\nOr handle with try/except"
+    },
+    {
+      "type": "RecursionError",
+      "keywords": ["maximum recursion depth exceeded"],
+      "simple": "Your function is calling itself too many times.",
+      "fix": "Add a base case:\n  def func(n):\n      if n <= 0:  # Base case\n          return\n      func(n-1)  # Recursive call\n\nOr check if you need recursion at all"
+    }
+  ]
+}
