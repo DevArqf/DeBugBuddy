@@ -1,6 +1,6 @@
-# 🐛💬 DeBugBuddy
-
 <div align="center">
+
+<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/user-attachments/assets/34e0b260-74c9-4f6f-92f9-f96204910deb" />
 
 ### _Your terminal's debugging companion_
 
@@ -200,6 +200,82 @@ Found 3 patterns:
 ---
 
 ## 📸 Screenshots
+```bash
+db
+```
+<img width="614" height="255" alt="db" src="https://github.com/user-attachments/assets/d468c297-bd2c-4eb9-a447-085941c71cf0" />
+
+---
+
+```bash
+db explain "NameError: name 'user_id' is not defined"
+```
+<img width="1037" height="363" alt="db explain NameError" src="https://github.com/user-attachments/assets/244173c4-1b50-4c06-92cf-8e0574fdc914" />
+
+---
+
+```bash
+db explain -e "IndexError: list index out of range"
+```
+<img width="1041" height="581" alt="db explain -e" src="https://github.com/user-attachments/assets/2e2f0c08-e276-48cd-a448-32f04707d876" />
+
+---
+
+```bash
+db interactive
+```
+<img width="692" height="264" alt="db interactive" src="https://github.com/user-attachments/assets/8468bbe4-3fc8-4a65-b5ab-f10db2f8bd6c" />
+
+---
+
+```bash
+[EXECUTED IN INTERACTIVE MENU] TypeError: unsupported operand type(s) for +: 'int' and 'str'
+```
+<img width="740" height="470" alt="db interactive  error debug + code example" src="https://github.com/user-attachments/assets/83620a8d-7eae-4a89-a43c-0d5adbf04890" />
+
+---
+
+```bash
+[EXECUTED IN INTERACTIVE MENU] help
+```
+<img width="301" height="127" alt="db interactive  help" src="https://github.com/user-attachments/assets/698a1b98-2875-4358-a159-242d0ab2f2ff" />
+
+---
+
+```bash
+[EXECUTED IN INTERACTIVE MENU] history
+```
+<img width="301" height="190" alt="db interactive  history" src="https://github.com/user-attachments/assets/998acfdd-6976-4a64-9284-d756415744b0" />
+
+---
+
+```bash
+db history
+```
+<img width="691" height="604" alt="db history" src="https://github.com/user-attachments/assets/807b1dbb-5240-42cd-b55d-fe812286ae58" />
+
+---
+
+```bash
+db history --stats
+```
+<img width="740" height="276" alt="db history  --stats" src="https://github.com/user-attachments/assets/16f2f9bd-55e0-41be-a8b4-c4ae4b49df2e" />
+
+---
+
+```bash
+db search "import"
+```
+<img width="725" height="212" alt="db search" src="https://github.com/user-attachments/assets/4cd85f05-1132-4d1b-a9a2-f9386d55cb9b" />
+
+---
+
+```bash
+db config --show
+```
+<img width="710" height="307" alt="db config  --show" src="https://github.com/user-attachments/assets/6d617847-501a-4f9b-876b-b473aab9ad2e" />
+
+---
 
 ### Before DeBugBuddy
 
