@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/user-attachments/assets/34e0b260-74c9-4f6f-92f9-f96204910deb" />
+<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/DevArqf/DeBugBuddy/blob/main/DeBugBuddy%20Logo.png" />
 
 ### _Your terminal's debugging companion_
 
