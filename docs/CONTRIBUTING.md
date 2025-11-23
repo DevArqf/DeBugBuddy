@@ -52,7 +52,7 @@ What should happen
 Environment
 - OS: macOS 13.0
 - Python: 3.10.0
-- DeBugBuddy: 0.1.1
+- DeBugBuddy: 0.1.2
 
 Additional Context
 Any other info

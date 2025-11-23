@@ -6,7 +6,7 @@
 Stop Googling. Understand your errors.
 
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/badge/pypi-v0.1.1-orange.svg)](https://pypi.org/project/debugbuddy/)
+[![PyPI](https://img.shields.io/badge/pypi-v0.1.2-orange.svg)](https://pypi.org/project/debugbuddy-cli/0.1.2/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -23,7 +23,7 @@ Stop Googling. Understand your errors.
 ## Installation
 
 ```bash
-pip install debugbuddy
+pip install debugbuddy-cli
 ```
 
 ## Quick Start

@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, find_namespace_packages
 from setuptools.command.install import install
 import subprocess
 import sys
@@ -68,17 +68,17 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="debugbuddy",
-    version="0.1.1",
+    name="debugbuddy-cli",
+    version="0.1.2",
     license='MIT',
     author="DevArqf",
     author_email="devarqf@gmail.com",
     description="Your terminal's debugging companion - instant error explanations",
     long_description_content_type="text/markdown",
     url="https://github.com/DevArqf/DeBugBuddy",
-    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.1.1.tar.gz",
+    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.1.2.tar.gz",
     keywords = ['python', 'debugging', 'cli'],
-    packages=find_packages(),
+    packages=find_namespace_packages(include=['debugbuddy', 'debugbuddy.*']),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
