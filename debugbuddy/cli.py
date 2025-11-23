@@ -22,7 +22,7 @@ console = Console()
 def main(ctx, version):
     if version:
         console.print(Panel(
-            "[bold cyan]DeBugBuddy[/bold cyan] [green]v0.1.0[/green]\n\n"
+            "[bold cyan]DeBugBuddy[/bold cyan] [green]v0.1.1[/green]\n\n"
             "Your terminal's debugging companion\n"
             "Made with ❤️ by DevArqf",
             border_style="cyan"

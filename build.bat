@@ -55,7 +55,7 @@ if errorlevel 1 (
 echo ✓ Package check passed
 echo.
 
-RE
+REM
 echo ═══════════════════════════════════════════
 echo 📦 Package Information
 echo ═══════════════════════════════════════════
@@ -93,6 +93,7 @@ if "%choice%"=="1" (
 ) else if "%choice%"=="3" (
     echo ⚠ Are you sure you want to upload to PyPI?
     set /p confirm="This cannot be undone! [y/N]: "
+    set "confirm=%confirm: =%"
     if /i "%confirm%"=="y" (
         echo ▶ Uploading to PyPI...
         twine upload dist/*

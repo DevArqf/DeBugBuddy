@@ -3,6 +3,7 @@
 Thanks for taking the time to improve DeBugBuddy. Your work helps developers fix problems faster and stay focused in their terminal.
 
 ## Quick Start
+
 ```bash
 1. Fork the repo
 2. Clone your fork
@@ -23,19 +24,17 @@ Thanks for taking the time to improve DeBugBuddy. Your work helps developers fix
 
 Before you open an issue:
 
-* Check existing issues
-* Update your version
+- Check existing issues
+- Update your version
   `pip install --upgrade debugbuddy`
-
 
 When you report a bug, be clear:
 
-* Explain what you expected
-* Explain what happened
-* Share error messages
-* Share your OS and Python version
-* Provide steps to reproduce the bug
-
+- Explain what you expected
+- Explain what happened
+- Share error messages
+- Share your OS and Python version
+- Provide steps to reproduce the bug
 
 Use this template:
 
@@ -53,7 +52,7 @@ What should happen
 Environment
 - OS: macOS 13.0
 - Python: 3.10.0
-- DeBugBuddy: 0.1.0
+- DeBugBuddy: 0.1.1
 
 Additional Context
 Any other info
@@ -63,18 +62,18 @@ Any other info
 
 Before you start:
 
-* Check the roadmap
-* Open an issue and describe your idea
-* Make sure no one is already working on it
+- Check the roadmap
+- Open an issue and describe your idea
+- Make sure no one is already working on it
 
 Popular feature ideas:
 
-* New error patterns
-* Language support
-* Clearer explanations
-* UI improvements
-* Performance updates
-* Documentation fixes
+- New error patterns
+- Language support
+- Clearer explanations
+- UI improvements
+- Performance updates
+- Documentation fixes
 
 ## Adding Error Patterns
 
@@ -82,9 +81,9 @@ This is one of the fastest ways to improve DeBugBuddy.
 
 ### 1. Find the Pattern File
 
-* Python: `debugbuddy/patterns/python.json`
-* JavaScript: `debugbuddy/patterns/javascript.json`
-* Universal: `debugbuddy/patterns/common.json`
+- Python: `debugbuddy/patterns/python.json`
+- JavaScript: `debugbuddy/patterns/javascript.json`
+- Universal: `debugbuddy/patterns/common.json`
 
 ### 2. Add a Pattern
 
@@ -103,22 +102,22 @@ This is one of the fastest ways to improve DeBugBuddy.
 
 Simple explanation:
 
-* Start with a magnifying glass
-* Use plain language
-* Explain the cause
-* Keep a helpful tone
+- Start with a magnifying glass
+- Use plain language
+- Explain the cause
+- Keep a helpful tone
 
 Fix section:
 
-* Give two or three clear steps
-* Use bullets
-* Add code if needed
+- Give two or three clear steps
+- Use bullets
+- Add code if needed
 
 Example section:
 
-* Show failing code
-* Show working code
-* Keep it short
+- Show failing code
+- Show working code
+- Keep it short
 
 ### 4. Test It
 
@@ -170,17 +169,17 @@ Add the language under Supported Errors in the README.
 
 Follow these style rules:
 
-* Use Python 3.8+
-* Follow PEP 8
-* Add type hints
-* Write docstrings
-* Keep functions short
+- Use Python 3.8+
+- Follow PEP 8
+- Add type hints
+- Write docstrings
+- Keep functions short
 
 Interface rules:
 
-* Use Rich for formatting
-* Keep colors consistent
-* Test on different terminal sizes
+- Use Rich for formatting
+- Keep colors consistent
+- Test on different terminal sizes
 
 ## Testing
 
@@ -211,36 +210,36 @@ def explain_error(error: str) -> Dict:
 
 ### README
 
-* Keep examples current
-* Add new features
-* Update screenshots
-* Fix typos
+- Keep examples current
+- Add new features
+- Update screenshots
+- Fix typos
 
 ## Contribution Ideas
 
 ### Good First Issues
 
-* Add error patterns
-* Fix typos
-* Improve messages
-* Add tests
-* Update examples
+- Add error patterns
+- Fix typos
+- Improve messages
+- Add tests
+- Update examples
 
 ### Intermediate
 
-* Add language support
-* Improve pattern detection
-* Add CLI features
-* Improve formatting
-* Optimize code
+- Add language support
+- Improve pattern detection
+- Add CLI features
+- Improve formatting
+- Optimize code
 
 ### Advanced
 
-* Improve AI integration
-* Add local model support
-* Build IDE plugins
-* Add team features
-* Build analytics tools
+- Improve AI integration
+- Add local model support
+- Build IDE plugins
+- Add team features
+- Build analytics tools
 
 ## Communication
 
@@ -251,17 +250,17 @@ Bugs: open an Issue
 
 Do:
 
-* Be respectful
-* Give clear feedback
-* Help others learn
-* Support contributions
+- Be respectful
+- Give clear feedback
+- Help others learn
+- Support contributions
 
 Don't:
 
-* Harass
-* Exclude
-* Share private info
-* Act unprofessionally
+- Harass
+- Exclude
+- Share private info
+- Act unprofessionally
 
 Report issues: [devarqf@gmail.com](mailto:devarqf@gmail.com)
 
@@ -269,25 +268,25 @@ Report issues: [devarqf@gmail.com](mailto:devarqf@gmail.com)
 
 Contributors receive:
 
-* A spot in the README
-* Release note mentions
-* Public thanks
+- A spot in the README
+- Release note mentions
+- Public thanks
 
 Top contributors:
 
-* Ten or more PRs: Core Contributor badge
-* Fifty or more PRs: Maintainer status
-* Pattern authors: Credit in pattern files
+- Ten or more PRs: Core Contributor badge
+- Fifty or more PRs: Maintainer status
+- Pattern authors: Credit in pattern files
 
 ## Pull Request Checklist
 
-* Code follows guidelines
-* Tests pass
-* New tests added where needed
-* Docs updated
-* Commits are clear
-* No conflicts
-* Related issues linked
+- Code follows guidelines
+- Tests pass
+- New tests added where needed
+- Docs updated
+- Commits are clear
+- No conflicts
+- Related issues linked
 
 ## Release Process
 
