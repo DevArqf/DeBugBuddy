@@ -69,14 +69,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="debugbuddy",
-    version="0.1.0",
+    version="0.1.1",
     license='MIT',
     author="DevArqf",
     author_email="devarqf@gmail.com",
     description="Your terminal's debugging companion - instant error explanations",
     long_description_content_type="text/markdown",
     url="https://github.com/DevArqf/DeBugBuddy",
-    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.1.0.tar.gz",
+    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.1.1.tar.gz",
     keywords = ['python', 'debugging', 'cli'],
     packages=find_packages(),
     classifiers=[
