@@ -1,6 +1,4 @@
 <div align="center">
-# DeBugBuddy
-
 <img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/DevArqf/DeBugBuddy/blob/main/DeBugBuddy%20Logo.png" />
 
 ### Your terminal’s debugging companion
@@ -14,8 +12,8 @@ Stop Googling. Understand your errors.
 
 [Install](#installation) •
 [Quick Start](#quick-start) •
-[Features](#features) •
-[Screenshots](#screenshots) •
+[Features](#features-screenshots) •
+[Screenshots](#features-screenshots) •
 [Docs](#documentation)
 
 </div>
@@ -27,8 +25,6 @@ Stop Googling. Understand your errors.
 ```bash
 pip install debugbuddy
 ```
-
----
 
 ## Quick Start
 
@@ -68,74 +64,7 @@ $ db explain "NameError: name 'user_id' is not defined"
 💡 Tip: Use db explain -e to see code examples
 ```
 
----
-
-## Features
-
-### Instant Explanations
-
-You get a clear explanation in under a second.
-
-```bash
-db explain "TypeError: unsupported operand type(s) for +: 'int' and 'str'"
-```
-
-### Interactive Chat Mode
-
-You can talk through an error directly in your terminal. The tool keeps context as you go.
-
-```bash
-db interactive
-```
-
-### Smart Suggestions
-
-The tool checks for common mistakes and gives you direct alternatives.
-
-```bash
-NameError: name 'pint' is not defined
-
-Did you mean:
-• print
-• int
-• point
-```
-
-### Code Examples
-
-Use the examples flag to view corrected code.
-
-```bash
-db explain -e "IndexError: list index out of range"
-```
-
-### Watch Mode
-
-Monitor a directory and get notified the moment an error appears.
-
-```bash
-db watch src/
-```
-
-### Error History
-
-Track your own patterns and see what you run into most often.
-
-```bash
-db history --stats
-```
-
-### Pattern Search
-
-Search across built in error patterns.
-
-```bash
-db search "import"
-```
-
----
-
-## Screenshots
+## Features-Screenshots
 ```bash
 db
 ```
@@ -211,13 +140,11 @@ db config --show
 ```
 <img width="710" height="307" alt="db config  --show" src="https://github.com/user-attachments/assets/6d617847-501a-4f9b-876b-b473aab9ad2e" />
 
----
-
 ## Documentation
 
-### All Commands
-
 ```bash
+All Commands
+
 db explain <error>
 db interactive
 db watch <dir>
@@ -228,9 +155,9 @@ db config --show
 db --version
 ```
 
-### Extra Options
-
 ```bash
+Extra Options
+
 db explain -e "SyntaxError: invalid syntax"
 db explain -v error.log
 db watch src/ --lang javascript
@@ -239,45 +166,40 @@ db config --set openai_api_key sk-...
 db explain --ai "complex error"
 ```
 
----
-
-## Supported Errors
-
-### Python
 ```
-Syntax
-Indentation
-Name
-Attribute
-Type
-Value
-Import
-Module not found
-Index
-Key
-File not found
-Recursion
+Supported Python Errors
+
+- Syntax
+- Indentation
+- Name
+- Attribute
+- Type
+- Value
+- Import
+- Module not found
+- Index
+- Key
+- File not found
+- Recursion
 ```
 
-### JavaScript
 ```
-Reference
-Type
-Syntax
-Range
+Supported JavaScript Errors
+
+- Reference
+- Type
+- Syntax
+- Range
 ```
 
-### Universal
 ```
-Network
-Permission
-Database
-API key
+Supported Universal Errors
+
+- Network
+- Permission
+- Database
+- API key
 ```
-
-More languages are planned.
-
----
 
 ## Configuration
 
@@ -288,66 +210,56 @@ db config --set default_language javascript
 db config --reset
 ```
 
----
-
 ## Contributing
 
 Contribute in any way you want. You can report bugs, add patterns, write docs, or extend support for other languages. See [CONTRIBUTING.md](https://github.com/DevArqf/DeBugBuddy/blob/main/docs/CONTRIBUTING.md) for the full guide.
-
----
 
 ## Roadmap
 
 ### v0.2.0
 
-Go, Rust, Java
-VSCode extension
-Local AI support
-Team error sharing
+- Go, Rust, Java Support
+- VSCode extension
+- Local AI support
+- Team error sharing
 
 ### v0.3.0
 
-IDE plugins
-Error prediction
-Custom pattern training
-GitHub integration
+- IDE plugins
+- Error prediction
+- Custom pattern training
+- GitHub integration
 
 ### v1.0.0
 
-10 or more languages
-Enterprise features
-Error analytics dashboard
-Slack and Discord bots
-
----
+- 10 or more languages
+- Enterprise features
+- Error analytics dashboard
+- Slack and Discord bots
 
 ## FAQ
 
-**Does it work offline**
-Yes. You only need internet if you turn on optional AI mode.
+**Q:** **Does it work offline?**
+ **A:** Yes. You only need internet if you turn on optional AI mode.
 
-**Is my code private**
-Yes. Everything stays local unless you opt into AI mode.
+**Q:** **Is my code private?**
+ **A:** Yes. Everything stays local unless you opt into AI mode.
 
-**How is this different from ChatGPT**
-It responds instantly, works offline, learns from your own history, and sits inside your terminal.
+**Q:** **How is this different from ChatGPT?**
+ **A:** It responds instantly, works offline, learns from your own history, and sits inside your terminal.
 
-**Does it replace StackOverflow**
-For debugging, yes. You stop switching tools.
+**Q:** **Does it replace StackOverflow?**
+ **A:** For debugging, yes. You stop switching tools.
 
-**Can I add custom patterns**
-Yes. Edit the JSON files in `~/.debugbuddy/patterns/`.
+**Q:** **Can I add custom patterns?**
+ **A:** Yes. Edit the JSON files in `~/.debugbuddy/patterns/`.
 
-**Is team use planned**
-Yes. It is on the roadmap.
-
----
+**Q:** **Is team use planned?**
+ **A:** Yes. It is on the roadmap.
 
 ## Support
 
 If DeBugBuddy helps you, star the GitHub repo. Stars help other developers discover the tool.
-
----
 
 <div align="center">
 Made with ❤️ by DevArqf  
