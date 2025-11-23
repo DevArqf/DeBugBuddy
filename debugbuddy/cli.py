@@ -32,7 +32,7 @@ def main(ctx, version):
     
     if ctx.invoked_subcommand is None:
         console.print(Panel.fit(
-            "[bold cyan]🐛💬 DeBugBuddy[/bold cyan]\n\n"
+            "[bold cyan]🐛 DeBugBuddy[/bold cyan]\n\n"
             "Your terminal's debugging companion\n\n"
             "[bold]Quick start:[/bold]\n"
             "  [yellow]db explain error.log[/yellow]     - Explain error from file\n"
@@ -74,7 +74,7 @@ def explain(source, ai, verbose, show_example):
             sys.exit(1)
         error_text = sys.stdin.read()
     
-    with console.status("[cyan]🔍 Analyzing error...", spinner="dots"):
+    with console.status("[green]🔍 Analyzing error...", spinner="dots"):
         parsed = parser.parse(error_text)
     
     if not parsed:
@@ -140,7 +140,6 @@ def explain(source, ai, verbose, show_example):
         if Confirm.ask("   View previous fix?", default=False):
             console.print(f"\n   Previous fix: {similar['fix'][:200]}")
     
-    # Show related errors
     related = explainer.get_related_errors(parsed['type'])
     if related and verbose:
         console.print(f"\n[dim]Related errors: {', '.join(related)}[/dim]")
@@ -163,15 +162,16 @@ def interactive():
     history = HistoryManager()
     
     console.print(Panel.fit(
-        "[bold cyan]🤖 Interactive DeBugBuddy[/bold cyan]\n\n"
-        "Paste your errors and I'll help you fix them!\n\n"
-        "[dim]Commands:[/dim]\n"
+        "[bold green]🤖 Interactive DeBugBuddy[/bold green]\n\n"
+        "[cyan]Paste your errors and I'll help you fix them![/cyan]\n\n"
+        "[bold]Commands:[/bold]\n"
         "  [yellow]paste error[/yellow]    - Paste and explain\n"
         "  [yellow]history[/yellow]        - Show recent errors\n"
+        "  [yellow]stats[/yellow]          - View statistics\n"
         "  [yellow]help[/yellow]           - Show help\n"
         "  [yellow]exit[/yellow]           - Quit\n",
         title="💬 Chat Mode",
-        border_style="cyan"
+        border_style="green"
     ))
     
     conversation_count = 0
@@ -270,11 +270,11 @@ def watch(directory, lang, exclude):
     """Watch directory for errors in real-time"""
     
     console.print(Panel.fit(
-        f"[cyan]👁️  Watching:[/cyan] [bold]{directory}[/bold]\n"
-        f"[cyan]Language:[/cyan] {lang}\n"
+        f"[green]👁️  Watching:[/green] [bold]{directory}[/bold]\n"
+        f"[green]Language:[/green] {lang}\n"
         f"[dim]Press Ctrl+C to stop[/dim]",
         title="🔍 Watch Mode",
-        border_style="cyan"
+        border_style="green"
     ))
     
     watcher = ErrorWatcher(directory, lang, exclude)
@@ -303,14 +303,14 @@ def history(limit, clear, stats):
     if stats:
         statistics = history_mgr.get_stats()
         
-        console.print("\n[bold cyan]📊 Your Debugging Statistics[/bold cyan]\n")
+        console.print("\n[bold green]📊 Your Debugging Statistics[/bold green]\n")
         console.print(f"Total errors analyzed: [bold]{statistics['total']}[/bold]")
         
         if statistics['by_type']:
             console.print("\n[bold]Most common errors:[/bold]")
             table = Table()
             table.add_column("Error Type", style="red")
-            table.add_column("Count", style="cyan", justify="right")
+            table.add_column("Count", style="green", justify="right")
             
             for error_type, count in sorted(statistics['by_type'].items(), key=lambda x: x[1], reverse=True)[:10]:
                 table.add_row(error_type, str(count))
@@ -327,9 +327,10 @@ def history(limit, clear, stats):
         console.print("  db explain \"your error here\"")
         return
     
-    console.print(f"\n[bold cyan]📚 Recent Errors[/bold cyan] [dim](last {len(entries)})[/dim]\n")
+    console.print(f"\n[bold green]📚 Recent Errors[/bold green] [dim](last {len(entries)})[/dim]\n")
     
     for i, entry in enumerate(entries, 1):
+        # create a nice box for each error
         time_str = entry['timestamp'].split('T')[1][:5] if 'T' in entry['timestamp'] else entry['timestamp'][:16]
         date_str = entry['timestamp'].split('T')[0]
         
@@ -360,7 +361,7 @@ def search(keyword):
         console.print("  • Keywords: import, undefined, indentation")
         return
     
-    console.print(f"\n[bold cyan]🔍 Found {len(results)} patterns for '{keyword}':[/bold cyan]\n")
+    console.print(f"\n[bold green]🔍 Found {len(results)} patterns for '{keyword}':[/bold green]\n")
     
     for i, pattern in enumerate(results, 1):
         console.print(f"{i}. [cyan]{pattern['name']}[/cyan] [dim]({pattern['language']})[/dim]")
@@ -387,10 +388,10 @@ def config(key, value, show, reset):
     if show or (not key and not value):
         cfg = config_mgr.get_all()
         
-        console.print("\n[bold cyan]⚙️  Current Configuration[/bold cyan]\n")
+        console.print("\n[bold green]⚙️  Current Configuration[/bold green]\n")
         
         table = Table()
-        table.add_column("Setting", style="cyan")
+        table.add_column("Setting", style="yellow")
         table.add_column("Value", style="green")
         
         for k, v in cfg.items():

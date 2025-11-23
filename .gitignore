@@ -1,8 +1,42 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
-*.egg-info/
-dist/
+*.pyd
+
+# Build artifacts
 build/
+dist/
+*.egg-info/
+*.whl
+*.tar.gz
+
+# Testing
 .pytest_cache/
+.coverage
+htmlcov/
+
+# Database
 *.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
