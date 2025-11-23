@@ -2,8 +2,7 @@ import re
 from typing import Dict, Optional
 
 class ErrorParser:
-    """Parse errors from various languages"""
-    
+
     PYTHON_PATTERNS = {
         'traceback': re.compile(r'Traceback \(most recent call last\):.*?(\w+Error.*?)(?:\n|$)', re.DOTALL),
         'error_line': re.compile(r'(\w+Error): (.+)'),
@@ -17,7 +16,7 @@ class ErrorParser:
         'key_error': re.compile(r'KeyError: (.+)'),
         'value_error': re.compile(r'ValueError: (.+)'),
     }
-    
+
     JS_PATTERNS = {
         'reference_error': re.compile(r'ReferenceError: (.+) is not defined'),
         'type_error': re.compile(r'TypeError: (.+)'),
@@ -26,28 +25,25 @@ class ErrorParser:
         'uri_error': re.compile(r'URIError: (.+)'),
         'file_line': re.compile(r'at (.+) \((.+):(\d+):(\d+)\)'),
     }
-    
+
     def parse(self, error_text: str) -> Optional[Dict]:
-        """Parse error text and extract structured info"""
-        
+
         error_text = error_text.strip()
-        
+
         result = self._parse_python(error_text)
         if result:
             result['language'] = 'python'
             return result
-        
+
         result = self._parse_javascript(error_text)
         if result:
             result['language'] = 'javascript'
             return result
-        
-        # fallback
+
         return self._parse_generic(error_text)
-    
+
     def _parse_python(self, text: str) -> Optional[Dict]:
-        """Parse Python errors"""
-        
+
         result = {
             'raw': text,
             'type': None,
@@ -56,37 +52,36 @@ class ErrorParser:
             'line': None,
             'traceback': None,
         }
-        
+
         traceback_match = self.PYTHON_PATTERNS['traceback'].search(text)
         if traceback_match:
             result['traceback'] = traceback_match.group(0)
-        
+
         file_match = self.PYTHON_PATTERNS['file_line'].search(text)
         if file_match:
             result['file'] = file_match.group(1)
             result['line'] = int(file_match.group(2))
-        
+
         for error_type, pattern in self.PYTHON_PATTERNS.items():
             if error_type in ['traceback', 'file_line', 'error_line']:
                 continue
-            
+
             match = pattern.search(text)
             if match:
                 result['type'] = error_type.replace('_', ' ').title()
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
-        
+
         error_match = self.PYTHON_PATTERNS['error_line'].search(text)
         if error_match:
             result['type'] = error_match.group(1)
             result['message'] = error_match.group(2)
             return result
-        
+
         return None if not result['type'] else result
-    
+
     def _parse_javascript(self, text: str) -> Optional[Dict]:
-        """Parse JavaScript errors"""
-        
+
         result = {
             'raw': text,
             'type': None,
@@ -95,7 +90,7 @@ class ErrorParser:
             'line': None,
             'column': None,
         }
-        
+
         for error_type, pattern in self.JS_PATTERNS.items():
             if error_type == 'file_line':
                 match = pattern.search(text)
@@ -105,21 +100,20 @@ class ErrorParser:
                     result['line'] = int(match.group(3))
                     result['column'] = int(match.group(4))
                 continue
-            
+
             match = pattern.search(text)
             if match:
                 result['type'] = error_type.replace('_', ' ').title()
                 result['message'] = match.group(1)
                 return result
-        
+
         return None if not result['type'] else result
-    
+
     def _parse_generic(self, text: str) -> Dict:
-        """Generic error parsing as fallback"""
-        
+
         lines = text.split('\n')
         first_line = lines[0] if lines else text
-        
+
         return {
             'raw': text,
             'type': 'Unknown Error',
@@ -128,14 +122,13 @@ class ErrorParser:
             'file': None,
             'line': None,
         }
-    
+
     def extract_code_snippet(self, error_text: str) -> Optional[str]:
-        """Extract the code snippet that caused the error"""
-        
+
         lines = error_text.split('\n')
         for i, line in enumerate(lines):
             if re.search(r'\^+|~+', line):
                 if i > 0:
                     return lines[i-1].strip()
-        
+
         return None

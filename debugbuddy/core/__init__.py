@@ -1,5 +1,3 @@
-"""Core functionality for error parsing and explanation"""
-
 from debugbuddy.core.parser import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
 from debugbuddy.core.watcher import ErrorWatcher
