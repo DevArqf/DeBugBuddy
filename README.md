@@ -230,7 +230,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ### v0.2.0
 
-- Go, Rust, Java Support
+- Typescript, C and PHP Language Support
 - VSCode extension
 - Local AI support
 - Team error sharing
