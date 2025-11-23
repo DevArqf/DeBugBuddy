@@ -2,12 +2,15 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
 import sys
+import os
+import time
 
 class PostInstallCommand(install):
     def run(self):
         install.run(self)
-        subprocess.call([sys.executable, '-c',
+        subprocess.call([sys.executable, '-c', '''
 import os
+import sys
 import time
 
 os.system('cls' if os.name == 'nt' else 'clear')
@@ -24,7 +27,6 @@ print("\\033[0m")
 print("\\033[96m                    Your Terminal's Debugging Companion\\033[0m")
 print("\\033[2m                          Made with ❤️ by DevArqf\\033[0m\\n")
 
-import sys
 spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 for i in range(15):
     for char in spinner:
@@ -60,7 +62,7 @@ print("\\033[2m━━━━━━━━━━━━━━━━━━━━━�
 print("\\033[2mGitHub: https://github.com/DevArqf/DeBugBuddy\\033[0m")
 print("\\033[2mDocs:   https://github.com/DevArqf/DeBugBuddy#readme\\033[0m")
 print("\\033[2m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\033[0m\\n")
-])
+'''])
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -81,7 +83,6 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Debuggers",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
