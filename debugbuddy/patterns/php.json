@@ -1,0 +1,142 @@
+{
+  "language": "php",
+  "version": "2.0",
+  "errors": [
+    {
+      "type": "Parse Error (E_PARSE)",
+      "keywords": ["parse error", "syntax error"],
+      "simple": "Syntax error preventing parsing.",
+      "fix": "Check missing ;, ), }, or quotes.",
+      "example": "<?php /* ❌ Wrong */\necho 'hello';\n\n/* ✅ Correct */\necho 'hello'; ?>",
+      "did_you_mean": ["Add ;"]
+    },
+    {
+      "type": "Fatal Error (E_ERROR)",
+      "keywords": ["fatal error", "call to undefined function"],
+      "simple": "Critical error halting execution.",
+      "fix": "Define missing functions or classes.",
+      "example": "<?php /* ❌ Wrong */\nundefined_func();\n\n/* ✅ Correct */\nfunction my_func() {}\nmy_func(); ?>",
+      "did_you_mean": ["Define function"]
+    },
+    {
+      "type": "Warning (E_WARNING)",
+      "keywords": ["warning", "undefined variable"],
+      "simple": "Non-critical issue.",
+      "fix": "Declare variables; use isset().",
+      "example": "<?php /* ❌ Wrong */\necho $var;\n\n/* ✅ Correct */\n$var = 'hello';\necho $var; ?>",
+      "did_you_mean": ["$var = ''"]
+    },
+    {
+      "type": "Notice (E_NOTICE)",
+      "keywords": ["notice", "undefined index"],
+      "simple": "Minor issue like undefined array key.",
+      "fix": "Use isset() or array_key_exists().",
+      "example": "<?php /* ❌ Wrong */\necho $_GET['key'];\n\n/* ✅ Correct */\necho isset($_GET['key']) ? $_GET['key'] : ''; ?>",
+      "did_you_mean": ["Use ?? operator"]
+    },
+    {
+      "type": "Deprecated Error (E_DEPRECATED)",
+      "keywords": ["deprecated", "deprecated function"],
+      "simple": "Using deprecated feature.",
+      "fix": "Update to current syntax.",
+      "example": "<?php /* ❌ Wrong */\nmysql_connect();\n\n/* ✅ Correct */\n$pdo = new PDO($dsn, $user, $pass); ?>",
+      "did_you_mean": ["Use PDO"]
+    },
+    {
+      "type": "Type Error (E_RECOVERABLE_ERROR)",
+      "keywords": ["type error", "argument type"],
+      "simple": "Wrong argument type passed.",
+      "fix": "Cast or validate types.",
+      "example": "<?php /* ❌ Wrong */\nfunction add(int $a, int $b) { return $a + $b; }\nadd('1', 2);\n\n/* ✅ Correct */\nadd((int)'1', 2); ?>",
+      "did_you_mean": ["Type cast"]
+    },
+    {
+      "type": "Division by Zero",
+      "keywords": ["division by zero"],
+      "simple": "Dividing by zero.",
+      "fix": "Check denominator.",
+      "example": "<?php /* ❌ Wrong */\necho 10 / 0;\n\n/* ✅ Correct */\n$div = $b ?? 1;\necho 10 / $div; ?>",
+      "did_you_mean": ["if ($b != 0)"]
+    },
+    {
+      "type": "Out of Memory (E_ERROR variant)",
+      "keywords": ["out of memory", "allowed memory size"],
+      "simple": "Exceeded memory limit.",
+      "fix": "Increase memory_limit in php.ini or optimize code.",
+      "example": "",
+      "did_you_mean": ["ini_set('memory_limit', '256M')"]
+    },
+    {
+      "type": "Strict Error (E_STRICT)",
+      "keywords": ["strict standards", "E_STRICT"],
+      "simple": "Code not following strict standards.",
+      "fix": "Update to best practices.",
+      "example": "<?php /* ❌ Wrong */\nini_set('html_errors', 0);\n\n/* ✅ Correct */\n// Follow strict types\ndeclare(strict_types=1);",
+      "did_you_mean": ["declare(strict_types=1)"]
+    },
+    {
+      "type": "Core Error (E_CORE_ERROR)",
+      "keywords": ["core error"],
+      "simple": "Fatal error in PHP core.",
+      "fix": "Update PHP or report bug.",
+      "example": "",
+      "did_you_mean": ["Update PHP"]
+    },
+    {
+      "type": "Core Warning (E_CORE_WARNING)",
+      "keywords": ["core warning"],
+      "simple": "Warning in PHP core.",
+      "fix": "Check PHP configuration.",
+      "example": "",
+      "did_you_mean": ["Check php.ini"]
+    },
+    {
+      "type": "Compile Error (E_COMPILE_ERROR)",
+      "keywords": ["compile error"],
+      "simple": "Error during compilation.",
+      "fix": "Fix opcode issues.",
+      "example": "",
+      "did_you_mean": ["Validate syntax"]
+    },
+    {
+      "type": "Compile Warning (E_COMPILE_WARNING)",
+      "keywords": ["compile warning"],
+      "simple": "Warning during compilation.",
+      "fix": "Address opcode warnings.",
+      "example": "",
+      "did_you_mean": ["Check opcache"]
+    },
+    {
+      "type": "User Error (E_USER_ERROR)",
+      "keywords": ["user error", "trigger_error"],
+      "simple": "Custom fatal error via trigger_error().",
+      "fix": "Handle in error handler.",
+      "example": "<?php trigger_error('Custom error', E_USER_ERROR);",
+      "did_you_mean": ["Use exceptions"]
+    },
+    {
+      "type": "User Warning (E_USER_WARNING)",
+      "keywords": ["user warning"],
+      "simple": "Custom warning via trigger_error().",
+      "fix": "Review custom triggers.",
+      "example": "<?php trigger_error('Custom warning', E_USER_WARNING);",
+      "did_you_mean": ["Log instead"]
+    },
+    {
+      "type": "User Notice (E_USER_NOTICE)",
+      "keywords": ["user notice"],
+      "simple": "Custom notice via trigger_error().",
+      "fix": "Suppress if minor.",
+      "example": "<?php trigger_error('Custom notice', E_USER_NOTICE);",
+      "did_you_mean": ["Use logging"]
+    },
+    {
+      "type": "User Deprecated (E_USER_DEPRECATED)",
+      "keywords": ["user deprecated"],
+      "simple": "Custom deprecation notice.",
+      "fix": "Update usage.",
+      "example": "<?php trigger_error('Deprecated', E_USER_DEPRECATED);",
+      "did_you_mean": ["Mark as deprecated"]
+    }
+  ]
+}

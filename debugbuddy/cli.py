@@ -1,5 +1,7 @@
 import click
 import sys
+import ast
+import subprocess
 from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
@@ -10,279 +12,264 @@ from rich.prompt import Prompt, Confirm
 
 from debugbuddy.core.parser import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
-from debugbuddy.core.watcher import ErrorWatcher
+from debugbuddy.core.watcher import ErrorWatcher, SimpleChecker
 from debugbuddy.core.history import HistoryManager
 from debugbuddy.utils.config import ConfigManager
+from debugbuddy.ai import get_provider, get_explanation_prompt
 
 console = Console()
 
+def _detect_all_errors(file_path):
+    all_errors = []
+
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        if file_path.suffix != '.py':
+            return [content]
+
+        filename = str(file_path)
+        lines = content.splitlines(keepends=True)
+        current_lines = lines[:]
+        max_iterations = 20
+
+        for iteration in range(max_iterations):
+            current_content = ''.join(current_lines)
+            try:
+                ast.parse(current_content, filename=filename)
+                break
+            except (SyntaxError, IndentationError) as e:
+                error_type = type(e).__name__
+                lineno = e.lineno
+                msg = e.msg
+                error_msg = f"{error_type}: {msg}\n  File \"{filename}\", line {lineno}"
+                if hasattr(e, 'text') and e.text:
+                    error_msg += f"\n    {e.text.rstrip()}\n    {' ' * (getattr(e, 'offset', 0) - 1) if getattr(e, 'offset', 0) else ''}^"
+                all_errors.append(error_msg)
+
+                if 0 <= lineno - 1 < len(current_lines):
+                    offending_line = current_lines[lineno - 1]
+                    stripped = offending_line.lstrip()
+                    if stripped:
+                        indent = offending_line[:-len(stripped)]
+                        commented = indent + '#' + stripped
+                        current_lines[lineno - 1] = commented + '\n'
+
+    except Exception:
+        return []
+
+    return all_errors
+
 @click.group(invoke_without_command=True)
 @click.pass_context
-@click.option('--version', is_flag=True, help='Show version')
-def main(ctx, version):
-    if version:
-        console.print(Panel(
-            "[bold cyan]DeBugBuddy[/bold cyan] [green]v0.1.2[/green]\n\n"
-            "Your terminal's debugging companion\n"
-            "Made with ❤️ by DevArqf",
-            border_style="cyan"
-        ))
-        sys.exit(0)
-
+def main(ctx):
     if ctx.invoked_subcommand is None:
-        console.print(Panel.fit(
-            "[bold cyan]🐛 DeBugBuddy[/bold cyan]\n\n"
-            "Your terminal's debugging companion\n\n"
-            "[bold]Quick start:[/bold]\n"
-            "  [yellow]db explain error.log[/yellow]     - Explain error from file\n"
-            "  [yellow]db explain \"error text\"[/yellow]  - Explain error directly\n"
-            "  [yellow]db watch src/[/yellow]            - Monitor directory\n"
-            "  [yellow]db interactive[/yellow]           - Chat mode\n"
-            "  [yellow]db history[/yellow]               - View past errors\n\n"
-            "Run [green]db --help[/green] for all commands",
-            title="🎯 Welcome",
-            border_style="cyan"
-        ))
+        console.print("\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
+        console.print("Version 0.2.2\n")
+        ctx.invoke(explain)
 
 @main.command()
-@click.argument('source', required=False)
+@click.argument('error_input', required=False)
+@click.option('--file', '-f', is_flag=True, help='Treat input as file path')
 @click.option('--ai', is_flag=True, help='Use AI for explanation')
-@click.option('--verbose', '-v', is_flag=True, help='Verbose output')
-@click.option('--show-example', '-e', is_flag=True, help='Show code example')
-def explain(source, ai, verbose, show_example):
+@click.option('--py', is_flag=True)
+@click.option('--js', is_flag=True)
+@click.option('--ts', is_flag=True)
+@click.option('--c', is_flag=True)
+@click.option('--php', is_flag=True)
+def explain(error_input, file, ai, py, js, ts, c, php):
+    config_mgr = ConfigManager()
+    allowed_languages = config_mgr.get('languages', [])
 
     parser = ErrorParser()
-    explainer = ErrorExplainer()
+    explainer = ErrorExplainer(allowed_languages=allowed_languages)
     history = HistoryManager()
 
-    if source:
-        if Path(source).exists():
-            with open(source, 'r', encoding='utf-8') as f:
-                error_text = f.read()
-        else:
-            error_text = source
-    else:
-        if sys.stdin.isatty():
-            console.print("[red]❌ No input provided[/red]")
-            console.print("\nUsage:")
-            console.print("  db explain error.log")
-            console.print("  db explain \"NameError: name 'x' is not defined\"")
-            console.print("  python script.py 2>&1 | db explain")
-            sys.exit(1)
-        error_text = sys.stdin.read()
+    language = None
+    if py:
+        language = 'python'
+    elif js:
+        language = 'javascript'
+    elif ts:
+        language = 'typescript'
+    elif c:
+        language = 'c'
+    elif php:
+        language = 'php'
 
-    with console.status("[green]🔍 Analyzing error...", spinner="dots"):
-        parsed = parser.parse(error_text)
+    if not error_input:
+        error_input = sys.stdin.read().strip()
+
+    if not error_input:
+        console.print("[yellow]⚠ No error provided[/yellow]")
+        console.print("[dim]Usage: dbug explain \"Your error message\"[/dim]")
+        console.print("[dim]Or pipe: python script.py 2>&1 | dbug explain[/dim]")
+        return
+
+    if file:
+        try:
+            with open(error_input, 'r', encoding='utf-8') as f:
+                error_text = f.read().strip()
+        except FileNotFoundError:
+            console.print(f"[red]✗ File not found: {error_input}[/red]")
+            return
+        except Exception as e:
+            console.print(f"[red]✗ Error reading file: {e}[/red]")
+            return
+    else:
+        error_text = error_input
+
+    parsed = parser.parse(error_text, language=language)
 
     if not parsed:
-        console.print("\n[red]❌ Could not parse error[/red]")
-        console.print("\n[yellow]💡 Tip:[/yellow] Try pasting the full error message including traceback")
-        if verbose:
-            console.print("\n[dim]Raw input:[/dim]")
-            console.print(error_text[:500])
-        sys.exit(1)
+        console.print("[yellow]⚠ Couldn't parse the error[/yellow]")
+        console.print("[dim]Try copying the exact error message[/dim]")
+        return
+
+    if allowed_languages and parsed.get('language') not in allowed_languages and parsed.get('language') != 'common':
+        console.print(f"[yellow]⚠ Language '{parsed.get('language')}' is excluded in config. Using generic explanation.[/yellow]")
+        parsed = parser._parse_generic(error_text)
+
+    explanation = explainer.explain(parsed)
 
     if ai:
-        console.print("[yellow]⚠️  AI mode not configured yet. Using pattern matching.[/yellow]")
-        explanation = explainer.explain(parsed)
-    else:
-        explanation = explainer.explain(parsed)
-
-    code_snippet = parser.extract_code_snippet(error_text)
-
-    display_parts = []
-
-    error_info = f"[bold red]{parsed['type']}[/bold red]"
-    if parsed.get('file'):
-        error_info += f"\n[dim]File: {parsed['file']}"
-        if parsed.get('line'):
-            error_info += f", Line {parsed['line']}[/dim]"
-    elif parsed.get('line'):
-        error_info += f"\n[dim]Line {parsed['line']}[/dim]"
-
-    display_parts.append(error_info)
-    display_parts.append("\n" + explanation['simple'])
-
-    if explanation.get('suggestions'):
-        display_parts.append("\n[bold yellow]💡 Did you mean?[/bold yellow]")
-        for suggestion in explanation['suggestions'][:3]:
-            display_parts.append(f"  • {suggestion}")
-
-    display_parts.append(f"\n[bold green]✅ How to fix:[/bold green]\n{explanation['fix']}")
-
-    console.print("\n")
-    console.print(Panel(
-        "\n".join(display_parts),
-        title="🐛 Error Explanation",
-        border_style="red",
-        padding=(1, 2)
-    ))
-
-    if code_snippet and verbose:
-        console.print("\n[bold]📝 Code that caused the error:[/bold]")
-        syntax = Syntax(code_snippet, "python", theme="monokai", line_numbers=False)
-        console.print(Panel(syntax, border_style="yellow"))
-
-    if show_example or (explanation.get('example') and verbose):
-        example = explanation.get('example')
-        if example:
-            console.print("\n[bold]📚 Example:[/bold]")
-            syntax = Syntax(example, "python", theme="monokai", line_numbers=False)
-            console.print(Panel(syntax, border_style="green"))
-
-    similar = history.find_similar(parsed)
-    if similar:
-        console.print(f"\n[yellow]💭 You've seen this type of error before[/yellow]")
-        console.print(f"   Last occurrence: [dim]{similar['timestamp']}[/dim]")
-        if Confirm.ask("   View previous fix?", default=False):
-            console.print(f"\n   Previous fix: {similar['fix'][:200]}")
-
-    related = explainer.get_related_errors(parsed['type'])
-    if related and verbose:
-        console.print(f"\n[dim]Related errors: {', '.join(related)}[/dim]")
+        provider_name = config_mgr.get('ai_provider', 'openai')
+        api_key = config_mgr.get(f'{provider_name}_api_key')
+        if not api_key:
+            console.print(f"[yellow]⚠ No {provider_name.upper()} API key set. Run: dbug config --set {provider_name}_api_key YOUR_KEY[/yellow]")
+        else:
+            provider = get_provider(provider_name, config_mgr.get_all())
+            if provider:
+                ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
+                if ai_explain:
+                    explanation['ai'] = ai_explain
+                else:
+                    console.print("[yellow]⚠ AI explanation failed[/yellow]")
 
     history.add(parsed, explanation)
 
-    console.print("\n[dim]💡 Tip: Use [cyan]db explain -e[/cyan] to see code examples[/dim]")
+    title = f"🐛 {parsed['type']}"
+    if parsed.get('file') and parsed.get('line'):
+        title += f"\nFile: {parsed['file']}, Line {parsed['line']}"
 
-    if verbose:
-        console.print("\n[dim]Full parsed data:[/dim]")
-        console.print(parsed)
+    content = f"🔍 {explanation['simple']}\n\n💡 Fix:\n{explanation['fix']}"
 
-@main.command()
-def interactive():
+    if 'example' in explanation and explanation['example']:
+        content += f"\n\n📝 Example:\n{explanation['example']}"
 
-    parser = ErrorParser()
-    explainer = ErrorExplainer()
-    history = HistoryManager()
+    if 'did_you_mean' in explanation:
+        dym = '\n'.join(f"• {s}" for s in explanation['did_you_mean'])
+        content += f"\n\n🤔 Did you mean?\n{dym}"
 
-    console.print(Panel.fit(
-        "[bold green]🤖 Interactive DeBugBuddy[/bold green]\n\n"
-        "[cyan]Paste your errors and I'll help you fix them![/cyan]\n\n"
-        "[bold]Commands:[/bold]\n"
-        "  [yellow]paste error[/yellow]    - Paste and explain\n"
-        "  [yellow]history[/yellow]        - Show recent errors\n"
-        "  [yellow]stats[/yellow]          - View statistics\n"
-        "  [yellow]help[/yellow]           - Show help\n"
-        "  [yellow]exit[/yellow]           - Quit\n",
-        title="💬 Chat Mode",
-        border_style="green"
-    ))
+    if 'suggestions' in explanation:
+        sugg = '\n'.join(f"• {s}" for s in explanation['suggestions'])
+        content += f"\n\n📌 Suggestions:\n{sugg}"
 
-    conversation_count = 0
+    if 'ai' in explanation:
+        content += f"\n\n🤖 AI Explanation:\n{explanation['ai']}"
 
-    while True:
-        try:
-            console.print()
-            user_input = Prompt.ask("[bold cyan]You[/bold cyan]", default="")
+    console.print(Panel(content, title=title, expand=False))
 
-            if not user_input:
-                continue
-
-            cmd = user_input.lower().strip()
-
-            if cmd in ['exit', 'quit', 'q']:
-                console.print("\n[green]👋 Thanks for using DeBugBuddy! Happy coding![/green]\n")
-                break
-
-            elif cmd == 'help':
-                console.print("\n[bold]Available commands:[/bold]")
-                console.print("  • Paste any error message")
-                console.print("  • Type 'history' to see past errors")
-                console.print("  • Type 'stats' to see error statistics")
-                console.print("  • Type 'exit' to quit")
-                continue
-
-            elif cmd == 'history':
-                recent = history.get_recent(5)
-                if not recent:
-                    console.print("[yellow]No history yet[/yellow]")
-                else:
-                    table = Table(title="Recent Errors")
-                    table.add_column("#", style="cyan")
-                    table.add_column("Error", style="red")
-                    table.add_column("When", style="dim")
-
-                    for i, entry in enumerate(recent, 1):
-                        table.add_row(
-                            str(i),
-                            entry['error_type'],
-                            entry['timestamp'][:16]
-                        )
-
-                    console.print(table)
-                continue
-
-            elif cmd == 'stats':
-                stats = history.get_stats()
-                console.print(f"\n[bold]Your debugging stats:[/bold]")
-                console.print(f"  Total errors analyzed: {stats['total']}")
-                if stats['by_type']:
-                    console.print(f"\n  Most common errors:")
-                    for error_type, count in sorted(stats['by_type'].items(), key=lambda x: x[1], reverse=True)[:5]:
-                        console.print(f"    • {error_type}: {count}")
-                continue
-
-            parsed = parser.parse(user_input)
-
-            if parsed:
-                conversation_count += 1
-
-                explanation = explainer.explain(parsed)
-
-                console.print(f"\n[bold green]🐛 DeBugBuddy:[/bold green]")
-                console.print(f"\n{explanation['simple']}")
-                console.print(f"\n[bold]Fix:[/bold]")
-                console.print(explanation['fix'])
-
-                if explanation.get('example'):
-                    if Confirm.ask("\nShow code example?", default=True):
-                        console.print()
-                        syntax = Syntax(explanation['example'], "python", theme="monokai")
-                        console.print(syntax)
-
-                history.add(parsed, explanation)
-
-                if conversation_count % 3 == 0:
-                    console.print("\n[dim]💡 Tip: Type 'history' to see your recent errors[/dim]")
-
-            else:
-                console.print("\n[yellow]🤔 I couldn't detect an error in that message.[/yellow]")
-                console.print("Try pasting the full error with traceback, or type 'help' for commands.")
-
-        except KeyboardInterrupt:
-            console.print("\n\n[green]👋 Goodbye![/green]\n")
-            break
-        except EOFError:
-            break
+    similar = history.find_similar(parsed)
+    if similar:
+        console.print("\n[dim]📝 Similar error seen before:[/dim]")
+        console.print(f"[dim]{similar['timestamp']}: {similar['error_type']} - {similar['simple']}[/dim]")
 
 @main.command()
-@click.argument('directory', default='.')
-@click.option('--lang', default='python', help='Language to watch (python/javascript)')
-@click.option('--exclude', multiple=True, help='Patterns to exclude')
-def watch(directory, lang, exclude):
+@click.argument('path', type=click.Path(exists=True), required=False)
+def watch(path):
+    config_mgr = ConfigManager()
+    allowed_languages = config_mgr.get('languages', [])
 
-    console.print(Panel.fit(
-        f"[green]👁️  Watching:[/green] [bold]{directory}[/bold]\n"
-        f"[green]Language:[/green] {lang}\n"
-        f"[dim]Press Ctrl+C to stop[/dim]",
-        title="🔍 Watch Mode",
-        border_style="green"
-    ))
+    path = Path(path) if path else Path.cwd()
 
-    watcher = ErrorWatcher(directory, lang, exclude)
+    if not path.is_dir():
+        path = path.parent
+
+    console.print(f"\n[bold green]🐛 Watching for errors in: {path.absolute()}[/bold green]")
+    console.print("[dim]Press Ctrl+C to stop[/dim]\n")
+
+    event_handler = ErrorWatcher()
+    observer = Observer()
+    observer.schedule(event_handler, str(path), recursive=True)
+    observer.start()
 
     try:
-        watcher.start()
+        while True:
+            pass
     except KeyboardInterrupt:
-        console.print("\n[yellow]⏹️  Stopped watching[/yellow]\n")
+        observer.stop()
+
+    observer.join()
 
 @main.command()
-@click.option('--limit', default=10, help='Number of entries to show')
+@click.argument('file_path', type=click.Path(exists=True))
+def check(file_path):
+    config_mgr = ConfigManager()
+    allowed_languages = config_mgr.get('languages', [])
+
+    file_path = Path(file_path)
+    console.print(f"\n[bold green]🐛 Checking {file_path.name}[/bold green]\n")
+
+    all_errors = _detect_all_errors(file_path)
+
+    if not all_errors:
+        console.print("[green]✅ No errors found![/green]")
+        return
+
+    parser = ErrorParser()
+    explainer = ErrorExplainer(allowed_languages=allowed_languages)
+
+    table = Table()
+    table.add_column("Line", style="dim")
+    table.add_column("Type", style="red")
+    table.add_column("Explanation", style="green")
+
+    for error_text in all_errors:
+        parsed = parser.parse(error_text)
+        if parsed:
+            if allowed_languages and parsed.get('language') not in allowed_languages and parsed.get('language') != 'common':
+                parsed = parser._parse_generic(error_text)
+            explanation = explainer.explain(parsed)
+            table.add_row(
+                str(parsed.get('line', '-')),
+                parsed['type'],
+                explanation['simple']
+            )
+
+    console.print(table)
+
+@main.command()
+@click.argument('command', required=False, nargs=-1)
+def run(command):
+    if not command:
+        console.print("[yellow]⚠ No command provided[/yellow]")
+        console.print("[dim]Usage: dbug run python script.py[/dim]")
+        return
+
+    command_str = ' '.join(command)
+    console.print(f"\n[bold green]🐛 Running: {command_str}[/bold green]\n")
+
+    process = subprocess.Popen(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if process.returncode == 0:
+        console.print(stdout.decode('utf-8'))
+        console.print("\n[green]✅ Success![/green]")
+    else:
+        error_text = stderr.decode('utf-8').strip()
+        if error_text:
+            ctx = click.get_current_context()
+            ctx.invoke(explain, error_input=error_text)
+        else:
+            console.print("[yellow]⚠ Command failed without error output[/yellow]")
+
+@main.command()
 @click.option('--clear', is_flag=True, help='Clear history')
 @click.option('--stats', is_flag=True, help='Show statistics')
-def history(limit, clear, stats):
-
+@click.option('--search', type=str, help='Search history')
+def history(clear, stats, search):
     history_mgr = HistoryManager()
 
     if clear:
@@ -292,58 +279,57 @@ def history(limit, clear, stats):
         return
 
     if stats:
-        statistics = history_mgr.get_stats()
+        stats_data = history_mgr.get_stats()
+        console.print("\n[bold green]📊 Error Statistics[/bold green]\n")
+        console.print(f"Total errors: {stats_data['total']}\n")
 
-        console.print("\n[bold green]📊 Your Debugging Statistics[/bold green]\n")
-        console.print(f"Total errors analyzed: [bold]{statistics['total']}[/bold]")
+        console.print("[cyan]By Type:[/cyan]")
+        for typ, count in sorted(stats_data['by_type'].items(), key=lambda x: x[1], reverse=True):
+            console.print(f"  • {typ}: {count}")
 
-        if statistics['by_type']:
-            console.print("\n[bold]Most common errors:[/bold]")
-            table = Table()
-            table.add_column("Error Type", style="red")
-            table.add_column("Count", style="green", justify="right")
-
-            for error_type, count in sorted(statistics['by_type'].items(), key=lambda x: x[1], reverse=True)[:10]:
-                table.add_row(error_type, str(count))
-
-            console.print(table)
-
+        console.print("\n[cyan]By Language:[/cyan]")
+        for lang, count in sorted(stats_data['by_language'].items(), key=lambda x: x[1], reverse=True):
+            console.print(f"  • {lang}: {count}")
         return
 
-    entries = history_mgr.get_recent(limit)
+    if search:
+        results = history_mgr.search(search)
+        if not results:
+            console.print(f"[yellow]⚠ No history found for '{search}'[/yellow]")
+            return
 
-    if not entries:
-        console.print("[yellow]📭 No history yet[/yellow]")
-        console.print("\n[dim]Start using DeBugBuddy to track your errors:[/dim]")
-        console.print("  db explain \"your error here\"")
+        console.print(f"\n[bold green]🔍 Search Results for '{search}':[/bold green]\n")
+        for entry in results:
+            console.print(f"[dim]{entry['timestamp']}[/dim]")
+            console.print(f"[red]{entry['error_type']}[/red]: {entry['message']}")
+            if entry['file']:
+                console.print(f"[dim]File: {entry['file']}, Line {entry['line']}[/dim]")
+            console.print(f"💡 {entry['simple']}")
+            console.print()
         return
 
-    console.print(f"\n[bold green]📚 Recent Errors[/bold green] [dim](last {len(entries)})[/dim]\n")
+    recent = history_mgr.get_recent()
+    if not recent:
+        console.print("[yellow]⚠ No history yet[/yellow]")
+        return
 
-    for i, entry in enumerate(entries, 1):
-        time_str = entry['timestamp'].split('T')[1][:5] if 'T' in entry['timestamp'] else entry['timestamp'][:16]
-        date_str = entry['timestamp'].split('T')[0]
-
-        error_display = f"[bold red]{entry['error_type']}[/bold red]"
-        if entry.get('file'):
-            error_display += f" [dim]in {entry['file']}[/dim]"
-
-        console.print(f"{i}. {error_display}")
-        console.print(f"   [dim]{date_str} at {time_str}[/dim]")
-        console.print(f"   {entry['simple'][:80]}...")
+    console.print("\n[bold green]📜 Recent Errors[/bold green]\n")
+    for entry in recent:
+        console.print(f"[dim]{entry['timestamp']}[/dim]")
+        console.print(f"[red]{entry['error_type']}[/red]: {entry['message']}")
+        if entry['file']:
+            console.print(f"[dim]File: {entry['file']}, Line {entry['line']}[/dim]")
+        console.print(f"💡 {entry['simple']}")
         console.print()
-
-    console.print("[dim]💡 Tip: Use [cyan]db history --stats[/cyan] to see your debugging stats[/dim]\n")
 
 @main.command()
 @click.argument('keyword')
 def search(keyword):
-
     explainer = ErrorExplainer()
-    results = explainer.search_patterns(keyword)
 
+    results = explainer.search_patterns(keyword)
     if not results:
-        console.print(f"[yellow]🔍 No patterns found for '{keyword}'[/yellow]")
+        console.print(f"[yellow]⚠ No patterns found for '{keyword}'[/yellow]")
         console.print("\n[dim]Try searching for:[/dim]")
         console.print("  • Error names: syntax, name, type")
         console.print("  • Keywords: import, undefined, indentation")
@@ -368,7 +354,7 @@ def config(key, value, show, reset):
     if reset:
         if Confirm.ask("Reset all settings to defaults?"):
             config_mgr.reset()
-            console.print("[green]✅ Config reset to defaults[/green]")
+            console.print("[green]✅  Config reset to defaults[/green]")
         return
 
     if show or (not key and not value):

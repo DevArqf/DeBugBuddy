@@ -12,7 +12,7 @@ REM
 echo ▶ Cleaning old builds...
 if exist build rmdir /s /q build
 if exist dist rmdir /s /q dist
-if exist debugbuddy-cli.egg-info rmdir /s /q debugbuddy-cli.egg-info
+if exist debugbuddy_cli.egg-info rmdir /s /q debugbuddy_cli.egg-info
 echo ✓ Cleaned old builds
 echo.
 
@@ -78,9 +78,9 @@ if "%choice%"=="1" (
     echo ✓ Installed locally
     echo.
     echo Test it:
-    echo   db
-    echo   db --version
-    echo   db explain "test error"
+    echo   dbug
+    echo   dbug --version
+    echo   dbug explain "test error"
     pause
     goto :end
 ) else if "%choice%"=="2" (

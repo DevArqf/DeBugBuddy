@@ -1,4 +1,5 @@
 import json
+import sqlite3
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
@@ -8,108 +9,123 @@ class HistoryManager:
     def __init__(self):
         self.data_dir = Path.home() / '.debugbuddy'
         self.data_dir.mkdir(exist_ok=True)
-        self.history_file = self.data_dir / 'history.json'
+        self.db_file = self.data_dir / 'history.db'
+        self._init_db()
+
+    def _init_db(self):
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT,
+                error_type TEXT,
+                message TEXT,
+                file TEXT,
+                line INTEGER,
+                language TEXT,
+                simple TEXT,
+                fix TEXT
+            )
+        ''')
+        conn.commit()
+        conn.close()
 
     def add(self, error: Dict, explanation: Dict):
 
-        history = self._load()
-
-        entry = {
-            'timestamp': datetime.now().isoformat(),
-            'error_type': error.get('type', 'Unknown'),
-            'message': error.get('message', '')[:200],
-            'file': error.get('file'),
-            'line': error.get('line'),
-            'language': error.get('language', 'unknown'),
-            'simple': explanation.get('simple', '')[:100],
-            'fix': explanation.get('fix', '')[:200],
-        }
-
-        history.append(entry)
-
-        if len(history) > 100:
-            history = history[-100:]
-
-        self._save(history)
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO history (timestamp, error_type, message, file, line, language, simple, fix)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            datetime.now().isoformat(),
+            error.get('type', 'Unknown'),
+            error.get('message', '')[:200],
+            error.get('file'),
+            error.get('line'),
+            error.get('language', 'unknown'),
+            explanation.get('simple', '')[:100],
+            explanation.get('fix', '')[:200],
+        ))
+        conn.commit()
+        conn.close()
 
     def get_recent(self, limit: int = 10) -> List[Dict]:
 
-        history = self._load()
-        return history[-limit:][::-1]
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM history ORDER BY id DESC LIMIT ?', (limit,))
+        rows = cursor.fetchall()
+        conn.close()
+        return self._rows_to_dicts(rows)
 
     def find_similar(self, error: Dict) -> Optional[Dict]:
 
-        history = self._load()
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
         error_type = error.get('type', '').lower()
-
-        for entry in reversed(history):
-            if entry['error_type'].lower() == error_type:
-                return entry
-
+        cursor.execute('SELECT * FROM history WHERE LOWER(error_type) = ? ORDER BY id DESC LIMIT 1', (error_type,))
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            return self._row_to_dict(row)
         return None
 
     def search(self, keyword: str) -> List[Dict]:
 
-        history = self._load()
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
         keyword_lower = keyword.lower()
-
-        results = []
-        for entry in history:
-            searchable = [
-                entry['error_type'],
-                entry['message'],
-                entry['simple'],
-            ]
-
-            if any(keyword_lower in str(field).lower() for field in searchable):
-                results.append(entry)
-
-        return results
+        cursor.execute('''
+            SELECT * FROM history 
+            WHERE LOWER(error_type) LIKE ? OR LOWER(message) LIKE ? OR LOWER(simple) LIKE ?
+            ORDER BY id DESC
+        ''', (f'%{keyword_lower}%', f'%{keyword_lower}%', f'%{keyword_lower}%'))
+        rows = cursor.fetchall()
+        conn.close()
+        return self._rows_to_dicts(rows)
 
     def clear(self):
-        self._save([])
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM history')
+        conn.commit()
+        conn.close()
 
     def get_stats(self) -> Dict:
 
-        history = self._load()
+        conn = sqlite3.connect(self.db_file)
+        cursor = conn.cursor()
+        cursor.execute('SELECT COUNT(*) FROM history')
+        total = cursor.fetchone()[0]
 
-        if not history:
-            return {
-                'total': 0,
-                'by_type': {},
-                'by_language': {},
-            }
+        cursor.execute('SELECT error_type, COUNT(*) FROM history GROUP BY error_type')
+        by_type = dict(cursor.fetchall())
 
-        stats = {
-            'total': len(history),
-            'by_type': {},
-            'by_language': {},
+        cursor.execute('SELECT language, COUNT(*) FROM history GROUP BY language')
+        by_language = dict(cursor.fetchall())
+
+        conn.close()
+
+        return {
+            'total': total,
+            'by_type': by_type,
+            'by_language': by_language,
         }
 
-        for entry in history:
-            error_type = entry['error_type']
-            language = entry.get('language', 'unknown')
+    def _rows_to_dicts(self, rows: list) -> List[Dict]:
+        return [self._row_to_dict(row) for row in rows]
 
-            stats['by_type'][error_type] = stats['by_type'].get(error_type, 0) + 1
-            stats['by_language'][language] = stats['by_language'].get(language, 0) + 1
-
-        return stats
-
-    def _load(self) -> List[Dict]:
-
-        if not self.history_file.exists():
-            return []
-
-        try:
-            with open(self.history_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except (json.JSONDecodeError, IOError):
-            return []
-
-    def _save(self, history: List[Dict]):
-
-        try:
-            with open(self.history_file, 'w', encoding='utf-8') as f:
-                json.dump(history, f, indent=2, ensure_ascii=False)
-        except IOError as e:
-            print(f"Warning: Could not save history: {e}")
+    def _row_to_dict(self, row: tuple) -> Dict:
+        return {
+            'id': row[0],
+            'timestamp': row[1],
+            'error_type': row[2],
+            'message': row[3],
+            'file': row[4],
+            'line': row[5],
+            'language': row[6],
+            'simple': row[7],
+            'fix': row[8],
+        }

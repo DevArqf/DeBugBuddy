@@ -1,48 +1,102 @@
 {
-    "language": "common",
-    "version": "1.0",
-    "errors": [
-      {
-        "type": "Network Error",
-        "keywords": ["ECONNREFUSED", "network", "timeout", "fetch failed"],
-        "simple": "Can't connect to the server or API.",
-        "fix": "Check:\n• Is the server running?\n• Is the URL correct?\n• Check your internet connection\n• Are you behind a firewall/proxy?\n• Is the API key valid?"
-      },
-      {
-        "type": "Permission Error",
-        "keywords": ["permission denied", "EACCES", "access denied"],
-        "simple": "You don't have permission to access this file or resource.",
-        "fix": "Try:\n• Run with admin/sudo privileges\n• Check file permissions\n• Make sure file isn't locked by another program\n• Check if you own the file"
-      },
-      {
-        "type": "Timeout Error",
-        "keywords": ["timeout", "timed out"],
-        "simple": "The operation took too long and was cancelled.",
-        "fix": "Options:\n• Increase timeout duration\n• Check if server is slow/down\n• Check network connection\n• Optimize your query/request"
-      },
-      {
-        "type": "Memory Error",
-        "keywords": ["out of memory", "memory error", "heap"],
-        "simple": "Your program ran out of available memory.",
-        "fix": "Solutions:\n• Process data in smaller chunks\n• Close unused resources\n• Check for memory leaks\n• Increase available memory\n• Optimize data structures"
-      },
-      {
-        "type": "Database Error",
-        "keywords": ["database", "connection refused", "authentication failed"],
-        "simple": "Can't connect to or query the database.",
-        "fix": "Check:\n• Is database server running?\n• Are credentials correct?\n• Is database name correct?\n• Check connection string\n• Verify network access to database"
-      },
-      {
-        "type": "API Key Error",
-        "keywords": ["invalid api key", "unauthorized", "401", "403"],
-        "simple": "Your API key is missing, invalid, or doesn't have permission.",
-        "fix": "Verify:\n• API key is set correctly\n• Key hasn't expired\n• Key has required permissions\n• Using correct authentication method\n• Check API documentation"
-      },
-      {
-        "type": "SSL/Certificate Error",
-        "keywords": ["certificate", "SSL", "TLS", "CERT"],
-        "simple": "There's a problem with the security certificate.",
-        "fix": "Options:\n• Update certificates\n• Check system date/time\n• For dev: disable SSL verification (not for prod!)\n• Install required certificates\n• Check with admin"
-      }
-    ]
-  }
+  "language": "common",
+  "version": "2.0",
+  "errors": [
+    {
+      "type": "Compilation Error",
+      "keywords": ["compile error", "syntax error"],
+      "simple": "Code doesn't compile due to syntax issues.",
+      "fix": "Check for missing semicolons, brackets, or keywords specific to the language.",
+      "example": "",
+      "did_you_mean": ["Review syntax rules"]
+    },
+    {
+      "type": "Logic Error",
+      "keywords": ["logic error", "wrong output"],
+      "simple": "Code runs but produces incorrect results.",
+      "fix": "Debug with print statements or debugger; review algorithm.",
+      "example": "",
+      "did_you_mean": ["Add logging", "Step through code"]
+    },
+    {
+      "type": "Runtime Error",
+      "keywords": ["runtime error"],
+      "simple": "Error during execution.",
+      "fix": "Use try-catch blocks and validate inputs.",
+      "example": "",
+      "did_you_mean": ["Add error handling"]
+    },
+    {
+      "type": "Linkage Error",
+      "keywords": ["undefined reference", "linking error"],
+      "simple": "Missing library or function definition.",
+      "fix": "Link required libraries or define missing functions.",
+      "example": "",
+      "did_you_mean": ["Add -l flag for linking"]
+    },
+    {
+      "type": "Segmentation Fault",
+      "keywords": ["segfault", "segmentation fault"],
+      "simple": "Access to invalid memory.",
+      "fix": "Check array bounds, null pointers, and memory allocation.",
+      "example": "",
+      "did_you_mean": ["Use valgrind"]
+    },
+    {
+      "type": "Network Error",
+      "keywords": ["ECONNREFUSED", "network", "timeout", "fetch failed"],
+      "simple": "Can't connect to the server or API.",
+      "fix": "Check:\n• Is the server running?\n• Is the URL correct?\n• Check your internet connection\n• Are you behind a firewall/proxy?\n• Is the API key valid?",
+      "example": "",
+      "did_you_mean": ["Ping server", "Check URL"]
+    },
+    {
+      "type": "Permission Error",
+      "keywords": ["permission denied", "EACCES", "access denied"],
+      "simple": "You don't have permission to access this file or resource.",
+      "fix": "Try:\n• Run with admin/sudo privileges\n• Check file permissions\n• Make sure file isn't locked by another program\n• Check if you own the file",
+      "example": "",
+      "did_you_mean": ["chmod 755 file"]
+    },
+    {
+      "type": "Timeout Error",
+      "keywords": ["timeout", "timed out"],
+      "simple": "The operation took too long and was cancelled.",
+      "fix": "Options:\n• Increase timeout duration\n• Check if server is slow/down\n• Check network connection\n• Optimize your query/request",
+      "example": "",
+      "did_you_mean": ["Set higher timeout"]
+    },
+    {
+      "type": "Memory Error",
+      "keywords": ["out of memory", "memory error", "heap"],
+      "simple": "Your program ran out of available memory.",
+      "fix": "Solutions:\n• Process data in smaller chunks\n• Close unused resources\n• Check for memory leaks\n• Increase available memory\n• Optimize data structures",
+      "example": "",
+      "did_you_mean": ["Free memory", "Use streaming"]
+    },
+    {
+      "type": "Database Error",
+      "keywords": ["database", "connection refused", "authentication failed"],
+      "simple": "Can't connect to or query the database.",
+      "fix": "Check:\n• Is database server running?\n• Are credentials correct?\n• Is database name correct?\n• Check connection string\n• Verify network access to database",
+      "example": "",
+      "did_you_mean": ["Test connection"]
+    },
+    {
+      "type": "API Key Error",
+      "keywords": ["invalid api key", "unauthorized", "401", "403"],
+      "simple": "Your API key is missing, invalid, or doesn't have permission.",
+      "fix": "Verify:\n• API key is set correctly\n• Key hasn't expired\n• Key has required permissions\n• Using correct authentication method\n• Check API documentation",
+      "example": "",
+      "did_you_mean": ["Regenerate key"]
+    },
+    {
+      "type": "SSL/Certificate Error",
+      "keywords": ["certificate", "SSL", "TLS", "CERT"],
+      "simple": "There's a problem with the security certificate.",
+      "fix": "Options:\n• Update certificates\n• Check system date/time\n• For dev: disable SSL verification (not for prod!)\n• Install required certificates\n• Check with admin",
+      "example": "",
+      "did_you_mean": ["Update CA bundle"]
+    }
+  ]
+}

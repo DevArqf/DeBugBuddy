@@ -16,6 +16,7 @@ dist/
 .coverage
 remove_comments.py
 htmlcov/
+dbug-test-env/
 
 # Database
 *.db

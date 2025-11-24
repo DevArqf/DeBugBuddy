@@ -98,9 +98,9 @@ case $choice in
         print_success "Installed locally"
         echo ""
         echo "Test it:"
-        echo "  db"
-        echo "  db --version"
-        echo "  db explain \"test error\""
+        echo "  dbug"
+        echo "  dbug --version"
+        echo "  dbug explain \"test error\""
         ;;
     2)
         print_step "Uploading to TestPyPI..."
