@@ -192,4 +192,3 @@ Made with ❤️ by DevArqf
 Stop Googling. Understand your errors.
 
 </div>
-```
