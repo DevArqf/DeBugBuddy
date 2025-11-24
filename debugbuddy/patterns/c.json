@@ -1,0 +1,102 @@
+{
+  "language": "c",
+  "version": "2.0",
+  "errors": [
+    {
+      "type": "Syntax Error",
+      "keywords": ["syntax error", "expected declaration"],
+      "simple": "Invalid syntax in code.",
+      "fix": "Check for missing semicolons, braces, or keywords.",
+      "example": "/* ❌ Wrong */\nint x = 5\nmain() { }\n\n/* ✅ Correct */\nint x = 5;\nint main() { return 0; }",
+      "did_you_mean": ["Add ;", "Close }"]
+    },
+    {
+      "type": "Undefined Reference",
+      "keywords": ["undefined reference", "linker error"],
+      "simple": "Function or variable not defined.",
+      "fix": "Declare prototype or define the function; link libraries.",
+      "example": "/* ❌ Wrong */\nextern int foo();\nint main() { foo(); } /* missing definition */\n\n/* ✅ Correct */\nint foo() { return 0; }\nint main() { foo(); }",
+      "did_you_mean": ["Add function body", "gcc -l lib"]
+    },
+    {
+      "type": "Segmentation Fault",
+      "keywords": ["segfault", "segmentation fault"],
+      "simple": "Invalid memory access.",
+      "fix": "Check array bounds, null pointers, uninitialized vars.",
+      "example": "/* ❌ Wrong */\nint arr[5];\narr[10] = 0;\n\n/* ✅ Correct */\nint arr[5];\nif (index < 5) arr[index] = 0;",
+      "did_you_mean": ["Check bounds", "Initialize pointer"]
+    },
+    {
+      "type": "Type Mismatch",
+      "keywords": ["incompatible types", "type error"],
+      "simple": "Assignment between incompatible types.",
+      "fix": "Cast explicitly or use correct types.",
+      "example": "/* ❌ Wrong */\nint x = 5.5;\n\n/* ✅ Correct */\nint x = (int)5.5;",
+      "did_you_mean": ["Add cast"]
+    },
+    {
+      "type": "Null Pointer Dereference",
+      "keywords": ["null pointer", "dereference"],
+      "simple": "Dereferencing null pointer.",
+      "fix": "Check if pointer is null before use.",
+      "example": "/* ❌ Wrong */\nint *p = NULL;\n*p = 5;\n\n/* ✅ Correct */\nint *p = malloc(sizeof(int));\nif (p != NULL) *p = 5;\nfree(p);",
+      "did_you_mean": ["if (ptr) *ptr"]
+    },
+    {
+      "type": "Array Bounds Error",
+      "keywords": ["array bounds", "out of bounds"],
+      "simple": "Accessing array beyond limits.",
+      "fix": "Validate indices.",
+      "example": "/* ❌ Wrong */\nint arr[3] = {1,2,3};\narr[3] = 4;\n\n/* ✅ Correct */\nint arr[4] = {1,2,3,0};\narr[3] = 4;",
+      "did_you_mean": ["Use sizeof"]
+    },
+    {
+      "type": "Memory Leak",
+      "keywords": ["memory leak", "valgrind"],
+      "simple": "Allocated memory not freed.",
+      "fix": "Free all malloc'ed memory.",
+      "example": "/* ❌ Wrong */\nint *p = malloc(sizeof(int));\n/* no free */\n\n/* ✅ Correct */\nint *p = malloc(sizeof(int));\n*p = 5;\nfree(p);",
+      "did_you_mean": ["Add free()"]
+    },
+    {
+      "type": "Format String Mismatch",
+      "keywords": ["format specifier", "printf error"],
+      "simple": "Mismatch in printf arguments.",
+      "fix": "Match %d, %s, etc. with types.",
+      "example": "/* ❌ Wrong */\nprintf(\"%d\", \"hello\");\n\n/* ✅ Correct */\nprintf(\"%s\", \"hello\");",
+      "did_you_mean": ["Use %s for string"]
+    },
+    {
+      "type": "Division by Zero",
+      "keywords": ["division by zero"],
+      "simple": "Dividing by zero at runtime.",
+      "fix": "Check denominator before division.",
+      "example": "/* ❌ Wrong */\nint res = 10 / 0;\n\n/* ✅ Correct */\nif (denom != 0) res = num / denom; else res = 0;",
+      "did_you_mean": ["if (denom != 0)"]
+    },
+    {
+      "type": "Uninitialized Variable",
+      "keywords": ["uninitialized variable"],
+      "simple": "Using variable without initialization.",
+      "fix": "Initialize all variables before use.",
+      "example": "/* ❌ Wrong */\nint x;\nprintf(\"%d\", x);\n\n/* ✅ Correct */\nint x = 0;\nprintf(\"%d\", x);",
+      "did_you_mean": ["Initialize to 0"]
+    },
+    {
+      "type": "Include Error",
+      "keywords": ["no such file", "header not found"],
+      "simple": "Missing header file.",
+      "fix": "Include correct headers or check paths.",
+      "example": "/* ❌ Wrong */\n#include <missing.h>\n\n/* ✅ Correct */\n#include <stdio.h>",
+      "did_you_mean": ["Check #include"]
+    },
+    {
+      "type": "Undefined Behavior",
+      "keywords": ["undefined behavior", "UB"],
+      "simple": "Code invokes undefined behavior (e.g., signed overflow).",
+      "fix": "Avoid undefined actions; use unsigned types for overflow.",
+      "example": "/* ❌ Wrong */\nint x = INT_MAX; x++;\n\n/* ✅ Correct */\nunsigned int x = UINT_MAX; // Handle wraparound",
+      "did_you_mean": ["Use unsigned"]
+    }
+  ]
+}

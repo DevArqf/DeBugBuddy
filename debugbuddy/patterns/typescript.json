@@ -1,0 +1,86 @@
+{
+  "language": "typescript",
+  "version": "2.0",
+  "errors": [
+    {
+      "type": "Type Error (TS2345)",
+      "keywords": ["type error", "is not assignable to", "property does not exist"],
+      "simple": "Type mismatch between expected and provided types.",
+      "fix": "Check:\n• Variable declarations match usage\n• Function parameters and returns align\n• Interface implementations are complete\n• Use type guards for runtime checks",
+      "example": "// ❌ Wrong\nlet str: string = 5;\n\n// ✅ Correct\nlet num: number = 5;\nlet str: string = num.toString();",
+      "did_you_mean": ["Add type annotation", "Use as Type"]
+    },
+    {
+      "type": "Declaration Error (TS2304, TS1008)",
+      "keywords": ["cannot find name", "declaration expected"],
+      "simple": "Missing or incorrect declaration.",
+      "fix": "Ensure variables, functions, and imports are declared properly.",
+      "example": "// ❌ Wrong\nconsole.log(undefinedVar);\n\n// ✅ Correct\ndeclare const myVar: string = 'hello';\nconsole.log(myVar);",
+      "did_you_mean": ["Add declare", "Import module"]
+    },
+    {
+      "type": "Module Resolution Error (TS2307)",
+      "keywords": ["cannot find module", "module not found"],
+      "simple": "TypeScript can't locate the module.",
+      "fix": "Check:\n• tsconfig.json paths\n• node_modules installation\n• Import paths are correct\n• Use @types for third-party libs",
+      "example": "// ❌ Wrong\nimport 'missing-module';\n\n// ✅ Correct\nnpm install missing-module @types/missing-module",
+      "did_you_mean": ["npm install", "Check tsconfig"]
+    },
+    {
+      "type": "Interface Error (TS2322, TS2324)",
+      "keywords": ["does not conform to interface", "missing property"],
+      "simple": "Object doesn't match interface.",
+      "fix": "Add missing properties or make optional.",
+      "example": "// ❌ Wrong\ninterface Person { name: string; age: number; }\nconst p: Person = { name: 'John' };\n\n// ✅ Correct\ninterface Person { name: string; age?: number; }\nconst p: Person = { name: 'John' };",
+      "did_you_mean": ["Make property optional"]
+    },
+    {
+      "type": "Generic Type Error (TS2322)",
+      "keywords": ["generic type", "constraint violated"],
+      "simple": "Generic type constraints not met.",
+      "fix": "Ensure type arguments satisfy constraints.",
+      "example": "// ❌ Wrong\nfunction id<T extends string>(arg: T): T { return arg; }\nid<number>(5);\n\n// ✅ Correct\nfunction id<T extends string>(arg: T): T { return arg; }\nid<string>('hello');",
+      "did_you_mean": ["Satisfy constraint"]
+    },
+    {
+      "type": "Union Type Error (TS2322, TS2345)",
+      "keywords": ["union type", "type is not assignable"],
+      "simple": "Value doesn't match any union type.",
+      "fix": "Use type narrowing or adjust union.",
+      "example": "// ❌ Wrong\ntype StrNum = string | number;\nlet val: StrNum = true;\n\n// ✅ Correct\ntype StrNumBool = string | number | boolean;\nlet val: StrNumBool = true;",
+      "did_you_mean": ["Narrow type with if"]
+    },
+    {
+      "type": "Async Type Error (TS2322)",
+      "keywords": ["await", "promise type mismatch"],
+      "simple": "Async function return type doesn't match.",
+      "fix": "Specify Promise<T> for async functions.",
+      "example": "// ❌ Wrong\nasync function getData(): string {\n  return fetch('/api').then(r => r.json());\n}\n\n// ✅ Correct\nasync function getData(): Promise<string> {\n  const r = await fetch('/api');\n  return r.text();\n}",
+      "did_you_mean": ["Add Promise<T>"]
+    },
+    {
+      "type": "Syntax Error (TS1003, TS1005)",
+      "keywords": ["invalid syntax", "unexpected token"],
+      "simple": "Invalid TypeScript syntax.",
+      "fix": "Check for missing semicolons, brackets, or type annotations.",
+      "example": "// ❌ Wrong\nlet x: number = 'string';\n\n// ✅ Correct\nlet x: number = 5;",
+      "did_you_mean": ["Add type annotation"]
+    },
+    {
+      "type": "Null/Undefined Error (TS2532, TS2533)",
+      "keywords": ["null", "undefined", "strict null checks"],
+      "simple": "Accessing null or undefined value with strict null checks enabled.",
+      "fix": "Use optional chaining (?.) or type guards.",
+      "example": "// ❌ Wrong\nlet obj: {prop: string} | null = null;\nconsole.log(obj.prop);\n\n// ✅ Correct\nlet obj: {prop: string} | null = null;\nconsole.log(obj?.prop);",
+      "did_you_mean": ["Use optional chaining"]
+    },
+    {
+      "type": "Import/Export Error (TS2305, TS1192)",
+      "keywords": ["export was not found", "default export"],
+      "simple": "Import/export mismatch.",
+      "fix": "Match default/named exports correctly.",
+      "example": "// ❌ Wrong\nexport default function fn() {}\n// import fn;\n\n// ✅ Correct\nimport fn from './module';",
+      "did_you_mean": ["Check export type"]
+    }
+  ]
+}

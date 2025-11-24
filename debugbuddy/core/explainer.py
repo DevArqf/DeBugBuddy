@@ -2,23 +2,39 @@ import json
 import difflib
 from pathlib import Path
 from typing import Dict, List, Optional
+import builtins
 
 class ErrorExplainer:
 
-    def __init__(self):
+    def __init__(self, allowed_languages: Optional[List[str]] = None):
+        self.allowed_languages = allowed_languages or []
         self.patterns = self._load_patterns()
 
     def _load_patterns(self) -> Dict:
 
         patterns = {}
-        pattern_dir = Path(__file__).parent.parent / 'patterns'
+        pattern_dir = Path(__file__).parent.parent.parent / 'patterns'
 
-        for pattern_file in pattern_dir.glob('*.json'):
-            try:
-                with open(pattern_file, 'r', encoding='utf-8') as f:
-                    patterns[pattern_file.stem] = json.load(f)
-            except Exception as e:
-                print(f"Warning: Could not load {pattern_file}: {e}")
+        if not self.allowed_languages:
+            for pattern_file in pattern_dir.glob('*.json'):
+                try:
+                    with open(pattern_file, 'r', encoding='utf-8') as f:
+                        patterns[pattern_file.stem] = json.load(f)
+                except Exception as e:
+                    print(f"Warning: Could not load {pattern_file}: {e}")
+            return patterns
+
+        always_load = ['common']
+        load_langs = set(self.allowed_languages) | set(always_load)
+
+        for lang in load_langs:
+            pattern_file = pattern_dir / f'{lang}.json'
+            if pattern_file.exists():
+                try:
+                    with open(pattern_file, 'r', encoding='utf-8') as f:
+                        patterns[lang] = json.load(f)
+                except Exception as e:
+                    print(f"Warning: Could not load {pattern_file}: {e}")
 
         return patterns
 
@@ -68,72 +84,29 @@ class ErrorExplainer:
         return False
 
     def _generic_explanation(self, parsed_error: Dict) -> Dict:
-
-        error_type = parsed_error.get('type', 'Unknown Error')
-        message = parsed_error.get('message', '')
-
-        templates = {
-            'syntax': {
-                'simple': "🔍 There's a syntax mistake in your code.",
-                'fix': "Check the line mentioned for:\n  • Typos or misspellings\n  • Missing brackets, quotes, or colons\n  • Incorrect indentation",
-                'example': None
-            },
-            'name': {
-                'simple': "🔍 You're using something that doesn't exist or wasn't imported.",
-                'fix': "Make sure you:\n  • Defined it before using it\n  • Spelled it correctly\n  • Imported it if it's from a module",
-                'example': None
-            },
-            'type': {
-                'simple': "🔍 You're mixing incompatible data types or using something incorrectly.",
-                'fix': "Check:\n  • Are you mixing strings and numbers?\n  • Using the right function arguments?\n  • Object types match what you expect?",
-                'example': None
-            },
-            'import': {
-                'simple': "🔍 Python can't find the module you're trying to import.",
-                'fix': "Try:\n  • pip install <module_name>\n  • Check spelling\n  • Verify virtual environment is active",
-                'example': None
-            },
-            'attribute': {
-                'simple': "🔍 You're trying to access something that doesn't exist on this object.",
-                'fix': "Debug:\n  • Check if object is None\n  • Verify attribute name\n  • Print object to see what it is",
-                'example': None
-            },
-        }
-
-        for key, template in templates.items():
-            if key in error_type.lower():
-                return template
-
         return {
-            'simple': f"🔍 {error_type}: {message[:100]}",
-            'fix': "Debug steps:\n  • Read the error message carefully\n  • Check the line number mentioned\n  • Review your recent changes\n  • Search the error online if needed",
-            'example': None
+            'simple': 'Generic error occurred.',
+            'fix': 'Check the error message for clues.',
+            'example': '',
+            'did_you_mean': [],
         }
 
     def _get_name_suggestions(self, message: str, parsed_error: Dict) -> List[str]:
-
-        import re
-        match = re.search(r"name ['\"]([^'\"]+)['\"]", message)
+        match = re.search(r"name '([^']+)' is not defined", message)
         if not match:
             return []
 
         undefined_name = match.group(1)
 
-        suggestions = []
-
-        builtins = [
-            'print', 'len', 'range', 'list', 'dict', 'str', 'int', 'float',
-            'True', 'False', 'None', 'input', 'open', 'max', 'min', 'sum',
-            'abs', 'all', 'any', 'enumerate', 'zip', 'map', 'filter'
-        ]
-
+        dir_builtins = dir(builtins)
         close_matches = difflib.get_close_matches(
-            undefined_name, 
-            builtins, 
-            n=3, 
+            undefined_name,
+            dir_builtins,
+            n=3,
             cutoff=0.6
         )
 
+        suggestions = []
         if close_matches:
             suggestions.extend([f"Did you mean: {match}?" for match in close_matches])
 

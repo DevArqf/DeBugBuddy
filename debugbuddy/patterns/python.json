@@ -3,6 +3,398 @@
   "version": "2.0",
   "errors": [
     {
+      "type": "ArithmeticError",
+      "keywords": ["arithmetic error"],
+      "simple": "An error occurred during numeric calculations.",
+      "fix": "Check mathematical operations for invalid inputs like division by zero or overflow.",
+      "example": "# ❌ Wrong\nresult = 1 / 0\n\n# ✅ Correct\nif denominator != 0:\n    result = numerator / denominator\nelse:\n    result = None",
+      "did_you_mean": ["Validate numeric inputs", "Use try/except for calculations"]
+    },
+    {
+      "type": "AssertionError",
+      "keywords": ["assertion error"],
+      "simple": "An assert statement failed.",
+      "fix": "Verify the condition in the assert statement or remove it if not needed.",
+      "example": "# ❌ Wrong\nassert x > 0, 'x must be positive'\n\n# ✅ Correct\nif x <= 0:\n    raise ValueError('x must be positive')\nassert x > 0",
+      "did_you_mean": ["Check assert conditions", "Replace with explicit checks"]
+    },
+    {
+      "type": "AttributeError",
+      "keywords": ["attribute error", "has no attribute"],
+      "simple": "Trying to access an attribute that doesn't exist on an object.",
+      "fix": "Check object type and spelling of attribute name; use hasattr() to verify.",
+      "example": "# ❌ Wrong\nobj.nonexistent\n\n# ✅ Correct\nif hasattr(obj, 'attr'):\n    obj.attr\nelse:\n    print('Attribute missing')",
+      "did_you_mean": ["Verify attribute name", "Check object type"]
+    },
+    {
+      "type": "BaseException",
+      "keywords": ["base exception"],
+      "simple": "Base class for all exceptions; rarely raised directly.",
+      "fix": "Handle specific subclasses instead.",
+      "example": "",
+      "did_you_mean": ["Catch specific exceptions"]
+    },
+    {
+      "type": "BlockingIOError",
+      "keywords": ["blocking io error"],
+      "simple": "An I/O operation is blocked.",
+      "fix": "Use non-blocking I/O or increase timeouts.",
+      "example": "",
+      "did_you_mean": ["Set non-blocking mode"]
+    },
+    {
+      "type": "BrokenPipeError",
+      "keywords": ["broken pipe"],
+      "simple": "Write to a pipe that has been closed.",
+      "fix": "Check if the pipe is still open before writing.",
+      "example": "",
+      "did_you_mean": ["Verify pipe status"]
+    },
+    {
+      "type": "BufferError",
+      "keywords": ["buffer error"],
+      "simple": "Buffer-related operation failed.",
+      "fix": "Ensure buffer sizes are appropriate.",
+      "example": "",
+      "did_you_mean": ["Adjust buffer size"]
+    },
+    {
+      "type": "BytesWarning",
+      "keywords": ["bytes warning"],
+      "simple": "Warning about bytes/bytearray usage.",
+      "fix": "Follow deprecation advice.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "ChildProcessError",
+      "keywords": ["child process error"],
+      "simple": "Error in subprocess creation.",
+      "fix": "Check command and permissions.",
+      "example": "",
+      "did_you_mean": ["Validate subprocess args"]
+    },
+    {
+      "type": "ConnectionAbortedError",
+      "keywords": ["connection aborted"],
+      "simple": "Connection aborted by peer.",
+      "fix": "Handle network interruptions.",
+      "example": "",
+      "did_you_mean": ["Add retry logic"]
+    },
+    {
+      "type": "ConnectionError",
+      "keywords": ["connection error"],
+      "simple": "General connection failure.",
+      "fix": "Verify network and endpoint.",
+      "example": "",
+      "did_you_mean": ["Check connectivity"]
+    },
+    {
+      "type": "ConnectionRefusedError",
+      "keywords": ["connection refused"],
+      "simple": "Connection refused by server.",
+      "fix": "Ensure server is running and accessible.",
+      "example": "",
+      "did_you_mean": ["Start server"]
+    },
+    {
+      "type": "ConnectionResetError",
+      "keywords": ["connection reset"],
+      "simple": "Connection reset by peer.",
+      "fix": "Implement reconnection.",
+      "example": "",
+      "did_you_mean": ["Add error handling"]
+    },
+    {
+      "type": "DeprecationWarning",
+      "keywords": ["deprecation warning"],
+      "simple": "Feature is deprecated.",
+      "fix": "Update to non-deprecated alternative.",
+      "example": "",
+      "did_you_mean": ["Check docs for replacement"]
+    },
+    {
+      "type": "EOFError",
+      "keywords": ["eof error", "EOF when reading a line"],
+      "simple": "End of file reached unexpectedly.",
+      "fix": "Check input data completeness.",
+      "example": "# ❌ Wrong\ninput()\n\n# ✅ Correct\ntry:\n    data = input()\nexcept EOFError:\n    data = ''",
+      "did_you_mean": ["Handle empty input"]
+    },
+    {
+      "type": "Ellipsis",
+      "keywords": ["ellipsis"],
+      "simple": "Not an error; special value ...",
+      "fix": "",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "EncodingWarning",
+      "keywords": ["encoding warning"],
+      "simple": "Encoding issue warning.",
+      "fix": "Specify correct encoding.",
+      "example": "",
+      "did_you_mean": ["Use utf-8"]
+    },
+    {
+      "type": "EnvironmentError",
+      "keywords": ["environment error"],
+      "simple": "OS-level error.",
+      "fix": "Check system resources.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "Exception",
+      "keywords": ["exception"],
+      "simple": "Base class for exceptions.",
+      "fix": "Catch specific types.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "FileExistsError",
+      "keywords": ["file exists"],
+      "simple": "File already exists.",
+      "fix": "Check if file exists before creating.",
+      "example": "# ❌ Wrong\nopen('file.txt', 'x')\n\n# ✅ Correct\nif not os.path.exists('file.txt'):\n    open('file.txt', 'x')",
+      "did_you_mean": ["Use 'w' mode instead"]
+    },
+    {
+      "type": "FileNotFoundError",
+      "keywords": ["file not found", "no such file"],
+      "simple": "File or directory doesn't exist.",
+      "fix": "Verify path and existence with os.path.exists().",
+      "example": "# ❌ Wrong\nwith open('missing.txt') as f:\n    content = f.read()\n\n# ✅ Correct\nimport os\nfile_path = 'missing.txt'\nif os.path.exists(file_path):\n    with open(file_path) as f:\n        content = f.read()\nelse:\n    print(f'File not found: {file_path}')\n    print(f'Current dir: {os.getcwd()}')",
+      "did_you_mean": ["Check file exists", "Use absolute path", "Verify current directory"]
+    },
+    {
+      "type": "FloatingPointError",
+      "keywords": ["floating point error"],
+      "simple": "Floating-point arithmetic issue.",
+      "fix": "Use decimal module for precision.",
+      "example": "",
+      "did_you_mean": ["Import decimal"]
+    },
+    {
+      "type": "FutureWarning",
+      "keywords": ["future warning"],
+      "simple": "Future change warning.",
+      "fix": "Update code to avoid deprecation.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "GeneratorExit",
+      "keywords": ["generator exit"],
+      "simple": "Generator closed.",
+      "fix": "Handle in __del__ or close().",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "ImportError",
+      "keywords": ["import error", "no module named"],
+      "simple": "Module cannot be imported.",
+      "fix": "Install module or check name.",
+      "example": "# ❌ Wrong\nimport missing_module\n\n# ✅ Correct\ntry:\n    import missing_module\nexcept ImportError:\n    print('Install with pip')",
+      "did_you_mean": ["pip install module", "Check spelling"]
+    },
+    {
+      "type": "IndentationError",
+      "keywords": ["unexpected indent", "expected an indented block", "unindent"],
+      "simple": "Your code indentation is inconsistent - Python uses spaces to group code blocks.",
+      "fix": "Fix your indentation:\n  • Use 4 spaces per level (not tabs)\n  • All code in same block must align perfectly\n  • After if/for/def/class, indent the next line\n  • Don't mix tabs and spaces",
+      "example": "# ❌ Wrong\ndef greet():\nprint('hello')  # Not indented!\n\n# ✅ Correct\ndef greet():\n    print('hello')  # 4 spaces",
+      "did_you_mean": ["Add 4 spaces before the line", "Remove extra spaces", "Use consistent spacing"]
+    },
+    {
+      "type": "IndexError",
+      "keywords": ["index error", "list index out of range"],
+      "simple": "List index is out of range.",
+      "fix": "Check list length before accessing.",
+      "example": "# ❌ Wrong\nlst = [1,2]\nprint(lst[2])\n\n# ✅ Correct\nlst = [1,2]\nif len(lst) > 2:\n    print(lst[2])\nelse:\n    print('Index too high')",
+      "did_you_mean": ["Use len() check", "Handle with try/except"]
+    },
+    {
+      "type": "InterruptedError",
+      "keywords": ["interrupted error"],
+      "simple": "System call interrupted.",
+      "fix": "Retry the operation.",
+      "example": "",
+      "did_you_mean": ["Add retry"]
+    },
+    {
+      "type": "IsADirectoryError",
+      "keywords": ["is a directory"],
+      "simple": "Operation not allowed on directory.",
+      "fix": "Use appropriate mode for directories.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "KeyError",
+      "keywords": ["key error"],
+      "simple": "Dictionary key doesn't exist.",
+      "fix": "Use get() or check with in.",
+      "example": "# ❌ Wrong\nd = {'a':1}\nprint(d['b'])\n\n# ✅ Correct\nd = {'a':1}\nprint(d.get('b', 'Not found'))",
+      "did_you_mean": ["Use dict.get()", "'key' in dict"]
+    },
+    {
+      "type": "KeyboardInterrupt",
+      "keywords": ["keyboard interrupt"],
+      "simple": "User interrupted execution (Ctrl+C).",
+      "fix": "Handle gracefully with try/except.",
+      "example": "# ✅ Correct\ntry:\n    while True:\n        pass\nexcept KeyboardInterrupt:\n    print('Interrupted')",
+      "did_you_mean": ["Add signal handling"]
+    },
+    {
+      "type": "LookupError",
+      "keywords": ["lookup error"],
+      "simple": "Base for KeyError and IndexError.",
+      "fix": "Handle specific subclasses.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "MemoryError",
+      "keywords": ["memory error", "out of memory"],
+      "simple": "Out of memory.",
+      "fix": "Optimize data usage or increase memory.",
+      "example": "",
+      "did_you_mean": ["Process in chunks"]
+    },
+    {
+      "type": "ModuleNotFoundError",
+      "keywords": ["module not found"],
+      "simple": "Module cannot be found.",
+      "fix": "Install or check PYTHONPATH.",
+      "example": "# ❌ Wrong\nimport nonexistent\n\n# ✅ Correct\ntry:\n    import nonexistent\nexcept ModuleNotFoundError:\n    print('Install module')",
+      "did_you_mean": ["pip install", "Check path"]
+    },
+    {
+      "type": "NameError",
+      "keywords": ["name", "is not defined"],
+      "simple": "You're trying to use something that doesn't exist yet - Python doesn't know what this is.",
+      "fix": "Check these common causes:\n  • Typo in the variable/function name?\n  • Did you define it before using it?\n  • Need to import it from a module?\n  • Deleted or commented it out accidentally?",
+      "example": "# ❌ Wrong\nprint(message)\n\n# ✅ Correct\nmessage = 'Hello'\nprint(message)",
+      "did_you_mean": ["Define variable", "Check spelling", "Import module"]
+    },
+    {
+      "type": "NotADirectoryError",
+      "keywords": ["not a directory"],
+      "simple": "Operation expected directory but found file.",
+      "fix": "Verify path type.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "NotImplementedError",
+      "keywords": ["not implemented"],
+      "simple": "Method not implemented.",
+      "fix": "Implement the method.",
+      "example": "",
+      "did_you_mean": ["Override method"]
+    },
+    {
+      "type": "OSError",
+      "keywords": ["os error", "permission denied"],
+      "simple": "OS operation failed.",
+      "fix": "Check permissions and paths.",
+      "example": "",
+      "did_you_mean": ["Run with sudo"]
+    },
+    {
+      "type": "OverflowError",
+      "keywords": ["overflow error"],
+      "simple": "Arithmetic overflow.",
+      "fix": "Use larger types or check ranges.",
+      "example": "",
+      "did_you_mean": ["Use int64"]
+    },
+    {
+      "type": "PendingDeprecationWarning",
+      "keywords": ["pending deprecation"],
+      "simple": "Pending deprecation.",
+      "fix": "Update code.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "PermissionError",
+      "keywords": ["permission denied", "EACCES"],
+      "simple": "You don't have permission to access this file or resource.",
+      "fix": "Try:\n• Run with admin/sudo privileges\n• Check file permissions\n• Make sure file isn't locked by another program\n• Check if you own the file",
+      "example": "# ❌ Wrong\nopen('/root/file.txt', 'r')\n\n# ✅ Correct\nimport os\nif os.access('/root/file.txt', os.R_OK):\n    with open('/root/file.txt') as f:\n        pass",
+      "did_you_mean": ["chmod file", "Run as admin"]
+    },
+    {
+      "type": "ProcessLookupError",
+      "keywords": ["process lookup"],
+      "simple": "Process not found.",
+      "fix": "Verify PID.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "RecursionError",
+      "keywords": ["maximum recursion depth exceeded"],
+      "simple": "Your function is calling itself too many times - missing or wrong base case.",
+      "fix": "Fix infinite recursion:\n  • Add a base case (stopping condition)\n  • Make sure base case is reachable\n  • Verify recursive calls move toward base case\n  • Consider using iteration instead\n  • Increase recursion limit only if necessary",
+      "example": "# ❌ Wrong (no base case)\ndef countdown(n):\n    print(n)\n    countdown(n - 1)  # Never stops!\n\n# ✅ Correct (with base case)\ndef countdown(n):\n    if n <= 0:  # Base case!\n        print('Done')\n        return\n    print(n)\n    countdown(n - 1)",
+      "did_you_mean": ["Add base case", "Check stopping condition", "Use loop instead"]
+    },
+    {
+      "type": "ReferenceError",
+      "keywords": ["reference error"],
+      "simple": "Weak reference expired.",
+      "fix": "Recreate reference.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "ResourceWarning",
+      "keywords": ["resource warning"],
+      "simple": "Resource not closed.",
+      "fix": "Use context managers.",
+      "example": "",
+      "did_you_mean": ["Use with statement"]
+    },
+    {
+      "type": "RuntimeError",
+      "keywords": ["runtime error"],
+      "simple": "General runtime issue.",
+      "fix": "Debug specific cause.",
+      "example": "",
+      "did_you_mean": ["Check runtime conditions"]
+    },
+    {
+      "type": "RuntimeWarning",
+      "keywords": ["runtime warning"],
+      "simple": "Suspicious runtime behavior.",
+      "fix": "Review code.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "StopAsyncIteration",
+      "keywords": ["stop async iteration"],
+      "simple": "Async iterator exhausted.",
+      "fix": "Handle in async code.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "StopIteration",
+      "keywords": ["stop iteration"],
+      "simple": "Iterator exhausted.",
+      "fix": "Normal for iterators.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
       "type": "SyntaxError",
       "keywords": ["invalid syntax", "unexpected indent", "EOF while scanning"],
       "simple": "🔍 There's a syntax mistake in your code - Python can't understand what you wrote.",
@@ -11,84 +403,124 @@
       "did_you_mean": ["Check for missing colons", "Look for unclosed brackets", "Verify indentation"]
     },
     {
-      "type": "IndentationError",
-      "keywords": ["unexpected indent", "expected an indented block", "unindent"],
-      "simple": "🔍 Your code indentation is inconsistent - Python uses spaces to group code blocks.",
-      "fix": "Fix your indentation:\n  • Use 4 spaces per level (not tabs)\n  • All code in same block must align perfectly\n  • After if/for/def/class, indent the next line\n  • Don't mix tabs and spaces",
-      "example": "# ❌ Wrong\ndef greet():\nprint('hello')  # Not indented!\n\n# ✅ Correct\ndef greet():\n    print('hello')  # 4 spaces",
-      "did_you_mean": ["Add 4 spaces before the line", "Remove extra spaces", "Use consistent spacing"]
+      "type": "SyntaxWarning",
+      "keywords": ["syntax warning"],
+      "simple": "Suspicious syntax.",
+      "fix": "Correct code.",
+      "example": "",
+      "did_you_mean": []
     },
     {
-      "type": "NameError",
-      "keywords": ["name", "is not defined"],
-      "simple": "🔍 You're trying to use something that doesn't exist yet - Python doesn't know what this is.",
-      "fix": "Check these common causes:\n  • Typo in the variable/function name?\n  • Did you define it before using it?\n  • Need to import it from a module?\n  • Deleted or commented it out accidentally?",
-      "example": "# ❌ Wrong\nprint(message)  # message not defined!\n\n# ✅ Correct\nmessage = 'Hello'\nprint(message)  # Define first\n\n# ✅ Or import it\nfrom config import message\nprint(message)",
-      "did_you_mean": ["Define the variable first", "Check spelling", "Import from module"]
+      "type": "SystemError",
+      "keywords": ["system error"],
+      "simple": "Internal system error.",
+      "fix": "Report bug.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "SystemExit",
+      "keywords": ["system exit"],
+      "simple": "Program exit requested.",
+      "fix": "Handle with except.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "TabError",
+      "keywords": ["tab error"],
+      "simple": "Inconsistent tab/space mix.",
+      "fix": "Use spaces only.",
+      "example": "",
+      "did_you_mean": ["Convert tabs to spaces"]
+    },
+    {
+      "type": "TimeoutError",
+      "keywords": ["timeout", "timed out"],
+      "simple": "The operation took too long and was cancelled.",
+      "fix": "Options:\n• Increase timeout duration\n• Check if server is slow/down\n• Check network connection\n• Optimize your query/request",
+      "example": "# ❌ Wrong\nsocket.settimeout(1)\n\n# ✅ Correct\nsocket.settimeout(10)",
+      "did_you_mean": ["Increase timeout", "Optimize code"]
     },
     {
       "type": "TypeError",
-      "keywords": ["unsupported operand", "not callable", "takes", "positional argument", "NoneType"],
-      "simple": "🔍 You're trying to use something in the wrong way - mixing incompatible types or wrong function usage.",
-      "fix": "Common type mistakes:\n  • Can't add string + number (use str() or int())\n  • Calling something that's not a function\n  • Wrong number of function arguments\n  • Trying to modify immutable types (tuples, strings)\n  • Object is None (returned nothing)",
-      "example": "# ❌ Wrong\nage = '25'\nprint(age + 5)  # Can't add string + number\n\n# ✅ Correct\nage = '25'\nprint(int(age) + 5)  # Convert to int\n# OR\nprint(age + str(5))  # Convert to string",
-      "did_you_mean": ["Convert types: str(), int(), float()", "Check function arguments", "Verify return values"]
+      "keywords": ["type error", "not callable"],
+      "simple": "Wrong object type used.",
+      "fix": "Check types with isinstance().",
+      "example": "# ❌ Wrong\n'hello' + 5\n\n# ✅ Correct\n'hello ' + str(5)",
+      "did_you_mean": ["Convert types", "Check function args"]
     },
     {
-      "type": "AttributeError",
-      "keywords": ["has no attribute", "'NoneType' object", "no attribute"],
-      "simple": "🔍 You're trying to access something that doesn't exist on this object, or the object is None.",
-      "fix": "Debug steps:\n  • Print the object to see what it actually is\n  • Check if it's None (function returned nothing)\n  • Verify the attribute name spelling\n  • Make sure you're using the right object type\n  • Check if module was imported correctly",
-      "example": "# ❌ Wrong\nresult = None\nresult.upper()  # None has no .upper()!\n\n# ✅ Correct\nresult = get_data()\nif result is not None:\n    result.upper()\nelse:\n    print('No data returned')",
-      "did_you_mean": ["Check if object is None", "Print object type", "Verify attribute exists"]
+      "type": "UnboundLocalError",
+      "keywords": ["unbound local"],
+      "simple": "Local variable referenced before assignment.",
+      "fix": "Declare global or assign before use.",
+      "example": "# ❌ Wrong\ndef func():\n    print(x)\n    x = 1\n\n# ✅ Correct\ndef func():\n    global x\n    print(x)\n    x = 1",
+      "did_you_mean": ["Use global/nonlocal", "Assign default"]
     },
     {
-      "type": "ImportError",
-      "keywords": ["No module named", "cannot import"],
-      "simple": "🔍 Python can't find the module you're trying to import - it's not installed or doesn't exist.",
-      "fix": "Solutions:\n  • Install it: pip install <module_name>\n  • Check spelling of module name\n  • Verify you're in the right virtual environment\n  • For your own modules, check file location\n  • Check if __init__.py exists in package folder",
-      "example": "# ❌ Error\nimport requests  # Not installed!\n\n# ✅ Fix\n# In terminal:\n# pip install requests\n\n# Then import works:\nimport requests",
-      "did_you_mean": ["Run: pip install <module>", "Check module spelling", "Activate virtual environment"]
+      "type": "UnicodeDecodeError",
+      "keywords": ["unicode decode"],
+      "simple": "Invalid byte sequence for encoding.",
+      "fix": "Specify correct encoding.",
+      "example": "# ❌ Wrong\nopen('file.txt', 'r')\n\n# ✅ Correct\nopen('file.txt', 'r', encoding='utf-8')",
+      "did_you_mean": ["Add encoding='utf-8'"]
     },
     {
-      "type": "ModuleNotFoundError",
-      "keywords": ["No module named"],
-      "simple": "🔍 The module you want doesn't exist or isn't installed in your environment.",
-      "fix": "Quick fixes:\n  • Install: pip install <module_name>\n  • Check if you're in correct virtual environment\n  • For your own module: verify file exists\n  • Ensure __init__.py exists in package folders\n  • Check PYTHONPATH if using custom locations",
-      "example": "# If error says: No module named 'pandas'\n\n# Fix in terminal:\npip install pandas\n\n# Or for specific version:\npip install pandas==2.0.0",
-      "did_you_mean": ["Install with pip", "Check venv is activated", "Verify file path"]
+      "type": "UnicodeEncodeError",
+      "keywords": ["unicode encode"],
+      "simple": "Cannot encode character.",
+      "fix": "Handle surrogates or use errors='ignore'.",
+      "example": "",
+      "did_you_mean": ["Use errors='replace'"]
     },
     {
-      "type": "IndexError",
-      "keywords": ["list index out of range", "tuple index out of range"],
-      "simple": "🔍 You're trying to access a list item that doesn't exist - the index is too high.",
-      "fix": "Remember:\n  • Python counts from 0 (first item is [0])\n  • Check if list is empty before accessing\n  • Use len(list) to check size\n  • Last item is list[-1] or list[len(list)-1]\n  • Can't access list[5] if list only has 3 items",
-      "example": "# ❌ Wrong\nfruits = ['apple', 'banana']\nprint(fruits[5])  # Only 2 items!\n\n# ✅ Correct\nfruits = ['apple', 'banana']\nif len(fruits) > 5:\n    print(fruits[5])\nelse:\n    print('Not enough items')",
-      "did_you_mean": ["Check list length first", "Use len()", "Remember: starts at 0"]
+      "type": "UnicodeError",
+      "keywords": ["unicode error"],
+      "simple": "Unicode related error.",
+      "fix": "Check encoding.",
+      "example": "",
+      "did_you_mean": []
     },
     {
-      "type": "KeyError",
-      "keywords": ["KeyError"],
-      "simple": "🔍 You're trying to access a dictionary key that doesn't exist.",
-      "fix": "Safe ways to access dict keys:\n  • Check first: if key in dict:\n  • Use .get(): dict.get(key, default)\n  • Print dict.keys() to see available keys\n  • Check for typos in key name\n  • Remember: keys are case-sensitive",
-      "example": "# ❌ Wrong\nuser = {'name': 'Alice'}\nprint(user['age'])  # Key doesn't exist!\n\n# ✅ Correct options\n# Option 1: Check first\nif 'age' in user:\n    print(user['age'])\n\n# Option 2: Use .get()\nage = user.get('age', 'Unknown')\nprint(age)  # Returns 'Unknown' if missing",
-      "did_you_mean": ["Use dict.get()", "Check if key exists", "Print dict.keys()"]
+      "type": "UnicodeTranslateError",
+      "keywords": ["unicode translate"],
+      "simple": "Translation table error.",
+      "fix": "Verify table.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "UnicodeWarning",
+      "keywords": ["unicode warning"],
+      "simple": "Unicode issue warning.",
+      "fix": "Fix encoding.",
+      "example": "",
+      "did_you_mean": []
+    },
+    {
+      "type": "UserWarning",
+      "keywords": ["user warning"],
+      "simple": "User-issued warning.",
+      "fix": "Review message.",
+      "example": "",
+      "did_you_mean": []
     },
     {
       "type": "ValueError",
-      "keywords": ["invalid literal", "could not convert"],
-      "simple": "🔍 You're trying to convert something that can't be converted - wrong data format.",
-      "fix": "Common value errors:\n  • Can't convert 'abc' to int (not a number)\n  • Empty strings can't be converted\n  • Check data before converting\n  • Use try/except for safe conversion\n  • Validate input format",
-      "example": "# ❌ Wrong\nage = input('Age: ')  # User types 'twenty'\nage_num = int(age)  # Can't convert!\n\n# ✅ Correct\nage = input('Age: ')\ntry:\n    age_num = int(age)\nexcept ValueError:\n    print('Please enter a number')\n    age_num = 0",
-      "did_you_mean": ["Use try/except", "Validate input first", "Check string format"]
+      "keywords": ["value error"],
+      "simple": "Invalid value for operation.",
+      "fix": "Validate inputs.",
+      "example": "# ❌ Wrong\nint('abc')\n\n# ✅ Correct\ntry:\n    int('abc')\nexcept ValueError:\n    print('Invalid')",
+      "did_you_mean": ["Validate input", "Use try/except"]
     },
     {
-      "type": "FileNotFoundError",
-      "keywords": ["No such file or directory"],
-      "simple": "🔍 Python can't find the file you're trying to open - wrong path or file doesn't exist.",
-      "fix": "Debugging file paths:\n  • Check if file actually exists\n  • Verify spelling and extension (.txt, .json)\n  • Use absolute path: /full/path/to/file\n  • Check current directory: os.getcwd()\n  • Use os.path.exists() to test\n  • Watch out for Windows vs Linux paths",
-      "example": "# ❌ Wrong\nwith open('data.txt') as f:\n    content = f.read()\n\n# ✅ Correct\nimport os\n\nfile_path = 'data.txt'\nif os.path.exists(file_path):\n    with open(file_path) as f:\n        content = f.read()\nelse:\n    print(f'File not found: {file_path}')\n    print(f'Current dir: {os.getcwd()}')",
-      "did_you_mean": ["Check file exists", "Use absolute path", "Verify current directory"]
+      "type": "Warning",
+      "keywords": ["warning"],
+      "simple": "Base warning class.",
+      "fix": "Address specific warning.",
+      "example": "",
+      "did_you_mean": []
     },
     {
       "type": "ZeroDivisionError",
@@ -97,14 +529,6 @@
       "fix": "Prevent division by zero:\n  • Check denominator before dividing\n  • Handle edge cases\n  • Use try/except for safety\n  • Consider what should happen when divisor is 0",
       "example": "# ❌ Wrong\ntotal = 100\ncount = 0\naverage = total / count  # Division by zero!\n\n# ✅ Correct\ntotal = 100\ncount = 0\n\nif count > 0:\n    average = total / count\nelse:\n    average = 0  # or None, or handle differently\n    print('No items to average')",
       "did_you_mean": ["Check if divisor != 0", "Handle zero case", "Use try/except"]
-    },
-    {
-      "type": "RecursionError",
-      "keywords": ["maximum recursion depth exceeded"],
-      "simple": "🔍 Your function is calling itself too many times - missing or wrong base case.",
-      "fix": "Fix infinite recursion:\n  • Add a base case (stopping condition)\n  • Make sure base case is reachable\n  • Verify recursive calls move toward base case\n  • Consider using iteration instead\n  • Increase recursion limit only if necessary",
-      "example": "# ❌ Wrong (no base case)\ndef countdown(n):\n    print(n)\n    countdown(n - 1)  # Never stops!\n\n# ✅ Correct (with base case)\ndef countdown(n):\n    if n <= 0:  # Base case!\n        print('Done')\n        return\n    print(n)\n    countdown(n - 1)",
-      "did_you_mean": ["Add base case", "Check stopping condition", "Use loop instead"]
     }
   ]
 }

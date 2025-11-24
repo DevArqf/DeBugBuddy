@@ -1,36 +1,70 @@
 {
-    "language": "javascript",
-    "version": "1.0",
-    "errors": [
-      {
-        "type": "ReferenceError",
-        "keywords": ["is not defined", "cannot access"],
-        "simple": "You're using a variable that doesn't exist or hasn't been declared yet.",
-        "fix": "Check:\n• Did you declare the variable with let/const/var?\n• Is it spelled correctly?\n• Are you trying to use it before declaring it?\n• Is it in scope?"
-      },
-      {
-        "type": "TypeError",
-        "keywords": ["is not a function", "cannot read property", "undefined"],
-        "simple": "You're trying to use something in the wrong way.",
-        "fix": "Common causes:\n• Calling something that's not a function\n• Accessing property of null/undefined\n• Wrong data type\n• Check if object exists before using it"
-      },
-      {
-        "type": "SyntaxError",
-        "keywords": ["Unexpected token", "Unexpected identifier"],
-        "simple": "There's a syntax mistake in your code.",
-        "fix": "Look for:\n• Missing closing brackets ) ] }\n• Missing commas in objects/arrays\n• Missing quotes around strings\n• Using reserved keywords incorrectly"
-      },
-      {
-        "type": "RangeError",
-        "keywords": ["Maximum call stack size exceeded", "Invalid array length"],
-        "simple": "You've exceeded JavaScript's limits.",
-        "fix": "Check for:\n• Infinite recursion (function calling itself)\n• Creating arrays that are too large\n• Add base case to recursive functions"
-      },
-      {
-        "type": "URIError",
-        "keywords": ["URI malformed"],
-        "simple": "The URL or URI you're trying to encode/decode is invalid.",
-        "fix": "Make sure:\n• URL is properly formatted\n• Special characters are encoded\n• Use encodeURIComponent() for URL parts"
-      }
-    ]
-  }
+  "language": "javascript",
+  "version": "2.0",
+  "errors": [
+    {
+      "type": "AggregateError",
+      "keywords": ["aggregate error"],
+      "simple": "Multiple errors occurred.",
+      "fix": "Handle individual errors in promises.",
+      "example": "// ❌ Wrong\nPromise.any([Promise.reject('err1'), Promise.reject('err2')])\n\n// ✅ Correct\nPromise.allSettled([promise1, promise2]).then(results => {\n  results.forEach((result, index) => {\n    if (result.status === 'rejected') {\n      console.error(`Error ${index}:`, result.reason);\n    }\n  });\n});",
+      "did_you_mean": ["Use allSettled"]
+    },
+    {
+      "type": "EvalError",
+      "keywords": ["eval error"],
+      "simple": "Error in eval() function.",
+      "fix": "Avoid eval(); use safer alternatives.",
+      "example": "// ❌ Wrong\neval('invalid code');\n\n// ✅ Correct\n// Use Function constructor or avoid dynamic code",
+      "did_you_mean": ["Avoid eval"]
+    },
+    {
+      "type": "InternalError",
+      "keywords": ["internal error"],
+      "simple": "Internal JS engine error.",
+      "fix": "Update runtime or report bug.",
+      "example": "",
+      "did_you_mean": ["Update JS engine"]
+    },
+    {
+      "type": "RangeError",
+      "keywords": ["Maximum call stack size exceeded", "Invalid array length"],
+      "simple": "You've exceeded JavaScript's limits.",
+      "fix": "Check for:\n• Infinite recursion (function calling itself)\n• Creating arrays that are too large\n• Add base case to recursive functions",
+      "example": "// ❌ Wrong\nfunction recurse() { recurse(); }\nrecurse();\n\n// ✅ Correct\nfunction recurse(n) {\n  if (n <= 0) return;\n  recurse(n - 1);\n}",
+      "did_you_mean": ["Add base case", "Limit array size"]
+    },
+    {
+      "type": "ReferenceError",
+      "keywords": ["is not defined", "cannot access"],
+      "simple": "You're using a variable that doesn't exist or hasn't been declared yet.",
+      "fix": "Check:\n• Did you declare the variable with let/const/var?\n• Is it spelled correctly?\n• Are you trying to use it before declaring it?\n• Is it in scope?",
+      "example": "// ❌ Wrong\nconsole.log(undefinedVar);\n\n// ✅ Correct\nlet myVar = 5;\nconsole.log(myVar);",
+      "did_you_mean": ["Declare with let/const", "Check scope"]
+    },
+    {
+      "type": "SyntaxError",
+      "keywords": ["Unexpected token", "Unexpected identifier"],
+      "simple": "There's a syntax mistake in your code.",
+      "fix": "Look for:\n• Missing closing brackets ) ] }\n• Missing commas in objects/arrays\n• Missing quotes around strings\n• Using reserved keywords incorrectly",
+      "example": "// ❌ Wrong\nif (x > 5 {\n  console.log('yes');\n}\n\n// ✅ Correct\nif (x > 5) {\n  console.log('yes');\n}",
+      "did_you_mean": ["Add missing ) or {", "Check quotes"]
+    },
+    {
+      "type": "TypeError",
+      "keywords": ["is not a function", "cannot read property", "undefined"],
+      "simple": "You're trying to use something in the wrong way.",
+      "fix": "Common causes:\n• Calling something that's not a function\n• Accessing property of null/undefined\n• Wrong data type\n• Check if object exists before using it",
+      "example": "// ❌ Wrong\nconst obj = null;\nobj.prop;\n\n// ✅ Correct\nif (obj && obj.prop) {\n  console.log(obj.prop);\n} else {\n  console.log('Property missing');\n}",
+      "did_you_mean": ["Check null/undefined", "Verify type"]
+    },
+    {
+      "type": "URIError",
+      "keywords": ["URI malformed"],
+      "simple": "The URL or URI you're trying to encode/decode is invalid.",
+      "fix": "Make sure:\n• URL is properly formatted\n• Special characters are encoded\n• Use encodeURIComponent() for URL parts",
+      "example": "// ❌ Wrong\ndecodeURIComponent('%');\n\n// ✅ Correct\nconst encoded = encodeURIComponent('hello world');\nconst decoded = decodeURIComponent(encoded);",
+      "did_you_mean": ["Use encodeURIComponent"]
+    }
+  ]
+}

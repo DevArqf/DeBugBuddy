@@ -43,7 +43,7 @@ Bug Description
 Clear description of the bug
 
 To Reproduce
-1. Run `db explain "..."`
+1. Run `dbug explain "..."`
 2. See error
 
 Expected Behavior
@@ -52,7 +52,7 @@ What should happen
 Environment
 - OS: macOS 13.0
 - Python: 3.10.0
-- DeBugBuddy: 0.1.2
+- DeBugBuddy: 0.2.2
 
 Additional Context
 Any other info
@@ -122,7 +122,7 @@ Example section:
 ### 4. Test It
 
 ```
-db explain "your error type here"
+dbug explain "your error type here"
 ```
 
 ## Adding Language Support
