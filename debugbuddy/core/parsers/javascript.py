@@ -1,6 +1,6 @@
-from .base import BaseParser
-from typing import Dict
 import re
+from typing import Dict, Optional
+from .base import BaseParser
 
 class JavaScriptParser(BaseParser):
     language = 'javascript'
@@ -14,7 +14,7 @@ class JavaScriptParser(BaseParser):
         'file_line': re.compile(r'at (.+) \((.+):(\d+):(\d+)\)'),
     }
 
-    def parse(self, text: str) -> Dict:
+    def parse(self, text: str) -> Optional[Dict]:
         result = super().parse(text)
 
         file_match = self.PATTERNS['file_line'].search(text)
@@ -31,4 +31,4 @@ class JavaScriptParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        return result
+        return result if result['type'] else None

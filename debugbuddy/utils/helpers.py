@@ -1,6 +1,7 @@
 import ast
+from pathlib import Path
 
-def _detect_all_errors(file_path):
+def detect_all_errors(file_path: Path):
     all_errors = []
 
     try:
@@ -41,5 +42,3 @@ def _detect_all_errors(file_path):
         return []
 
     return all_errors
-
-    pass

@@ -1,6 +1,6 @@
-from .base import BaseParser
-from typing import Dict
 import re
+from typing import Dict, Optional
+from .base import BaseParser
 
 class TypeScriptParser(BaseParser):
     language = 'typescript'
@@ -11,7 +11,7 @@ class TypeScriptParser(BaseParser):
         'module_error': re.compile(r'Cannot find module \'([^\']+)\''),
     }
 
-    def parse(self, text: str) -> Dict:
+    def parse(self, text: str) -> Optional[Dict]:
         result = super().parse(text)
 
         for error_type, pattern in self.PATTERNS.items():
@@ -21,4 +21,4 @@ class TypeScriptParser(BaseParser):
                 result['message'] = match.group(0)
                 return result
 
-        return result
+        return result if result['type'] else None

@@ -1,9 +1,9 @@
 import click
 from rich.console import Console
 from rich.prompt import Prompt
-from debugbuddy.core.trainer import PatternTrainer
-from debugbuddy.storage.config import ConfigManager
-from debugbuddy.models.training import TrainingData
+from ...core.trainer import PatternTrainer
+from ...storage.config import ConfigManager
+from ...models.training import TrainingData
 
 console = Console()
 
@@ -41,11 +41,11 @@ def train(interactive, language):
                 language=lang
             ))
             
-            console.print(f"[green]✓ Added example {len(examples)}[/green]\n")
+            console.print(f"[green]Added example {len(examples)}[/green]\n")
         
         pattern = trainer.train_pattern(examples)
         
-        console.print(f"\n[green]✨ Custom pattern created![/green]")
+        console.print(f"\n[green]Custom pattern created![/green]")
         console.print(f"[dim]Type: {pattern.type}[/dim]")
         console.print(f"[dim]Keywords: {', '.join(pattern.keywords)}[/dim]")
     
@@ -57,6 +57,6 @@ def train(interactive, language):
             console.print("[dim]Use --interactive to create one[/dim]")
             return
         
-        console.print("\n[bold cyan]📚 Custom Patterns[/bold cyan]\n")
+        console.print("\n[bold cyan]Custom Patterns[/bold cyan]\n")
         for i, pattern in enumerate(patterns, 1):
             console.print(f"{i}. [cyan]{pattern.type}[/cyan] [{pattern.language}]")

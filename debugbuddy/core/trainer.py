@@ -1,10 +1,13 @@
-from typing import Dict, List
+from typing import List
 from pathlib import Path
+import re
+import json
 from ..models.training import TrainingData
 from ..models.pattern import Pattern
 from ..storage.patterns import PatternManager
 
 class PatternTrainer:
+    
     def __init__(self, storage_manager):
         self.storage = storage_manager
         self.custom_patterns_dir = Path.home() / '.debugbuddy' / 'patterns' / 'custom'
@@ -36,29 +39,6 @@ class PatternTrainer:
         
         return pattern
     
-    def _extract_keywords(self, examples: List[TrainingData]) -> List[str]:
-        keywords = set()
-        for ex in examples:
-            words = re.findall(r'\w+', ex.error_text.lower())
-            keywords.update(words)
-        return list(keywords)[:10]
-    
-    def _determine_error_type(self, examples: List[TrainingData]) -> str:
-        return re.search(r'(\w+Error)', examples[0].error_text) .group(1) if re.search else 'Unknown'
-    
-    def _generate_explanation(self, examples: List[TrainingData]) -> str:
-        return examples[0].explanation
-    
-    def _generate_fix(self, examples: List[TrainingData]) -> str:
-        return examples[0].fix
-    
-    def _save_custom_pattern(self, pattern: Pattern):
-        lang_dir = self.custom_patterns_dir / f"{pattern.language}.json"
-        patterns = self.pattern_mgr.load_patterns(pattern.language) or []
-        patterns.append(pattern.__dict__)
-        with open(lang_dir, 'w') as f:
-            json.dump({'errors': patterns}, f)
-    
     def list_custom_patterns(self) -> List[Pattern]:
         patterns = []
         for file in self.custom_patterns_dir.glob('*.json'):
@@ -70,11 +50,40 @@ class PatternTrainer:
     
     def delete_custom_pattern(self, pattern_id: str) -> bool:
         for file in self.custom_patterns_dir.glob('*.json'):
-            with open(file, 'r') as f:
+            with open(file, 'r+') as f:
                 data = json.load(f)
-            errors = [p for p in data['errors'] if p['type'] + p['language'] != pattern_id]
-            if len(errors) < len(data['errors']):
-                with open(file, 'w') as f:
+                errors = [p for p in data['errors'] if p['type'] != pattern_id]
+                if len(errors) < len(data['errors']):
+                    f.seek(0)
                     json.dump({'errors': errors}, f)
-                return True
+                    f.truncate()
+                    return True
         return False
+
+    def _extract_keywords(self, examples: List[TrainingData]) -> List[str]:
+        keywords = set()
+        for ex in examples:
+            words = re.findall(r'\b\w+\b', ex.error_text.lower())
+            keywords.update(words)
+        return list(keywords)[:10]
+
+    def _determine_error_type(self, examples: List[TrainingData]) -> str:
+        common_type = re.search(r'(\w+Error)', examples[0].error_text)
+        return common_type.group(1) if common_type else 'CustomError'
+
+    def _generate_explanation(self, examples: List[TrainingData]) -> str:
+        return ' '.join(set(ex.explanation for ex in examples))
+
+    def _generate_fix(self, examples: List[TrainingData]) -> str:
+        return ' '.join(set(ex.fix for ex in examples))
+
+    def _save_custom_pattern(self, pattern: Pattern):
+        file_path = self.custom_patterns_dir / f"{pattern.language}.json"
+        patterns = []
+        if file_path.exists():
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                patterns = data.get('errors', [])
+        patterns.append(pattern.__dict__)
+        with open(file_path, 'w') as f:
+            json.dump({'errors': patterns}, f, indent=2)

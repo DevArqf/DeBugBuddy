@@ -1,13 +1,12 @@
-from .providers import get_provider
-from .prompts import get_explanation_prompt
+from typing import Dict, Optional
 from .base import BaseAIProvider
 from .openai import OpenAIProvider
 from .anthropic import AnthropicProvider
+from .prompts import ERROR_EXPLANATION_PROMPT
 
-__all__ = [
-    'get_provider', 
-    'get_explanation_prompt',
-    'BaseAIProvider',
-    'OpenAIProvider',
-    'AnthropicProvider'
-]
+def get_provider(provider_name: str, config: Dict[str, Any]) -> Optional[Any]:
+    if provider_name == "openai":
+        return OpenAIProvider(config.get("openai_api_key"), config)
+    elif provider_name == "anthropic":
+        return AnthropicProvider(config.get("anthropic_api_key"), config)
+    return None

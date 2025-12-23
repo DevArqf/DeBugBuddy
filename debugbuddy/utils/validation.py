@@ -1,3 +1,3 @@
-def validate_error_text(text):
-    return bool(text.strip())
-# more soon
+def validate_path(path):
+    if not Path(path).exists():
+        raise ValueError("Path does not exist")

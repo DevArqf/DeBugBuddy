@@ -2,11 +2,11 @@ import click
 import sys
 from rich.console import Console
 from rich.panel import Panel
-from debugbuddy.core.parsers import ErrorParser
-from debugbuddy.integrations.ai import get_provider
-from debugbuddy.storage.config import ConfigManager
-from debugbuddy.storage.history import HistoryManager
-from debugbuddy.core.explainer import ErrorExplainer
+from ...core.parsers import ErrorParser
+from ...core.explainer import ErrorExplainer
+from ...storage.history import HistoryManager
+from ...storage.config import ConfigManager
+from ...integrations.ai.base import get_provider
 
 console = Console()
 
@@ -24,9 +24,22 @@ def explain(error_input, file, ai, language):
     if not error_input:
         error_input = sys.stdin.read().strip()
 
+    if not error_input:
+        console.print("[yellow]No error provided[/yellow]")
+        console.print("[dim]Usage: dbug explain \"Your error message\"[/dim]")
+        console.print("[dim]Or pipe: python script.py 2>&1 | dbug explain[/dim]")
+        return
+
     if file:
-        with open(error_input, 'r') as f:
-            error_text = f.read().strip()
+        try:
+            with open(error_input, 'r', encoding='utf-8') as f:
+                error_text = f.read().strip()
+        except FileNotFoundError:
+            console.print(f"[red]File not found: {error_input}[/red]")
+            return
+        except Exception as e:
+            console.print(f"[red]Error reading file: {e}[/red]")
+            return
     else:
         error_text = error_input
 
@@ -34,21 +47,47 @@ def explain(error_input, file, ai, language):
 
     if not parsed:
         console.print("[yellow]Couldn't parse the error[/yellow]")
+        console.print("[dim]Try copying the exact error message[/dim]")
         return
 
     explanation = explainer.explain(parsed)
 
     if ai:
         provider_name = config_mgr.get('ai_provider', 'openai')
-        provider = get_provider(provider_name, config_mgr.get_all())
-        if provider:
-            ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
-            explanation['ai'] = ai_explain
+        api_key = config_mgr.get(f'{provider_name}_api_key')
+        if not api_key:
+            console.print(f"[yellow]No {provider_name.upper()} API key set. Run: dbug config {provider_name}_api_key YOUR_KEY[/yellow]")
+        else:
+            provider = get_provider(provider_name, config_mgr.get_all())
+            if provider:
+                ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
+                if ai_explain:
+                    explanation['ai'] = ai_explain
+                else:
+                    console.print("[yellow]AI explanation failed[/yellow]")
 
     history.add(parsed, explanation)
 
     title = f"DeBugBuddy {parsed['type']}"
+    if parsed.get('file') and parsed.get('line'):
+        title += f"\nFile: {parsed['file']}, Line {parsed['line']}"
+
     content = f"Error: {explanation['simple']}\n\nFix:\n{explanation['fix']}"
+
+    if 'example' in explanation and explanation['example']:
+        content += f"\n\nExample:\n{explanation['example']}"
+
+    if 'did_you_mean' in explanation:
+        dym = '\n'.join(f"• {s}" for s in explanation['did_you_mean'])
+        content += f"\n\nDid you mean?\n{dym}"
+
+    if 'suggestions' in explanation:
+        sugg = '\n'.join(f"• {s}" for s in explanation['suggestions'])
+        content += f"\n\nSuggestions:\n{sugg}"
+
+    if 'ai' in explanation:
+        content += f"\n\nAI Explanation:\n{explanation['ai']}"
+
     console.print(Panel(content, title=title, expand=False))
 
     similar = history.find_similar(parsed)

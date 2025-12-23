@@ -1,16 +1,4 @@
-from setuptools import setup, find_packages, find_namespace_packages
-from setuptools.command.install import install
-import subprocess
-import sys
-import os
-import time
-
-class PostInstallCommand(install):
-    def run(self):
-        install.run(self)
-
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+from setuptools import setup, find_packages
 
 setup(
     name="debugbuddy-cli",
@@ -21,9 +9,9 @@ setup(
     description="Your terminal's debugging companion - instant error explanations",
     long_description_content_type="text/markdown",
     url="https://github.com/DevArqf/DeBugBuddy",
-    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.2.2.tar.gz",
+    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.3.2.tar.gz",
     keywords = ['python', 'debugging', 'cli'],
-    packages=find_namespace_packages(include=['debugbuddy', 'debugbuddy.*']),
+    packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -65,9 +53,6 @@ setup(
     },
     include_package_data=True,
     package_data={
-        "debugbuddy": ["patterns/*.json", "data/*.json"],
-    },
-    cmdclass={
-        'install': PostInstallCommand,
+        "debugbuddy": ["patterns/*.json"],
     },
 )

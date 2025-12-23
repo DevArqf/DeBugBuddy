@@ -13,8 +13,7 @@ class BaseParser:
             'line': None,
             'language': self.language,
         }
-        # Common parsing logic
-        # For example, file_line = re.compile(r'File "([^"]+)", line (\d+)')
+
         file_match = re.search(r'File "([^"]+)", line (\d+)', text)
         if file_match:
             result['file'] = file_match.group(1)

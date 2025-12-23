@@ -1,14 +1,15 @@
 import click
 from rich.console import Console
 from rich.table import Table
-from debugbuddy.integrations.github.client import GitHubClient
-from debugbuddy.integrations.github.search import GitHubSearcher
-from debugbuddy.storage.config import ConfigManager
+from ...integrations.github.client import GitHubClient
+from ...integrations.github.search import GitHubSearcher
+from ...storage.config import ConfigManager
 
 console = Console()
 
 @click.group()
 def github():
+
     pass
 
 @github.command()
@@ -22,7 +23,7 @@ def search(error_text, language):
     client = GitHubClient(token)
     searcher = GitHubSearcher(client)
     
-    console.print(f"\n[bold cyan]🔍 Searching GitHub...[/bold cyan]\n")
+    console.print(f"\n[bold cyan]Searching GitHub...[/bold cyan]\n")
     
     solutions = searcher.find_solutions(error_text, language)
     
@@ -59,7 +60,7 @@ def report(error_text, repo):
     token = config.get('github_token')
     
     if not token:
-        console.print("[red]⚠ GitHub token not configured[/red]")
+        console.print("[red]GitHub token not configured[/red]")
         console.print("[dim]Set with: dbug config github_token YOUR_TOKEN[/dim]")
         return
     
@@ -70,4 +71,4 @@ def report(error_text, repo):
     
     issue = client.create_issue(repo, title, body, labels=['bug', 'debugbuddy'])
     
-    console.print(f"\n[green]✓ Issue created: {issue['html_url']}[/green]")
+    console.print(f"\n[green]Issue created: {issue['html_url']}[/green]")

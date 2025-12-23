@@ -1,11 +1,18 @@
+"""DeBugBuddy - Your terminal's debugging companion."""
+
+__version__ = "0.3.2"
+
 def __getattr__(name):
     if name == "ErrorParser":
-        from debugbuddy.core.parsers import ErrorParser
+        from .core.parsers import ErrorParser
         return ErrorParser
     elif name == "ErrorExplainer":
-        from debugbuddy.core.explainer import ErrorExplainer
+        from .core.explainer import ErrorExplainer
         return ErrorExplainer
     elif name == "ErrorPredictor":
-        from debugbuddy.core.predictor import ErrorPredictor
+        from .core.predictor import ErrorPredictor
         return ErrorPredictor
+    elif name == "PatternTrainer":
+        from .core.trainer import PatternTrainer
+        return PatternTrainer
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

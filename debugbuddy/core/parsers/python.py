@@ -1,6 +1,6 @@
-from .base import BaseParser
-from typing import Dict
 import re
+from typing import Dict, Optional
+from .base import BaseParser
 
 class PythonParser(BaseParser):
     language = 'python'
@@ -18,7 +18,7 @@ class PythonParser(BaseParser):
         'value_error': re.compile(r'ValueError: (.+)'),
     }
 
-    def parse(self, text: str) -> Dict:
+    def parse(self, text: str) -> Optional[Dict]:
         result = super().parse(text)
 
         error_match = self.PATTERNS['error_line'].search(text)
@@ -28,7 +28,7 @@ class PythonParser(BaseParser):
             return result
 
         for error_type, pattern in self.PATTERNS.items():
-            if error_type in ['traceback', 'error_line', 'file_line']:
+            if error_type in ['traceback', 'error_line']:
                 continue
             match = pattern.search(text)
             if match:
@@ -36,4 +36,4 @@ class PythonParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        return result
+        return result if result['type'] else None

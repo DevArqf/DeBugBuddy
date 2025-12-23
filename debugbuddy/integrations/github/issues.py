@@ -1,8 +1,8 @@
 from typing import List, Dict
 from .client import GitHubClient
-import requests
 
 class IssueManager:
+
     def __init__(self, client: GitHubClient):
         self.client = client
 

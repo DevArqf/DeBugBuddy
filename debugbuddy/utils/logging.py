@@ -2,4 +2,5 @@ import logging
 
 logger = logging.getLogger('debugbuddy')
 logger.setLevel(logging.INFO)
-# handlers below
+handler = logging.StreamHandler()
+logger.addHandler(handler)

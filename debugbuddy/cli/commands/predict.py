@@ -1,11 +1,12 @@
+# debugbuddy/cli/commands/predict.py
+"""Predict command implementation."""
+
 import click
 from pathlib import Path
 from rich.console import Console
 from rich.table import Table
-from debugbuddy.core.predictor import ErrorPredictor
-from debugbuddy.storage.config import ConfigManager
-from debugbuddy.integrations.github.search import GitHubSearcher
-from debugbuddy.integrations.github.client import GitHubClient
+from ...core.predictor import ErrorPredictor
+from ...storage.config import ConfigManager
 
 console = Console()
 
@@ -15,15 +16,14 @@ console = Console()
               help='Filter by severity level')
 @click.option('--limit', type=int, default=10, help='Maximum predictions to show')
 def predict(path, severity, limit):
-    github_client = GitHubClient()
-    github_searcher = GitHubSearcher(github_client)
+    """Predict potential errors in code."""
     
     config = ConfigManager()
-    predictor = ErrorPredictor(config, github_searcher)
+    predictor = ErrorPredictor(config)
     
     path = Path(path) if path else Path.cwd()
     
-    console.print(f"\n[bold cyan]🔮 Analyzing {path.name}...[/bold cyan]\n")
+    console.print(f"\n[bold cyan]Analyzing {path.name}...[/bold cyan]\n")
     
     predictions = predictor.predict_file(path)
     
@@ -33,7 +33,7 @@ def predict(path, severity, limit):
     predictions = predictions[:limit]
     
     if not predictions:
-        console.print("[green]✨ No potential errors detected![/green]")
+        console.print("[green]No potential errors detected![/green]")
         return
     
     table = Table(title="Potential Errors")
