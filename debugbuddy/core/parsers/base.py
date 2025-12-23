@@ -3,9 +3,17 @@ from typing import Dict, Optional
 
 class BaseParser:
     PATTERNS = {}
+    language = 'unknown'
 
     def parse(self, text: str) -> Optional[Dict]:
-    return {"type": "Unknown Error", "message": text.strip(), "file": None, "line": None}
+        result = {
+            'raw': text,
+            'type': None,
+            'message': None,
+            'file': None,
+            'line': None,
+            'language': self.language,
+        }
 
         file_match = re.search(r'File "([^"]+)", line (\d+)', text)
         if file_match:

@@ -1,3 +1,4 @@
+from typing import Optional
 from openai import OpenAI
 from .base import BaseAIProvider
 from .prompts import ERROR_EXPLANATION_PROMPT

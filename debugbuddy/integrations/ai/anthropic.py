@@ -1,3 +1,4 @@
+from typing import Optional
 from anthropic import Anthropic
 from .base import BaseAIProvider
 from .prompts import ERROR_EXPLANATION_PROMPT
