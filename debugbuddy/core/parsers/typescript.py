@@ -21,4 +21,4 @@ class TypeScriptParser(BaseParser):
                 result['message'] = match.group(0)
                 return result
 
-        return result if result['type'] else None
+        return result if 'type' in result and result['type'] != "Unknown Error" else result

@@ -36,4 +36,4 @@ class PythonParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        return result if result['type'] != "Generic Error" else None
+        assert 'NameError' in result['type']

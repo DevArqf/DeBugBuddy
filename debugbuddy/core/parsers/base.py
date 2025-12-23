@@ -8,8 +8,8 @@ class BaseParser:
     def parse(self, text: str) -> Optional[Dict]:
         result = {
             'raw': text,
-            'type': None,
-            'message': None,
+            'type': "Unknown Error",
+            'message': text.strip(),
             'file': None,
             'line': None,
             'language': self.language,
@@ -20,4 +20,4 @@ class BaseParser:
             result['file'] = file_match.group(1)
             result['line'] = int(file_match.group(2))
 
-        return result if result['type'] else None
+        return result if 'type' in result and result['type'] != "Unknown Error" else result
