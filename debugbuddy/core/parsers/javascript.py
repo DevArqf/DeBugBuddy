@@ -15,13 +15,13 @@ class JavaScriptParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-    result = {
-        "type": "Unknown Error",
-        "message": text.strip(),
-        "file": None,
-        "line": None,
-        "language": language
-    }
+        result = {
+            "type": "Unknown Error",
+            "message": text.strip(),
+            "file": None,
+            "line": None,
+            "language": language
+        }
 
         file_match = self.PATTERNS['file_line'].search(text)
         if file_match:

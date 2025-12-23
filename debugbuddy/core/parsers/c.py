@@ -12,13 +12,13 @@ class CParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-    result = {
-        "type": "Unknown Error",
-        "message": text.strip(),
-        "file": None,
-        "line": None,
-        "language": language
-    }
+        result = {
+            "type": "Unknown Error",
+            "message": text.strip(),
+            "file": None,
+            "line": None,
+            "language": language
+        }
 
         for error_type, pattern in self.PATTERNS.items():
             match = pattern.search(text)

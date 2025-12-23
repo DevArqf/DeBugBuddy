@@ -19,13 +19,13 @@ class PythonParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-    result = {
-        "type": "Unknown Error",
-        "message": text.strip(),
-        "file": None,
-        "line": None,
-        "language": language
-    }
+        result = {
+            "type": "Unknown Error",
+            "message": text.strip(),
+            "file": None,
+            "line": None,
+            "language": language
+        }
 
         error_match = self.PATTERNS['error_line'].search(text)
         if error_match:

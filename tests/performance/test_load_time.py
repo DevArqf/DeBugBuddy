@@ -3,9 +3,6 @@ import time
 import json
 from pathlib import Path
 
-with open(python_patterns, 'r', encoding='utf-8') as f:
-    data = json.load(f)
-
 class TestLoadTime:
 
     def test_import_speed(self):
@@ -95,12 +92,15 @@ class TestPatternLoadPerformance:
 
     def test_single_pattern_load(self):
         import json
+        from pathlib import Path
 
         pattern_dir = Path(__file__).parent.parent.parent / 'patterns'
         python_patterns = pattern_dir / 'python.json'
 
+        assert python_patterns.exists()
+
         start = time.time()
-        with open(python_patterns, 'r') as f:
+        with open(python_patterns, 'r', encoding='utf-8') as f:
             data = json.load(f)
         end = time.time()
 
