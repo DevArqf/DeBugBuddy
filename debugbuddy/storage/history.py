@@ -15,19 +15,6 @@ class HistoryManager:
     def _init_db(self):
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS history (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp TEXT,
-                error_type TEXT,
-                message TEXT,
-                file TEXT,
-                line INTEGER,
-                language TEXT,
-                simple TEXT,
-                fix TEXT
-            )
-        ''')
         conn.commit()
         conn.close()
 
@@ -35,10 +22,6 @@ class HistoryManager:
 
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO history (timestamp, error_type, message, file, line, language, simple, fix)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
             datetime.now().isoformat(),
             error.get('type', 'Unknown'),
             error.get('message', '')[:200],
@@ -77,11 +60,6 @@ class HistoryManager:
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
         keyword_lower = keyword.lower()
-        cursor.execute('''
-            SELECT * FROM history 
-            WHERE LOWER(error_type) LIKE ? OR LOWER(message) LIKE ? OR LOWER(simple) LIKE ?
-            ORDER BY id DESC
-        ''', (f'%{keyword_lower}%', f'%{keyword_lower}%', f'%{keyword_lower}%'))
         rows = cursor.fetchall()
         conn.close()
         return self._rows_to_dicts(rows)

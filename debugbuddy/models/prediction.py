@@ -8,6 +8,6 @@ class Prediction:
     column: Optional[int]
     error_type: str
     message: str
-    confidence: float  # 0.0 to 1.0
+    confidence: float
     suggestion: str
-    severity: str  # 'low', 'medium', 'high', 'critical'
+    severity: str

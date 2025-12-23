@@ -6,25 +6,22 @@ from ..storage.patterns import PatternManager
 from ..monitoring.checker import SimpleChecker
 
 class ErrorPredictor:
-    
+
     def __init__(self, config_manager):
         self.config = config_manager
         self.pattern_mgr = PatternManager()
-        
+
     def predict_file(self, file_path: Path) -> List[Prediction]:
         predictions = []
-        
-        # Static analysis
+
         predictions.extend(self._analyze_static(file_path))
-        
-        # Pattern matching
+
         predictions.extend(self._analyze_patterns(file_path))
-        
-        # ML-based prediction
+
         predictions.extend(self._analyze_ml(file_path))
-        
+
         return sorted(predictions, key=lambda x: x.confidence, reverse=True)
-    
+
     def _analyze_static(self, file_path: Path) -> List[Prediction]:
         predictions = []
         if file_path.suffix == '.py':
@@ -56,9 +53,8 @@ class ErrorPredictor:
                     suggestion="Fix the syntax",
                     severity='critical'
                 ))
-        # For other languages, could add linters if dependencies allow, but since no install, skip
         return predictions
-    
+
     def _analyze_patterns(self, file_path: Path) -> List[Prediction]:
         lang = file_path.suffix[1:]
         patterns = self.pattern_mgr.load_patterns(lang)
@@ -79,8 +75,6 @@ class ErrorPredictor:
                             severity='medium'
                         ))
         return predictions
-    
+
     def _analyze_ml(self, file_path: Path) -> List[Prediction]:
-        """Use trained ML models for prediction."""
-        # Placeholder for future ML integration. Might use torch :)
         return []

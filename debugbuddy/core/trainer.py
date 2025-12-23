@@ -7,13 +7,13 @@ from ..models.pattern import Pattern
 from ..storage.patterns import PatternManager
 
 class PatternTrainer:
-    
+
     def __init__(self, storage_manager):
         self.storage = storage_manager
         self.custom_patterns_dir = Path.home() / '.debugbuddy' / 'patterns' / 'custom'
         self.custom_patterns_dir.mkdir(parents=True, exist_ok=True)
         self.pattern_mgr = PatternManager()
-    
+
     def add_training_example(self, error_text: str, explanation: str, 
                             fix: str, language: str) -> bool:
         training_data = TrainingData(
@@ -23,10 +23,10 @@ class PatternTrainer:
             language=language
         )
         return self.storage.save_training_data(training_data)
-    
+
     def train_pattern(self, training_examples: List[TrainingData]) -> Pattern:
         keywords = self._extract_keywords(training_examples)
-        
+
         pattern = Pattern(
             type=self._determine_error_type(training_examples),
             keywords=keywords,
@@ -34,11 +34,11 @@ class PatternTrainer:
             fix=self._generate_fix(training_examples),
             language=training_examples[0].language
         )
-        
+
         self._save_custom_pattern(pattern)
-        
+
         return pattern
-    
+
     def list_custom_patterns(self) -> List[Pattern]:
         patterns = []
         for file in self.custom_patterns_dir.glob('*.json'):
@@ -47,7 +47,7 @@ class PatternTrainer:
                 for p in data.get('errors', []):
                     patterns.append(Pattern(**p))
         return patterns
-    
+
     def delete_custom_pattern(self, pattern_id: str) -> bool:
         for file in self.custom_patterns_dir.glob('*.json'):
             with open(file, 'r+') as f:

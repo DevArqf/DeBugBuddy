@@ -1,6 +1,3 @@
-# debugbuddy/cli/commands/predict.py
-"""Predict command implementation."""
-
 import click
 from pathlib import Path
 from rich.console import Console
@@ -16,32 +13,31 @@ console = Console()
               help='Filter by severity level')
 @click.option('--limit', type=int, default=10, help='Maximum predictions to show')
 def predict(path, severity, limit):
-    """Predict potential errors in code."""
-    
+
     config = ConfigManager()
     predictor = ErrorPredictor(config)
-    
+
     path = Path(path) if path else Path.cwd()
-    
+
     console.print(f"\n[bold cyan]Analyzing {path.name}...[/bold cyan]\n")
-    
+
     predictions = predictor.predict_file(path)
-    
+
     if severity:
         predictions = [p for p in predictions if p.severity == severity]
-    
+
     predictions = predictions[:limit]
-    
+
     if not predictions:
         console.print("[green]No potential errors detected![/green]")
         return
-    
+
     table = Table(title="Potential Errors")
     table.add_column("Line", style="yellow")
     table.add_column("Type", style="red")
     table.add_column("Confidence", style="cyan")
     table.add_column("Message", style="white")
-    
+
     for pred in predictions:
         confidence = f"{pred.confidence * 100:.0f}%"
         table.add_row(
@@ -50,6 +46,6 @@ def predict(path, severity, limit):
             confidence,
             pred.message[:60] + "..." if len(pred.message) > 60 else pred.message
         )
-    
+
     console.print(table)
     console.print(f"\n[dim]💡 Tip: Use --severity to filter by severity level[/dim]")

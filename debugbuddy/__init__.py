@@ -1,5 +1,3 @@
-"""DeBugBuddy - Your terminal's debugging companion."""
-
 __version__ = "0.3.2"
 
 def __getattr__(name):
