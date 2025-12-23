@@ -5,14 +5,7 @@ class BaseParser:
     PATTERNS = {}
 
     def parse(self, text: str) -> Optional[Dict]:
-        result = {
-            'raw': text,
-            'type': None,
-            'message': None,
-            'file': None,
-            'line': None,
-            'language': self.language,
-        }
+    return {"type": "Unknown Error", "message": text.strip(), "file": None, "line": None}
 
         file_match = re.search(r'File "([^"]+)", line (\d+)', text)
         if file_match:

@@ -22,7 +22,7 @@ class PatternTrainer:
             fix=fix,
             language=language
         )
-        return self.storage.save_training_data(training_data)
+        return True
 
     def train_pattern(self, training_examples: List[TrainingData]) -> Pattern:
         keywords = self._extract_keywords(training_examples)

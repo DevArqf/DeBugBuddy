@@ -22,15 +22,14 @@ class HistoryManager:
 
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
-            datetime.now().isoformat(),
-            error.get('type', 'Unknown'),
-            error.get('message', '')[:200],
-            error.get('file'),
-            error.get('line'),
-            error.get('language', 'unknown'),
-            explanation.get('simple', '')[:100],
-            explanation.get('fix', '')[:200],
-        ))
+        datetime.now().isoformat(),
+        error.get('type', 'Unknown'),
+        error.get('message', '')[:200],
+        error.get('file'),
+        error.get('line'),
+        error.get('language', 'unknown'),
+        explanation.get('simple', '')[:100],
+        explanation.get('fix', '')[:200],
         conn.commit()
         conn.close()
 

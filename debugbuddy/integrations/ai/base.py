@@ -1,6 +1,5 @@
-class BaseAIProvider:
-    def __init__(self, api_key):
-        self.api_key = api_key
+def get_provider(provider_name: str = "openai"):
+    raise NotImplementedError()
 
-    def explain_error(self, error_text, language):
-        raise NotImplementedError
+class BaseProvider:
+    pass

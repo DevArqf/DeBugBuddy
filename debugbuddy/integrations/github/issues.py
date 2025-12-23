@@ -1,3 +1,4 @@
+import requests
 from typing import List, Dict
 from .client import GitHubClient
 

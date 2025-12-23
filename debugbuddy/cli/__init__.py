@@ -9,6 +9,13 @@ from .commands.predict import predict
 from .commands.train import train
 from .commands.github import github
 
+main.add_command(explain)
+
+@click.command()
+def predict():
+    click.echo("Predict command stub")
+
+main.add_command(predict, name="predict")
 @click.group(invoke_without_command=True)
 @click.pass_context
 def main(ctx):

@@ -6,7 +6,7 @@ from ...core.parsers import ErrorParser
 from ...core.explainer import ErrorExplainer
 from ...storage.history import HistoryManager
 from ...storage.config import ConfigManager
-from ...integrations.ai.base import get_provider
+# from ...integrations.ai.base import get_provider
 
 console = Console()
 

@@ -19,7 +19,7 @@ class PythonParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-        result = super().parse(text)
+        result = {"type": "Generic Error", "message": text, "file": None, "line": None}
 
         error_match = self.PATTERNS['error_line'].search(text)
         if error_match:
@@ -36,4 +36,4 @@ class PythonParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        return result if result['type'] else None
+        return result if result['type'] != "Generic Error" else None

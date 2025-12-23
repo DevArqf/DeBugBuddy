@@ -1,9 +1,13 @@
+import re
+import json
 from .base import BaseParser
 from .python import PythonParser
 from .javascript import JavaScriptParser
 from .typescript import TypeScriptParser
 from .c import CParser
 from .php import PHPParser
+from typing import Dict, List, Optional, Any, Tuple
+from pathlib import Path
 
 class ErrorParser:
     def __init__(self):

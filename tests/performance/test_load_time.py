@@ -4,6 +4,9 @@ from pathlib import Path
 
 class TestLoadTime:
 
+    with open(python_patterns, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
     def test_import_speed(self):
         start = time.time()
 
