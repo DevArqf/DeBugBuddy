@@ -1,4 +1,4 @@
-from debugbuddy.core.parser import ErrorParser
+from debugbuddy.core.parsers import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
 from debugbuddy.monitoring.watcher import ErrorWatcher
 from debugbuddy.storage.history import HistoryManager

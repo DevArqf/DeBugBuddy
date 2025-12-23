@@ -219,6 +219,7 @@ class TestPredictionSpeed:
     def test_large_file_prediction(self, predictor):
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             for i in range(100):
+                f.write(f'print("Line {i}")\n')
             file_path = Path(f.name)
 
         start = time.time()
