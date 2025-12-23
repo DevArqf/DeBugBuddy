@@ -14,7 +14,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="debugbuddy-cli",
-    version="0.2.2",
+    version="0.3.2",
     license='MIT',
     author="DevArqf",
     author_email="devarqf@gmail.com",
@@ -38,20 +38,24 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "click>=8.0.0",
-        "colorama>=0.4.6",
         "rich>=13.0.0",
-        "watchdog>=3.0.0",
-        "requests>=2.31.0",
-        "openai>=2.8.1",
     ],
     extras_require={
-        "dev": [
-            "pytest>=7.0.0",
-            "black>=23.0.0",
-            "flake8>=6.0.0",
-        ],
         "ai": [
+            "openai>=2.8.1",
             "anthropic>=0.18.0",
+        ],
+        "github": [
+            "PyGithub>=2.1.0",
+        ],
+        "watch": [
+            "watchdog>=3.0.0",
+        ],
+        "full": [
+            "openai>=2.8.1",
+            "anthropic>=0.18.0",
+            "PyGithub>=2.1.0",
+            "watchdog>=3.0.0",
         ],
     },
     entry_points={

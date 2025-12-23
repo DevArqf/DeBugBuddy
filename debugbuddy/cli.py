@@ -12,10 +12,10 @@ from rich.prompt import Prompt, Confirm
 
 from debugbuddy.core.parser import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
-from debugbuddy.core.watcher import ErrorWatcher, SimpleChecker
-from debugbuddy.core.history import HistoryManager
-from debugbuddy.utils.config import ConfigManager
-from debugbuddy.ai import get_provider, get_explanation_prompt
+from debugbuddy.monitoring.watcher import ErrorWatcher, SimpleChecker
+from debugbuddy.storage.history import HistoryManager
+from debugbuddy.cli.commands.config import ConfigManager
+from debugbuddy.integrations.ai import get_provider, get_explanation_prompt
 
 console = Console()
 

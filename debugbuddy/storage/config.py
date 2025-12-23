@@ -9,7 +9,7 @@ class ConfigManager:
         'auto_save_history': True,
         'color_output': True,
         'max_history': 100,
-        'ai_provider': 'openai',
+        'ai_provider': 'anthropic',
         'openai_api_key': '',
         'anthropic_api_key': '',
         'ai_model': 'gpt-4',

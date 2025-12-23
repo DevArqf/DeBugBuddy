@@ -1,0 +1,1 @@
+from .commands import explain, watch, check, history, search, config, predict, train, github

@@ -1,8 +1,11 @@
-__version__ = "0.2.2"
-__author__ = "DevArqf"
-__license__ = "MIT"
-
-from debugbuddy.core.parser import ErrorParser
-from debugbuddy.core.explainer import ErrorExplainer
-
-__all__ = ['ErrorParser', 'ErrorExplainer']
+def __getattr__(name):
+    if name == "ErrorParser":
+        from debugbuddy.core.parsers import ErrorParser
+        return ErrorParser
+    elif name == "ErrorExplainer":
+        from debugbuddy.core.explainer import ErrorExplainer
+        return ErrorExplainer
+    elif name == "ErrorPredictor":
+        from debugbuddy.core.predictor import ErrorPredictor
+        return ErrorPredictor
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
