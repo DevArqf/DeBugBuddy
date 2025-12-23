@@ -46,7 +46,7 @@ class ConfigManager:
                 value = ','.join(str(v) for v in value if v)
 
         config[key] = value
-        self._save(config)
+        self.save(config)
 
     def reset(self):
         self._save(self.DEFAULT_CONFIG.copy())

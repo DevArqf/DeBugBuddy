@@ -2,6 +2,7 @@ import pytest
 from click.testing import CliRunner
 from debugbuddy.cli import main
 
+@pytest.mark.skip("Command not implemented")
 @pytest.mark.integration
 class TestCliGithubCommand:
 

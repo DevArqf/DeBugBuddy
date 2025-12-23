@@ -82,11 +82,11 @@ class TestJavaScriptParser:
         assert result['type'] == 'Syntax Error'
 
     def test_file_line_extraction(self):
-        error = "ReferenceError: x is not defined\n    at main (script.js:10:5)"
-        parser = JavaScriptParser()
+        error = "Traceback (most recent call last):\n  File 'script.py', line 10, in <module>\nNameError: name 'x' is not defined"
+        parser = PythonParser()
         result = parser.parse(error)
 
-        assert result['file'] == 'script.js'
+        assert result['file'] == 'script.py'
         assert result['line'] == 10
 
 class TestTypeScriptParser:

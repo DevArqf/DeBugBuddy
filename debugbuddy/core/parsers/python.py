@@ -19,7 +19,13 @@ class PythonParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-        result = {"type": "Generic Error", "message": text, "file": None, "line": None}
+    result = {
+        "type": "Unknown Error",
+        "message": text.strip(),
+        "file": None,
+        "line": None,
+        "language": language
+    }
 
         error_match = self.PATTERNS['error_line'].search(text)
         if error_match:
@@ -36,4 +42,6 @@ class PythonParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        assert 'NameError' in result['type']
+        if result['type'] != "Unknown Error":
+        result['type'] = result['type'].replace('Error', ' Error')
+    return result

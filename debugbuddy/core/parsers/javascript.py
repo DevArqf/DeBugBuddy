@@ -15,7 +15,13 @@ class JavaScriptParser(BaseParser):
     }
 
     def parse(self, text: str) -> Optional[Dict]:
-        result = super().parse(text)
+    result = {
+        "type": "Unknown Error",
+        "message": text.strip(),
+        "file": None,
+        "line": None,
+        "language": language
+    }
 
         file_match = self.PATTERNS['file_line'].search(text)
         if file_match:
@@ -31,4 +37,6 @@ class JavaScriptParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        return result if 'type' in result and result['type'] != "Unknown Error" else result
+        if result['type'] != "Unknown Error":
+        result['type'] = result['type'].replace('Error', ' Error')
+    return result

@@ -3,6 +3,9 @@ import time
 import json
 from pathlib import Path
 
+with open(python_patterns, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
 class TestLoadTime:
 
     def test_import_speed(self):
@@ -280,6 +283,7 @@ class TestParsingSpeed:
         from debugbuddy.core.parsers import ErrorParser
 
         parser = ErrorParser()
+        error = "Long traceback\nNameError: complex"
 
         start = time.time()
         for _ in range(100):
