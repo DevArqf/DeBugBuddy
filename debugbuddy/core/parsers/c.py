@@ -17,7 +17,7 @@ class CParser(BaseParser):
             "message": text.strip(),
             "file": None,
             "line": None,
-            "language": language
+            "language": "c"
         }
 
         for error_type, pattern in self.PATTERNS.items():
@@ -27,6 +27,6 @@ class CParser(BaseParser):
                 result['message'] = match.group(0)
                 return result
 
-        if result['type'] != "Unknown Error":
-        result['type'] = result['type'].replace('Error', ' Error')
-    return result
+            if result['type'] != "Unknown Error":
+                result['type'] = result['type'].replace('Error', ' Error')
+            return result

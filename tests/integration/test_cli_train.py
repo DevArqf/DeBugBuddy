@@ -5,7 +5,6 @@ from pathlib import Path
 from click.testing import CliRunner
 from debugbuddy.cli import main
 
-@pytest.mark.skip("Command not implemented")
 @pytest.fixture
 def training_data_file():
     data = {

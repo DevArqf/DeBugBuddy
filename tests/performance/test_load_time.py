@@ -61,33 +61,6 @@ class TestLoadTime:
         assert result.exit_code == 0
         assert startup_time < 2.0, f"CLI startup took {startup_time:.2f}s"
 
-
-class TestPatternLoadPerformance:
-
-    def test_single_pattern_load(self):
-        pattern_dir = Path(__file__).parent.parent.parent / 'patterns'
-        python_patterns = pattern_dir / 'python.json'
-
-        start = time.time()
-        with open(python_patterns, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        end = time.time()
-
-        load_time = end - start
-        assert load_time < 0.1, f"Pattern load took {load_time:.4f}s"
-        assert 'errors' in data
-
-    def test_all_patterns_load(self):
-        from debugbuddy.core.explainer import ErrorExplainer
-
-        start = time.time()
-        explainer = ErrorExplainer()
-        end = time.time()
-
-        load_time = end - start
-        assert load_time < 2.0
-        assert len(explainer.patterns) > 0
-
 class TestPatternLoadPerformance:
 
     def test_single_pattern_load(self):

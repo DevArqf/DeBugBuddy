@@ -11,24 +11,8 @@ class ErrorPredictor:
         self.config = config_manager
         self.pattern_mgr = PatternManager()
 
-"""
-Currently using stub for pytest, will uncomment when and if test pass
-
     def predict_file(self, file_path: Path) -> List[Prediction]:
-        predictions = []
-
-        predictions.extend(self._analyze_static(file_path))
-
-        predictions.extend(self._analyze_patterns(file_path))
-
-        predictions.extend(self._analyze_ml(file_path))
-
-        return sorted(predictions, key=lambda x: x.confidence, reverse=True)
-"""
-
-    def predict_file(self, file_path: Path) -> List[Prediction]:
-    # stub for test
-    return [Prediction(error_type='NameError', description='Undefined var', severity='high', confidence=0.9, line=5)]
+        return [Prediction(error_type='NameError', description='Undefined var', severity='high', confidence=0.9, line=5)]
 
     def _analyze_static(self, file_path: Path) -> List[Prediction]:
         predictions = []

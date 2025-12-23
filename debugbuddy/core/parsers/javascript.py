@@ -20,7 +20,7 @@ class JavaScriptParser(BaseParser):
             "message": text.strip(),
             "file": None,
             "line": None,
-            "language": language
+            "language": "javascript"
         }
 
         file_match = self.PATTERNS['file_line'].search(text)
@@ -37,6 +37,6 @@ class JavaScriptParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        if result['type'] != "Unknown Error":
-        result['type'] = result['type'].replace('Error', ' Error')
-    return result
+            if result['type'] != "Unknown Error":
+                result['type'] = result['type'].replace('Error', ' Error')
+            return result

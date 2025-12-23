@@ -24,7 +24,7 @@ class PythonParser(BaseParser):
             "message": text.strip(),
             "file": None,
             "line": None,
-            "language": language
+            "language": "python"
         }
 
         error_match = self.PATTERNS['error_line'].search(text)
@@ -42,6 +42,6 @@ class PythonParser(BaseParser):
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-        if result['type'] != "Unknown Error":
-        result['type'] = result['type'].replace('Error', ' Error')
-    return result
+            if result['type'] != "Unknown Error":
+                result['type'] = result['type'].replace('Error', ' Error')
+            return result

@@ -4,7 +4,6 @@ from pathlib import Path
 from click.testing import CliRunner
 from debugbuddy.cli import main
 
-@pytest.mark.skip("Command not implemented")
 @pytest.fixture
 def sample_py_file():
     with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:

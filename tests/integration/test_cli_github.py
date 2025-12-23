@@ -1,8 +1,10 @@
 import pytest
 from click.testing import CliRunner
+from rich.console import Console
 from debugbuddy.cli import main
 
-@pytest.mark.skip("Command not implemented")
+console = Console()
+
 @pytest.mark.integration
 class TestCliGithubCommand:
 
