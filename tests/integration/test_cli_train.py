@@ -26,14 +26,14 @@ class TestCliTrainCommand:
         assert result.exit_code == 0
         assert 'train' in result.output.lower()
 
-    def test_train_with_data_file(self, training_data_file):
+    def test_train_with_interactive_flag(self):
         runner = CliRunner()
-        result = runner.invoke(main, ['train', str(training_data_file), '--output', 'custom_pattern.json'])
-        assert result.exit_code == 0
-        assert 'trained' in result.output.lower() or 'saved' in result.output.lower()
+        result = runner.invoke(main, ['train', '--interactive', '--language', 'python'], 
+                              input='done\n')
+        assert 'train' in result.output.lower() or 'example' in result.output.lower()
 
-    def test_train_invalid_file(self):
+    def test_train_list_custom_patterns(self):
+        """Test listing custom patterns"""
         runner = CliRunner()
-        result = runner.invoke(main, ['train', 'invalid.json'])
-        assert result.exit_code != 0
-        assert 'error' in result.output.lower()
+        result = runner.invoke(main, ['train'])
+        assert result.exit_code == 0

@@ -61,21 +61,39 @@ class PatternTrainer:
         return False
 
     def _extract_keywords(self, examples: List[TrainingData]) -> List[str]:
-        keywords = set()
+        keywords = {}
+        
+        stop_words = {'the', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'of', 'and', 'or', 
+                     'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has', 'had',
+                     'something', 'went', 'issue', 'failed', 'line'}
+        
         for ex in examples:
             words = re.findall(r'\b\w+\b', ex.error_text.lower())
-            keywords.update(words)
-        return list(keywords)[:10]
+            for word in words:
+                if len(word) > 2 and not word.isdigit() and word not in stop_words:
+                    keywords[word] = keywords.get(word, 0) + 1
+        
+        sorted_keywords = sorted(keywords.items(), key=lambda x: x[1], reverse=True)
+        return [word for word, count in sorted_keywords[:10]]
 
     def _determine_error_type(self, examples: List[TrainingData]) -> str:
         common_type = re.search(r'(\w+Error)', examples[0].error_text)
-        return common_type.group(1) if common_type else 'CustomError'
+        if common_type:
+            return common_type.group(1)
+        
+        keywords = self._extract_keywords(examples)
+        if keywords:
+            return f"{keywords[0].capitalize()}Error"
+        
+        return 'CustomError'
 
     def _generate_explanation(self, examples: List[TrainingData]) -> str:
-        return ' '.join(set(ex.explanation for ex in examples))
+        explanations = set(ex.explanation for ex in examples)
+        return ' '.join(explanations)
 
     def _generate_fix(self, examples: List[TrainingData]) -> str:
-        return ' '.join(set(ex.fix for ex in examples))
+        fixes = set(ex.fix for ex in examples)
+        return ' '.join(fixes)
 
     def _save_custom_pattern(self, pattern: Pattern):
         file_path = self.custom_patterns_dir / f"{pattern.language}.json"

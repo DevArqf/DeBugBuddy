@@ -84,19 +84,21 @@ class HistoryManager:
         return self._row_to_dict(row) if row else None
 
     def search(self, keyword: str) -> List[Dict]:
-        keyword = keyword.lower()
+        keyword_lower = keyword.lower()
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
+        
         cursor.execute(
             """
             SELECT * FROM history
             WHERE
                 LOWER(error_type) LIKE ? OR
+                LOWER(REPLACE(error_type, ' ', '')) LIKE ? OR
                 LOWER(message) LIKE ? OR
                 LOWER(simple) LIKE ?
             ORDER BY id DESC
             """,
-            (f"%{keyword}%", f"%{keyword}%", f"%{keyword}%"),
+            (f"%{keyword_lower}%", f"%{keyword_lower}%", f"%{keyword_lower}%", f"%{keyword_lower}%"),
         )
         rows = cursor.fetchall()
         conn.close()

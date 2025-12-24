@@ -35,7 +35,7 @@ class JavaScriptParser(BaseParser):
             if match:
                 formatted_type = error_type.replace('_', ' ').title()
                 result['type'] = formatted_type
-                result['message'] = match.group(1) if match.groups() else match.group(0)
+                result['message'] = match.group(0) if error_type == 'reference_error' else match.group(1)
                 return result
 
         return result

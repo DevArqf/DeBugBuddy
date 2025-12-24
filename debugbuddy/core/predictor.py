@@ -29,12 +29,23 @@ class ErrorPredictor:
 
     def _analyze_static(self, file_path: Path) -> List[Prediction]:
         predictions = []
-        if file_path.suffix == '.py':
+        
+        if file_path.suffix != '.py':
+            return predictions
+            
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            if not content.strip():
+                return predictions
+            
             try:
-                with open(file_path, 'r') as f:
-                    tree = ast.parse(f.read())
+                tree = ast.parse(content, filename=str(file_path))
+                
                 checker = SimpleChecker(str(file_path))
                 checker.visit(tree)
+                
                 for name, lines in checker.undefined_locations.items():
                     for line in lines:
                         predictions.append(Prediction(
@@ -47,17 +58,23 @@ class ErrorPredictor:
                             suggestion="Define the variable or import it",
                             severity='high'
                         ))
-            except SyntaxError as e:
+                        
+            except (SyntaxError, IndentationError) as e:
                 predictions.append(Prediction(
                     file=str(file_path),
-                    line=e.lineno,
+                    line=e.lineno or 1,
                     column=e.offset,
                     error_type='SyntaxError',
-                    message=e.msg,
+                    message=e.msg or 'invalid syntax',
                     confidence=1.0,
-                    suggestion="Fix the syntax",
+                    suggestion="Fix the syntax error",
                     severity='critical'
                 ))
+                
+        except Exception as e:
+            # file read error or other issues - don't crash, just return empty
+            pass
+            
         return predictions
 
     def _analyze_patterns(self, file_path: Path) -> List[Prediction]:
@@ -66,7 +83,7 @@ class ErrorPredictor:
         predictions = []
         
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 for i, line in enumerate(lines, 1):
                     for pattern in patterns:
@@ -81,7 +98,7 @@ class ErrorPredictor:
                                 suggestion=pattern.get('fix', 'Review this line'),
                                 severity='medium'
                             ))
-        except:
+        except Exception:
             pass
             
         return predictions
