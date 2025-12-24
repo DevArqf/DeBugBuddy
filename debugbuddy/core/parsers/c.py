@@ -6,7 +6,7 @@ class CParser(BaseParser):
     language = 'c'
 
     PATTERNS = {
-        'syntax_error': re.compile(r'syntax error: (.+)'),
+        'syntax_error': re.compile(r'(syntax error|error:.*syntax)', re.IGNORECASE),
         'undefined_ref': re.compile(r'undefined reference to \'([^\']+)\''),
         'type_mismatch': re.compile(r'incompatible types (.+)'),
     }
@@ -23,10 +23,9 @@ class CParser(BaseParser):
         for error_type, pattern in self.PATTERNS.items():
             match = pattern.search(text)
             if match:
-                result['type'] = error_type.replace('_', ' ').title()
+                formatted_type = error_type.replace('_', ' ').title()
+                result['type'] = formatted_type
                 result['message'] = match.group(0)
                 return result
 
-            if result['type'] != "Unknown Error":
-                result['type'] = result['type'].replace('Error', ' Error')
-            return result
+        return result

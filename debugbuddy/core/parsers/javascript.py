@@ -6,7 +6,7 @@ class JavaScriptParser(BaseParser):
     language = 'javascript'
 
     PATTERNS = {
-        'reference_error': re.compile(r'ReferenceError: (.+) is not defined'),
+        'reference_error': re.compile(r'ReferenceError: (.+?) is not defined'),
         'type_error': re.compile(r'TypeError: (.+)'),
         'syntax_error': re.compile(r'SyntaxError: (.+)'),
         'range_error': re.compile(r'RangeError: (.+)'),
@@ -33,10 +33,9 @@ class JavaScriptParser(BaseParser):
                 continue
             match = pattern.search(text)
             if match:
-                result['type'] = error_type.replace('_', ' ').title()
+                formatted_type = error_type.replace('_', ' ').title()
+                result['type'] = formatted_type
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-            if result['type'] != "Unknown Error":
-                result['type'] = result['type'].replace('Error', ' Error')
-            return result
+        return result

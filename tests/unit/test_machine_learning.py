@@ -329,11 +329,11 @@ class TestMLIntegration:
             parsed = parser.parse(error)
             if parsed:
                 example = TrainingExample(
-                    error_text=parsed['raw'],
-                    error_type=parsed['type'],
-                    language=parsed['language']
-                )
-                examples.append(example)
+                error_text=parsed.get('message', error),
+                error_type=parsed['type'],
+                language=parsed['language']
+            )
+            examples.append(example)
 
         engine = MLEngine(model_dir=tmp_path)
         engine.train_classifier(examples, epochs=20)
@@ -341,7 +341,7 @@ class TestMLIntegration:
         new_error = "NameError: name 'z' is not defined"
         parsed_new = parser.parse(new_error)
 
-        result = engine.classify_error(parsed_new['raw'], parsed_new['language'])
+        result = engine.classify_error(parsed_new.get('message', new_error), parsed_new['language'])
 
         assert result['top_prediction']['type'] in ['Name Error', 'NameError', 'Unknown Error']
 

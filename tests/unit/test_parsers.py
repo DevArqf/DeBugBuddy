@@ -46,6 +46,7 @@ class TestPythonParser:
         assert 'out of range' in result['message']
 
     def test_file_line_extraction(self):
+        error = 'Traceback (most recent call last):\n File "test.py", line 42, in <module>\nNameError: name \'x\' is not defined'
         parser = PythonParser()
         result = parser.parse(error)
 
@@ -82,12 +83,12 @@ class TestJavaScriptParser:
         assert result['type'] == 'Syntax Error'
 
     def test_file_line_extraction(self):
-        error = "Traceback (most recent call last):\n  File 'script.py', line 10, in <module>\nNameError: name 'x' is not defined"
+        error = 'Traceback (most recent call last):\n  File "test.py", line 42, in <module>\nNameError: name \'x\' is not defined'
         parser = PythonParser()
         result = parser.parse(error)
-
-        assert result['file'] == 'script.py'
-        assert result['line'] == 10
+    
+        assert result['file'] == 'test.py'
+        assert result['line'] == 42
 
 class TestTypeScriptParser:
 

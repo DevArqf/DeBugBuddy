@@ -12,7 +12,20 @@ class ErrorPredictor:
         self.pattern_mgr = PatternManager()
 
     def predict_file(self, file_path: Path) -> List[Prediction]:
-        return [Prediction(error_type='NameError', description='Undefined var', severity='high', confidence=0.9, line=5)]
+        predictions = []
+        
+        static_preds = self._analyze_static(file_path)
+        predictions.extend(static_preds)
+        
+        pattern_preds = self._analyze_patterns(file_path)
+        predictions.extend(pattern_preds)
+        
+        ml_preds = self._analyze_ml(file_path)
+        predictions.extend(ml_preds)
+        
+        predictions.sort(key=lambda p: p.confidence, reverse=True)
+        
+        return predictions
 
     def _analyze_static(self, file_path: Path) -> List[Prediction]:
         predictions = []
@@ -51,22 +64,28 @@ class ErrorPredictor:
         lang = file_path.suffix[1:]
         patterns = self.pattern_mgr.load_patterns(lang)
         predictions = []
-        with open(file_path, 'r') as f:
-            lines = f.readlines()
-            for i, line in enumerate(lines, 1):
-                for pattern in patterns:
-                    if any(kw in line.lower() for kw in pattern.keywords):
-                        predictions.append(Prediction(
-                            file=str(file_path),
-                            line=i,
-                            column=None,
-                            error_type=pattern.type,
-                            message=pattern.simple,
-                            confidence=0.5,
-                            suggestion=pattern.fix,
-                            severity='medium'
-                        ))
+        
+        try:
+            with open(file_path, 'r') as f:
+                lines = f.readlines()
+                for i, line in enumerate(lines, 1):
+                    for pattern in patterns:
+                        if any(kw in line.lower() for kw in pattern.get('keywords', [])):
+                            predictions.append(Prediction(
+                                file=str(file_path),
+                                line=i,
+                                column=None,
+                                error_type=pattern.get('type', 'Unknown'),
+                                message=pattern.get('simple', 'Potential issue'),
+                                confidence=0.5,
+                                suggestion=pattern.get('fix', 'Review this line'),
+                                severity='medium'
+                            ))
+        except:
+            pass
+            
         return predictions
 
     def _analyze_ml(self, file_path: Path) -> List[Prediction]:
+        """Analyze using machine learning (placeholder)."""
         return []

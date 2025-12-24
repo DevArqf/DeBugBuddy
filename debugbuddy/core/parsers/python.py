@@ -20,6 +20,7 @@ class PythonParser(BaseParser):
 
     def parse(self, text: str) -> Optional[Dict]:
         result = {
+            "raw": text,
             "type": "Unknown Error",
             "message": text.strip(),
             "file": None,
@@ -27,9 +28,20 @@ class PythonParser(BaseParser):
             "language": "python"
         }
 
+        file_match = re.search(r'File "([^"]+)", line (\d+)', text)
+        if file_match:
+            result['file'] = file_match.group(1)
+            result['line'] = int(file_match.group(2))
+
         error_match = self.PATTERNS['error_line'].search(text)
         if error_match:
-            result['type'] = error_match.group(1)
+            error_type = error_match.group(1)
+            if error_type.endswith('Error'):
+                base = error_type[:-5]
+                spaced = re.sub(r'([A-Z])', r' \1', base).strip()
+                result['type'] = f"{spaced} Error"
+            else:
+                result['type'] = error_type
             result['message'] = error_match.group(2)
             return result
 
@@ -38,10 +50,9 @@ class PythonParser(BaseParser):
                 continue
             match = pattern.search(text)
             if match:
-                result['type'] = error_type.replace('_', ' ').title()
+                formatted_type = error_type.replace('_', ' ').title()
+                result['type'] = formatted_type
                 result['message'] = match.group(1) if match.groups() else match.group(0)
                 return result
 
-            if result['type'] != "Unknown Error":
-                result['type'] = result['type'].replace('Error', ' Error')
-            return result
+        return result
