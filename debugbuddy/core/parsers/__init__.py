@@ -30,10 +30,21 @@ class ErrorParser:
                     result['language'] = language
                     return result
 
+        js_specific_indicators = [
+            'referenceerror',
+            'urierror',
+            'evalerror',
+        ]
+        
+        if any(indicator in lower_text for indicator in js_specific_indicators):
+            result = self.parsers['javascript'].parse(error_text)
+            if result:
+                result['language'] = 'javascript'
+                return result
+        
         python_indicators = [
-            'nameerror', 'typeerror', 'valueerror', 'indexerror', 'keyerror',
-            'syntaxerror', 'attributeerror', 'importerror', 'modulenotfounderror',
-            'indentationerror', 'zerodivisionerror', 'filenotfounderror',
+            'nameerror', 'valueerror', 'indentationerror',
+            'modulenotfounderror', 'zerodivisionerror', 'filenotfounderror',
             'traceback', 'file "', "name '", 'is not defined'
         ]
         
@@ -43,14 +54,31 @@ class ErrorParser:
                 result['language'] = 'python'
                 return result
         
-        js_indicators = ['referenceerror', 'javascript', 'js', 'node']
-        if any(indicator in lower_text for indicator in js_indicators):
-            result = self.parsers['javascript'].parse(error_text)
+        if any(err in lower_text for err in ['typeerror', 'syntaxerror']):
+            if any(clue in lower_text for clue in ['cannot read property', 'undefined', 'null', 'javascript', 'js', 'node']):
+                result = self.parsers['javascript'].parse(error_text)
+                if result:
+                    result['language'] = 'javascript'
+                    return result
+            
+            if any(clue in lower_text for clue in ['traceback', "name '", 'python', '.py']):
+                result = self.parsers['python'].parse(error_text)
+                if result:
+                    result['language'] = 'python'
+                    return result
+            
+            result = self.parsers['python'].parse(error_text)
             if result:
-                result['language'] = 'javascript'
+                result['language'] = 'python'
                 return result
         
-        ts_indicators = ['type error', 'cannot find name', 'typescript', 'ts']
+        if any(err in lower_text for err in ['indexerror', 'keyerror', 'attributeerror', 'importerror']):
+            result = self.parsers['python'].parse(error_text)
+            if result:
+                result['language'] = 'python'
+                return result
+        
+        ts_indicators = ['type error', 'cannot find name', 'typescript', 'ts', 'ts2']
         if any(indicator in lower_text for indicator in ts_indicators):
             result = self.parsers['typescript'].parse(error_text)
             if result:

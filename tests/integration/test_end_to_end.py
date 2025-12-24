@@ -15,8 +15,8 @@ def runner():
 @pytest.fixture
 def temp_error_file():
     with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-        f.write("# Test file with error\n")
-        f.write("print(undefined_var)\n")
+        f.write("def test():\n")
+        f.write("print('missing indent')\n")
         f.flush()
         file_path = Path(f.name)
     yield file_path
