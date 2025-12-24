@@ -33,63 +33,79 @@ class PythonParser(BaseParser):
             result['file'] = file_match.group(1)
             result['line'] = int(file_match.group(2))
 
-        if 'NameError' in text and 'name' in text and 'is not defined' in text:
-            name_match = re.search(r"name ['\"]([^'\"]+)['\"] is not defined", text)
-            if name_match:
+        text_clean = text.strip()
+
+        if "NameError" in text_clean:
+            name_patterns = [
+                r"name ['\"]([^'\"]+)['\"] is not defined",
+                r"name ([^\s]+) is not defined",
+            ]
+            
+            for pattern in name_patterns:
+                match = re.search(pattern, text_clean, re.IGNORECASE)
+                if match:
+                    var_name = match.group(1)
+                    result['type'] = 'Name Error'
+                    result['message'] = f"name '{var_name}' is not defined"
+                    return result
+            
+            msg_match = re.search(r'NameError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
                 result['type'] = 'Name Error'
-                result['message'] = f"name '{name_match.group(1)}' is not defined"
-                return result
-        
-        if 'TypeError:' in text:
-            type_match = re.search(r'TypeError: (.+)', text)
-            if type_match:
-                result['type'] = 'Type Error'
-                result['message'] = type_match.group(1).strip()
-                return result
-        
-        if 'IndexError:' in text:
-            index_match = re.search(r'IndexError: (.+)', text)
-            if index_match:
-                result['type'] = 'Index Error'
-                result['message'] = index_match.group(1).strip()
-                return result
-        
-        if 'KeyError:' in text:
-            key_match = re.search(r'KeyError: (.+)', text)
-            if key_match:
-                result['type'] = 'Key Error'
-                result['message'] = key_match.group(1).strip()
-                return result
-        
-        if 'SyntaxError:' in text:
-            syntax_match = re.search(r'SyntaxError: (.+)', text)
-            if syntax_match:
-                result['type'] = 'Syntax Error'
-                result['message'] = syntax_match.group(1).strip()
-                return result
-        
-        if 'AttributeError:' in text:
-            attr_match = re.search(r'AttributeError: (.+)', text)
-            if attr_match:
-                result['type'] = 'Attribute Error'
-                result['message'] = attr_match.group(1).strip()
-                return result
-        
-        if 'ImportError:' in text or 'ModuleNotFoundError:' in text:
-            import_match = re.search(r'(ImportError|ModuleNotFoundError): (.+)', text)
-            if import_match:
-                result['type'] = 'Import Error' if 'ImportError' in text else 'Module Not Found Error'
-                result['message'] = import_match.group(2).strip()
-                return result
-        
-        if 'ValueError:' in text:
-            value_match = re.search(r'ValueError: (.+)', text)
-            if value_match:
-                result['type'] = 'Value Error'
-                result['message'] = value_match.group(1).strip()
+                result['message'] = msg_match.group(1).strip()
                 return result
 
-        error_match = re.search(r'(\w+Error): (.+)', text)
+        if "TypeError" in text_clean:
+            msg_match = re.search(r'TypeError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Type Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        if "IndexError" in text_clean:
+            msg_match = re.search(r'IndexError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Index Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        if "KeyError" in text_clean:
+            msg_match = re.search(r'KeyError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Key Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        if "SyntaxError" in text_clean:
+            msg_match = re.search(r'SyntaxError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Syntax Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        if "AttributeError" in text_clean:
+            msg_match = re.search(r'AttributeError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Attribute Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        if "ImportError" in text_clean or "ModuleNotFoundError" in text_clean:
+            msg_match = re.search(r'(ImportError|ModuleNotFoundError):\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                error_name = msg_match.group(1)
+                result['type'] = 'Import Error' if error_name == 'ImportError' else 'Module Not Found Error'
+                result['message'] = msg_match.group(2).strip()
+                return result
+
+        if "ValueError" in text_clean:
+            msg_match = re.search(r'ValueError:\s*(.+?)(?:\n|$)', text_clean)
+            if msg_match:
+                result['type'] = 'Value Error'
+                result['message'] = msg_match.group(1).strip()
+                return result
+
+        error_match = re.search(r'(\w+Error):\s*(.+?)(?:\n|$)', text_clean)
         if error_match:
             error_type = error_match.group(1)
             if error_type.endswith('Error'):

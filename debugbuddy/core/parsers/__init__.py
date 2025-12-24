@@ -30,18 +30,48 @@ class ErrorParser:
                     result['language'] = language
                     return result
 
-        if any(kw in lower_text for kw in ['traceback', 'file', 'line', 'python', 'py']):
-            return self.parsers['python'].parse(error_text)
-        elif any(kw in lower_text for kw in ['referenceerror', 'typeerror', 'syntaxerror', 'javascript', 'js']):
-            return self.parsers['javascript'].parse(error_text)
-        elif any(kw in lower_text for kw in ['type error', 'cannot find name', 'typescript', 'ts']):
-            return self.parsers['typescript'].parse(error_text)
-        elif any(kw in lower_text for kw in ['syntax error', 'undefined reference', 'c ', 'gcc']):
-            return self.parsers['c'].parse(error_text)
-        elif any(kw in lower_text for kw in ['parse error', 'fatal error', 'php']):
-            return self.parsers['php'].parse(error_text)
-        else:
-            return self._parse_generic(error_text)
+        python_indicators = [
+            'nameerror', 'typeerror', 'valueerror', 'indexerror', 'keyerror',
+            'syntaxerror', 'attributeerror', 'importerror', 'modulenotfounderror',
+            'indentationerror', 'zerodivisionerror', 'filenotfounderror',
+            'traceback', 'file "', "name '", 'is not defined'
+        ]
+        
+        if any(indicator in lower_text for indicator in python_indicators):
+            result = self.parsers['python'].parse(error_text)
+            if result:
+                result['language'] = 'python'
+                return result
+        
+        js_indicators = ['referenceerror', 'javascript', 'js', 'node']
+        if any(indicator in lower_text for indicator in js_indicators):
+            result = self.parsers['javascript'].parse(error_text)
+            if result:
+                result['language'] = 'javascript'
+                return result
+        
+        ts_indicators = ['type error', 'cannot find name', 'typescript', 'ts']
+        if any(indicator in lower_text for indicator in ts_indicators):
+            result = self.parsers['typescript'].parse(error_text)
+            if result:
+                result['language'] = 'typescript'
+                return result
+        
+        c_indicators = ['undefined reference', 'gcc', 'segmentation fault', 'segfault']
+        if any(indicator in lower_text for indicator in c_indicators):
+            result = self.parsers['c'].parse(error_text)
+            if result:
+                result['language'] = 'c'
+                return result
+        
+        php_indicators = ['parse error', 'fatal error', 'php']
+        if any(indicator in lower_text for indicator in php_indicators):
+            result = self.parsers['php'].parse(error_text)
+            if result:
+                result['language'] = 'php'
+                return result
+        
+        return self._parse_generic(error_text)
 
     def _parse_generic(self, text: str) -> Dict:
         lines = text.split('\n')
