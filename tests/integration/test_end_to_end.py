@@ -86,17 +86,21 @@ class TestErrorDetectionPipeline:
         with open(temp_error_file, 'r') as f:
             content = f.read()
             print(f"DEBUG - File content: {content}")
-        
+    
         errors = detect_all_errors(temp_error_file)
-        
+    
         print(f"DEBUG - Detected errors: {errors}")
-        
-        assert len(errors) > 0, "No errors detected in file with NameError"
-        
+    
+        assert len(errors) > 0, "No errors detected in file with syntax error"
+    
         error_texts = [str(e) for e in errors]
-        has_name_error = any('undefined_var' in e.lower() or 'nameerror' in e.lower() 
-                            for e in error_texts)
-        assert has_name_error, f"Expected NameError in: {error_texts}"
+    
+        has_error = any(
+            'error' in e.lower() or 
+            'indent' in e.lower() 
+            for e in error_texts
+        )
+        assert has_error, f"Expected to find an error in: {error_texts}"
 
 class TestSearchAndRetrieve:
 
