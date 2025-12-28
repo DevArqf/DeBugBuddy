@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 setup(
     name="debugbuddy-cli",
     version="0.3.2",
@@ -7,6 +10,7 @@ setup(
     author="DevArqf",
     author_email="devarqf@gmail.com",
     description="Your terminal's debugging companion - instant error explanations",
+    long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/DevArqf/DeBugBuddy",
     download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.3.2.tar.gz",

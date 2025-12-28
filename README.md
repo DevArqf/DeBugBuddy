@@ -158,7 +158,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 - Typescript, C and PHP Language Support
 - AI support
 
-### v0.3.0 ❌
+### v0.3.0 ✅
 
 - Error prediction
 - Custom pattern training
