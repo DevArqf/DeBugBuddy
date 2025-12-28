@@ -19,6 +19,17 @@ from debugbuddy.integrations.ai import get_provider, get_explanation_prompt
 
 console = Console()
 
+def get_version():
+    try:
+        from debugbuddy.__version__ import __version__
+        return __version__
+    except ImportError:
+        try:
+            from debugbuddy import __version__
+            return __version__
+        except (ImportError, AttributeError):
+            return "0.3.2"
+
 def _detect_all_errors(file_path):
     all_errors = []
 
@@ -62,11 +73,23 @@ def _detect_all_errors(file_path):
     return all_errors
 
 @click.group(invoke_without_command=True)
+@click.option('--version', '-v', is_flag=True, help='Show version and exit')
 @click.pass_context
-def main(ctx):
+def main(ctx, version):
+    """DeBugBuddy - Your terminal's debugging companion"""
+    
+    if version:
+        version_num = get_version()
+        console.print(f"\n[bold green]🐛 DeBugBuddy[/bold green] v{version_num}")
+        console.print("[dim]Stop Googling. Understand your errors.[/dim]")
+        console.print(f"\n[dim]Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}[/dim]")
+        console.print(f"[dim]Platform: {sys.platform}[/dim]\n")
+        return
+    
     if ctx.invoked_subcommand is None:
-        console.print("\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
-        console.print("Version 0.2.2\n")
+        version_num = get_version()
+        console.print(f"\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
+        console.print(f"Version {version_num}\n")
         ctx.invoke(explain)
 
 @main.command()
@@ -348,7 +371,6 @@ def search(keyword):
 @click.option('--show', is_flag=True, help='Show current config')
 @click.option('--reset', is_flag=True, help='Reset to defaults')
 def config(key, value, show, reset):
-
     config_mgr = ConfigManager()
 
     if reset:
@@ -382,7 +404,6 @@ def config(key, value, show, reset):
 
 @main.command()
 def update():
-
     with console.status("[cyan]Checking for pattern updates...", spinner="dots"):
         import time
         time.sleep(1)
