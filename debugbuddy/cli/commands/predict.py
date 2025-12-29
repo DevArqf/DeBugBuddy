@@ -13,7 +13,6 @@ console = Console()
               help='Filter by severity level')
 @click.option('--limit', type=int, default=10, help='Maximum predictions to show')
 def predict(path, severity, limit):
-
     config = ConfigManager()
     predictor = ErrorPredictor(config)
 
@@ -48,4 +47,4 @@ def predict(path, severity, limit):
         )
 
     console.print(table)
-    console.print(f"\n[dim]💡 Tip: Use --severity to filter by severity level[/dim]")
+    console.print(f"\n[dim]Tip: Use --severity to filter by severity level[/dim]")

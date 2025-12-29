@@ -6,7 +6,6 @@ from ...core.parsers import ErrorParser
 from ...core.explainer import ErrorExplainer
 from ...storage.history import HistoryManager
 from ...storage.config import ConfigManager
-# from ...integrations.ai.base import get_provider
 
 console = Console()
 
@@ -53,18 +52,22 @@ def explain(error_input, file, ai, language):
     explanation = explainer.explain(parsed)
 
     if ai:
-        provider_name = config_mgr.get('ai_provider', 'openai')
-        api_key = config_mgr.get(f'{provider_name}_api_key')
-        if not api_key:
-            console.print(f"[yellow]No {provider_name.upper()} API key set. Run: dbug config {provider_name}_api_key YOUR_KEY[/yellow]")
-        else:
-            provider = get_provider(provider_name, config_mgr.get_all())
-            if provider:
-                ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
-                if ai_explain:
-                    explanation['ai'] = ai_explain
-                else:
-                    console.print("[yellow]AI explanation failed[/yellow]")
+        try:
+            from ...integrations.ai import get_provider
+            provider_name = config_mgr.get('ai_provider', 'openai')
+            api_key = config_mgr.get(f'{provider_name}_api_key')
+            if not api_key:
+                console.print(f"[yellow]No {provider_name.upper()} API key set. Run: dbug config {provider_name}_api_key YOUR_KEY[/yellow]")
+            else:
+                provider = get_provider(provider_name, config_mgr.get_all())
+                if provider:
+                    ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
+                    if ai_explain:
+                        explanation['ai'] = ai_explain
+                    else:
+                        console.print("[yellow]AI explanation failed[/yellow]")
+        except ImportError:
+            console.print("[yellow]AI dependencies not installed[/yellow]")
 
     history.add(parsed, explanation)
 
@@ -77,12 +80,12 @@ def explain(error_input, file, ai, language):
     if 'example' in explanation and explanation['example']:
         content += f"\n\nExample:\n{explanation['example']}"
 
-    if 'did_you_mean' in explanation:
-        dym = '\n'.join(f"• {s}" for s in explanation['did_you_mean'])
+    if 'did_you_mean' in explanation and explanation['did_you_mean']:
+        dym = '\n'.join(f"  {s}" for s in explanation['did_you_mean'])
         content += f"\n\nDid you mean?\n{dym}"
 
-    if 'suggestions' in explanation:
-        sugg = '\n'.join(f"• {s}" for s in explanation['suggestions'])
+    if 'suggestions' in explanation and explanation['suggestions']:
+        sugg = '\n'.join(f"  {s}" for s in explanation['suggestions'])
         content += f"\n\nSuggestions:\n{sugg}"
 
     if 'ai' in explanation:

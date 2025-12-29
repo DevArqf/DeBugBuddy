@@ -20,7 +20,7 @@ def get_version():
             from debugbuddy import __version__
             return __version__
         except (ImportError, AttributeError):
-            return "unknown"
+            return "0.3.2"
 
 @click.group(invoke_without_command=True)
 @click.option('--version', '-v', is_flag=True, help='Show version')
@@ -30,13 +30,13 @@ def main(ctx, version):
     
     if version:
         version_num = get_version()
-        console.print(f"\n[bold green]🐛 DeBugBuddy[/bold green] v{version_num}")
+        console.print(f"\n[bold green]DeBugBuddy[/bold green] v{version_num}")
         console.print("[dim]Your terminal's debugging companion[/dim]\n")
         return
     
     if ctx.invoked_subcommand is None:
         version_num = get_version()
-        console.print(f"\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
+        console.print(f"\n[bold green]DeBugBuddy - Your terminal's debugging companion[/bold green]")
         console.print(f"Version v{version_num}\n")
         console.print("Usage: [cyan]dbug [COMMAND] [OPTIONS][/cyan]\n")
         console.print("Commands:")
