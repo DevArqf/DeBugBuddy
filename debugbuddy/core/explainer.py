@@ -3,38 +3,23 @@ import difflib
 from pathlib import Path
 from typing import Dict, List, Optional
 import builtins
+import re
 
 class ErrorExplainer:
 
-    def __init__(self, allowed_languages: Optional[List[str]] = None):
-        self.allowed_languages = allowed_languages or []
+    def __init__(self):
         self.patterns = self._load_patterns()
 
     def _load_patterns(self) -> Dict:
-
         patterns = {}
         pattern_dir = Path(__file__).parent.parent.parent / 'patterns'
 
-        if not self.allowed_languages:
-            for pattern_file in pattern_dir.glob('*.json'):
-                try:
-                    with open(pattern_file, 'r', encoding='utf-8') as f:
-                        patterns[pattern_file.stem] = json.load(f)
-                except Exception as e:
-                    print(f"Warning: Could not load {pattern_file}: {e}")
-            return patterns
-
-        always_load = ['common']
-        load_langs = set(self.allowed_languages) | set(always_load)
-
-        for lang in load_langs:
-            pattern_file = pattern_dir / f'{lang}.json'
-            if pattern_file.exists():
-                try:
-                    with open(pattern_file, 'r', encoding='utf-8') as f:
-                        patterns[lang] = json.load(f)
-                except Exception as e:
-                    print(f"Warning: Could not load {pattern_file}: {e}")
+        for pattern_file in pattern_dir.glob('*.json'):
+            try:
+                with open(pattern_file, 'r', encoding='utf-8') as f:
+                    patterns[pattern_file.stem] = json.load(f)
+            except Exception as e:
+                print(f"Warning: Could not load {pattern_file}: {e}")
 
         return patterns
 
@@ -135,35 +120,8 @@ class ErrorExplainer:
                 if any(keyword_lower in str(field).lower() for field in searchable):
                     results.append({
                         'name': pattern.get('type', 'Unknown'),
-                        'description': pattern.get('simple', '').replace('🔍 ', ''),
+                        'description': pattern.get('simple', '').replace('Search ', ''),
                         'language': lang
                     })
 
         return results
-
-    def get_related_errors(self, error_type: str) -> List[str]:
-
-        related = {
-            'syntax': ['IndentationError', 'TabError', 'EOFError'],
-            'name': ['AttributeError', 'ImportError', 'UnboundLocalError'],
-            'type': ['ValueError', 'AttributeError', 'KeyError'],
-            'import': ['ModuleNotFoundError', 'ImportError'],
-            'index': ['KeyError', 'ValueError'],
-            'attribute': ['TypeError', 'NameError'],
-        }
-
-        error_lower = error_type.lower()
-        for key, errors in related.items():
-            if key in error_lower:
-                return errors
-
-        return []
-
-    def get_code_example(self, error_type: str) -> Optional[str]:
-
-        for lang, data in self.patterns.items():
-            for pattern in data.get('errors', []):
-                if error_type.lower() in pattern.get('type', '').lower():
-                    return pattern.get('example')
-
-        return None

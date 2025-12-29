@@ -10,14 +10,24 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.prompt import Prompt, Confirm
 
-from debugbuddy.core.parser import ErrorParser
+from debugbuddy.core.parsers import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
-from debugbuddy.core.watcher import ErrorWatcher, SimpleChecker
-from debugbuddy.core.history import HistoryManager
-from debugbuddy.utils.config import ConfigManager
-from debugbuddy.ai import get_provider, get_explanation_prompt
+from debugbuddy.monitoring.watcher import ErrorWatcher
+from debugbuddy.storage.history import HistoryManager
+from debugbuddy.storage.config import ConfigManager
 
 console = Console()
+
+def get_version():
+    try:
+        from debugbuddy.__version__ import __version__
+        return __version__
+    except ImportError:
+        try:
+            from debugbuddy import __version__
+            return __version__
+        except (ImportError, AttributeError):
+            return "0.3.2"
 
 def _detect_all_errors(file_path):
     all_errors = []
@@ -62,11 +72,23 @@ def _detect_all_errors(file_path):
     return all_errors
 
 @click.group(invoke_without_command=True)
+@click.option('--version', '-v', is_flag=True, help='Show version and exit')
 @click.pass_context
-def main(ctx):
+def main(ctx, version):
+    """DeBugBuddy - Your terminal's debugging companion"""
+    
+    if version:
+        version_num = get_version()
+        console.print(f"\n[bold green]🐛 DeBugBuddy[/bold green] v{version_num}")
+        console.print("[dim]Stop Googling. Understand your errors.[/dim]")
+        console.print(f"\n[dim]Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}[/dim]")
+        console.print(f"[dim]Platform: {sys.platform}[/dim]\n")
+        return
+    
     if ctx.invoked_subcommand is None:
-        console.print("\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
-        console.print("Version 0.2.2\n")
+        version_num = get_version()
+        console.print(f"\n[bold green]🐛 DeBugBuddy - Your terminal's debugging companion[/bold green]")
+        console.print(f"Version {version_num}\n")
         ctx.invoke(explain)
 
 @main.command()
@@ -83,7 +105,7 @@ def explain(error_input, file, ai, py, js, ts, c, php):
     allowed_languages = config_mgr.get('languages', [])
 
     parser = ErrorParser()
-    explainer = ErrorExplainer(allowed_languages=allowed_languages)
+    explainer = ErrorExplainer()
     history = HistoryManager()
 
     language = None
@@ -137,15 +159,19 @@ def explain(error_input, file, ai, py, js, ts, c, php):
         provider_name = config_mgr.get('ai_provider', 'openai')
         api_key = config_mgr.get(f'{provider_name}_api_key')
         if not api_key:
-            console.print(f"[yellow]⚠ No {provider_name.upper()} API key set. Run: dbug config --set {provider_name}_api_key YOUR_KEY[/yellow]")
+            console.print(f"[yellow]⚠ No {provider_name.upper()} API key set. Run: dbug config {provider_name}_api_key YOUR_KEY[/yellow]")
         else:
-            provider = get_provider(provider_name, config_mgr.get_all())
-            if provider:
-                ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
-                if ai_explain:
-                    explanation['ai'] = ai_explain
-                else:
-                    console.print("[yellow]⚠ AI explanation failed[/yellow]")
+            try:
+                from debugbuddy.integrations.ai import get_provider
+                provider = get_provider(provider_name, config_mgr.get_all())
+                if provider:
+                    ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
+                    if ai_explain:
+                        explanation['ai'] = ai_explain
+                    else:
+                        console.print("[yellow]⚠ AI explanation failed[/yellow]")
+            except ImportError:
+                console.print("[yellow]⚠ AI dependencies not installed[/yellow]")
 
     history.add(parsed, explanation)
 
@@ -190,6 +216,7 @@ def watch(path):
     console.print(f"\n[bold green]🐛 Watching for errors in: {path.absolute()}[/bold green]")
     console.print("[dim]Press Ctrl+C to stop[/dim]\n")
 
+    from watchdog.observers import Observer
     event_handler = ErrorWatcher()
     observer = Observer()
     observer.schedule(event_handler, str(path), recursive=True)
@@ -219,7 +246,7 @@ def check(file_path):
         return
 
     parser = ErrorParser()
-    explainer = ErrorExplainer(allowed_languages=allowed_languages)
+    explainer = ErrorExplainer()
 
     table = Table()
     table.add_column("Line", style="dim")
@@ -348,7 +375,6 @@ def search(keyword):
 @click.option('--show', is_flag=True, help='Show current config')
 @click.option('--reset', is_flag=True, help='Reset to defaults')
 def config(key, value, show, reset):
-
     config_mgr = ConfigManager()
 
     if reset:
@@ -382,7 +408,6 @@ def config(key, value, show, reset):
 
 @main.command()
 def update():
-
     with console.status("[cyan]Checking for pattern updates...", spinner="dots"):
         import time
         time.sleep(1)
@@ -390,6 +415,17 @@ def update():
     console.print("[green]✅ Patterns are up to date[/green]")
     console.print("\n[dim]Pattern version: 2.0[/dim]")
     console.print("[dim]Last updated: 2024-11-22[/dim]")
+
+try:
+    from debugbuddy.cli.commands.predict import predict
+    from debugbuddy.cli.commands.train import train
+    from debugbuddy.cli.commands.github import github
+    
+    main.add_command(predict)
+    main.add_command(train)
+    main.add_command(github)
+except ImportError as e:
+    pass
 
 if __name__ == '__main__':
     main()

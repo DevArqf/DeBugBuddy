@@ -6,7 +6,8 @@
 Stop Googling. Understand your errors.
 
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/badge/pypi-v0.2.2-orange.svg)](https://pypi.org/project/debugbuddy-cli/0.2.2/)
+[![PyPI version](https://badge.fury.io/py/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -16,50 +17,10 @@ Stop Googling. Understand your errors.
 
 </div>
 
----
-
 ## Installation
 
 ```bash
 pip install debugbuddy-cli
-```
-
-## Quick Start
-
-```bash
-dbug explain "NameError: name 'x' is not defined"
-dbug explain error.log
-python script.py 2>&1 | dbug explain
-dbug interactive
-```
-
-### Example Output
-
-```bash
-$ dbug explain "NameError: name 'user_id' is not defined"
-
-╭─────────────────── 🐛 Error Explanation ───────────────────╮
-│ NameError                                                  │
-│ File: app.py, Line 42                                      │
-│                                                            │
-│ 🔍 You're trying to use 'user_id', but Python doesn't     │
-│ know what that is yet.                                     │
-│                                                            │
-│ 💡 Did you mean?                                           │
-│   • Check spelling of 'user_id'                            │
-│   • Did you forget to define 'user_id'?                    │
-│   • Need to import 'user_id'?                              │
-│                                                            │
-│ ✅ How to fix:                                             │
-│   • Define it before using: user_id = 123                  │
-│   • Import it: from config import user_id                  │
-│   • Check for typos in the name                            │
-╰────────────────────────────────────────────────────────────╯
-
-💭 You've seen this type of error before
-   Last occurrence: 2 hours ago
-
-💡 Tip: Use dbug explain -e to see code examples
 ```
 
 ## Documentation
@@ -67,27 +28,14 @@ $ dbug explain "NameError: name 'user_id' is not defined"
 ```bash
 All Commands
 
-dbug explain <error>
-dbug interactive
-dbug watch <dir>
-dbug history
-dbug history --stats
-dbug search <keyword>
-dbug config --show
-dbug config --reset
-dbug --version
-```
-
-```bash
-Extra Options
-
-dbug explain -e "SyntaxError: invalid syntax"
-dbug explain -v error.log
-dbug watch src/ --lang [CODING-LANG]
-dbug config ai_provider openai
-dbug config language [CODING-LANG]
-dbug config languages "" (Disables language filtering)
-dbug explain --ai "complex error"
+dbug explain     Explain an error message
+dbug predict     Predict errors in a file
+dbug watch       Watch files for errors
+dbug history     View error history
+dbug train       Train custom patterns or ML models
+dbug search      Search error patterns
+dbug config      Manage configuration
+dbug github      GitHub integration
 ```
 
 ## Supported Error Types
@@ -158,7 +106,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 - Typescript, C and PHP Language Support
 - AI support
 
-### v0.3.0 ❌
+### v0.3.0 ✅
 
 - Error prediction
 - Custom pattern training
@@ -180,7 +128,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 **A:** For debugging, yes. You stop switching tools.
 
 **Q:** **Can I add custom patterns?**
-**A:** Yes. Edit the JSON files in `~/.debugbuddy/patterns/`.
+**A:** Yes. Edit the JSON files in `./patterns`.
 
 ## Support
 
