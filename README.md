@@ -17,8 +17,6 @@ Stop Googling. Understand your errors.
 
 </div>
 
----
-
 ## Installation
 
 ```bash
