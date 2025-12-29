@@ -121,13 +121,13 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ## FAQ
 
-**Q:** **Is my code private?**
+**Q:** **Is my code private?** 
 **A:** Yes. Everything stays local unless you opt into AI mode.
 
-**Q:** **Does it replace StackOverflow?**
+**Q:** **Does it replace StackOverflow?** 
 **A:** For debugging, yes. You stop switching tools.
 
-**Q:** **Can I add custom patterns?**
+**Q:** **Can I add custom patterns?** 
 **A:** Yes. Edit the JSON files in `./patterns`.
 
 ## Support
