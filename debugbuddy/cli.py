@@ -10,12 +10,11 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.prompt import Prompt, Confirm
 
-from debugbuddy.core.parser import ErrorParser
+from debugbuddy.core.parsers import ErrorParser
 from debugbuddy.core.explainer import ErrorExplainer
-from debugbuddy.monitoring.watcher import ErrorWatcher, SimpleChecker
+from debugbuddy.monitoring.watcher import ErrorWatcher
 from debugbuddy.storage.history import HistoryManager
-from debugbuddy.cli.commands.config import ConfigManager
-from debugbuddy.integrations.ai import get_provider, get_explanation_prompt
+from debugbuddy.storage.config import ConfigManager
 
 console = Console()
 
@@ -106,7 +105,7 @@ def explain(error_input, file, ai, py, js, ts, c, php):
     allowed_languages = config_mgr.get('languages', [])
 
     parser = ErrorParser()
-    explainer = ErrorExplainer(allowed_languages=allowed_languages)
+    explainer = ErrorExplainer()
     history = HistoryManager()
 
     language = None
@@ -160,15 +159,19 @@ def explain(error_input, file, ai, py, js, ts, c, php):
         provider_name = config_mgr.get('ai_provider', 'openai')
         api_key = config_mgr.get(f'{provider_name}_api_key')
         if not api_key:
-            console.print(f"[yellow]⚠ No {provider_name.upper()} API key set. Run: dbug config --set {provider_name}_api_key YOUR_KEY[/yellow]")
+            console.print(f"[yellow]⚠ No {provider_name.upper()} API key set. Run: dbug config {provider_name}_api_key YOUR_KEY[/yellow]")
         else:
-            provider = get_provider(provider_name, config_mgr.get_all())
-            if provider:
-                ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
-                if ai_explain:
-                    explanation['ai'] = ai_explain
-                else:
-                    console.print("[yellow]⚠ AI explanation failed[/yellow]")
+            try:
+                from debugbuddy.integrations.ai import get_provider
+                provider = get_provider(provider_name, config_mgr.get_all())
+                if provider:
+                    ai_explain = provider.explain_error(error_text, parsed.get('language', 'code'))
+                    if ai_explain:
+                        explanation['ai'] = ai_explain
+                    else:
+                        console.print("[yellow]⚠ AI explanation failed[/yellow]")
+            except ImportError:
+                console.print("[yellow]⚠ AI dependencies not installed[/yellow]")
 
     history.add(parsed, explanation)
 
@@ -213,6 +216,7 @@ def watch(path):
     console.print(f"\n[bold green]🐛 Watching for errors in: {path.absolute()}[/bold green]")
     console.print("[dim]Press Ctrl+C to stop[/dim]\n")
 
+    from watchdog.observers import Observer
     event_handler = ErrorWatcher()
     observer = Observer()
     observer.schedule(event_handler, str(path), recursive=True)
@@ -242,7 +246,7 @@ def check(file_path):
         return
 
     parser = ErrorParser()
-    explainer = ErrorExplainer(allowed_languages=allowed_languages)
+    explainer = ErrorExplainer()
 
     table = Table()
     table.add_column("Line", style="dim")
@@ -411,6 +415,17 @@ def update():
     console.print("[green]✅ Patterns are up to date[/green]")
     console.print("\n[dim]Pattern version: 2.0[/dim]")
     console.print("[dim]Last updated: 2024-11-22[/dim]")
+
+try:
+    from debugbuddy.cli.commands.predict import predict
+    from debugbuddy.cli.commands.train import train
+    from debugbuddy.cli.commands.github import github
+    
+    main.add_command(predict)
+    main.add_command(train)
+    main.add_command(github)
+except ImportError as e:
+    pass
 
 if __name__ == '__main__':
     main()

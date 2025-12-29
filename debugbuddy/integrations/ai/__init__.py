@@ -10,3 +10,6 @@ def get_provider(provider_name: str, config: Dict[str, Any]) -> Optional[BaseAIP
     elif provider_name == "anthropic":
         return AnthropicProvider(config.get("anthropic_api_key"), config)
     return None
+
+def get_explanation_prompt(error: str, language: str) -> str:
+    return ERROR_EXPLANATION_PROMPT.format(error=error, language=language)

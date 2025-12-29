@@ -1,13 +1,5 @@
 import click
 from rich.console import Console
-from .commands.explain import explain
-from .commands.watch import watch
-from .commands.history import history
-from .commands.search import search
-from .commands.config import config
-from .commands.predict import predict
-from .commands.train import train
-from .commands.github import github
 
 console = Console()
 
@@ -57,14 +49,53 @@ def main(ctx, version):
         console.print('  [dim]dbug train --ml[/dim]')
         console.print()
 
-main.add_command(explain)
-main.add_command(watch)
-main.add_command(history)
-main.add_command(search)
-main.add_command(config)
-main.add_command(predict)
-main.add_command(train)
-main.add_command(github)
+try:
+    from .commands.explain import explain
+    main.add_command(explain)
+except ImportError:
+    pass
+
+try:
+    from .commands.watch import watch
+    main.add_command(watch)
+except ImportError:
+    pass
+
+try:
+    from .commands.history import history
+    main.add_command(history)
+except ImportError:
+    pass
+
+try:
+    from .commands.search import search
+    main.add_command(search)
+except ImportError:
+    pass
+
+try:
+    from .commands.config import config
+    main.add_command(config)
+except ImportError:
+    pass
+
+try:
+    from .commands.predict import predict
+    main.add_command(predict)
+except ImportError:
+    pass
+
+try:
+    from .commands.train import train
+    main.add_command(train)
+except ImportError:
+    pass
+
+try:
+    from .commands.github import github
+    main.add_command(github)
+except ImportError:
+    pass
 
 if __name__ == "__main__":
     main()
