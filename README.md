@@ -103,21 +103,20 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ### v0.2.0 ✅
 
-- Typescript, C and PHP Language Support
-- AI support
+- [x] Typescript, C and PHP Language Support
+- [x] AI support
 
 ### v0.3.0 ✅
 
-- Error prediction
-- Custom pattern training
-- GitHub integration
+- [x] Error prediction
+- [x] Custom pattern training
+- [x] GitHub integration
 
 ### v1.0.0 ❌
 
-- 10 or more languages
-- Enterprise features
-- Error analytics dashboard
-- Slack and Discord bots
+- [ ] 10 or more languages
+- [ ] Error analytics dashboard
+- [ ] Slack and Discord bots
 
 ## FAQ
 
