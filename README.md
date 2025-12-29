@@ -6,7 +6,8 @@
 Stop Googling. Understand your errors.
 
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI](https://img.shields.io/badge/pypi-v0.3.2-orange.svg)](https://pypi.org/project/debugbuddy-cli/0.3.2/)
+[![PyPI version](https://badge.fury.io/py/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
