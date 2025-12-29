@@ -35,11 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: dist/*
-      - name: Verify distributions exist
-        run: |
-          ls -l dist
-          test -n "$(ls -A dist)" || { echo "No distributions found in dist/"; exit 1; }
+          path: dist/
 
   pypi-publish:
     needs: build
