@@ -18,8 +18,7 @@ Stop Googling. Understand your errors.
 </div>
 
 ## Overview and Purpose
-DeBugBuddy is an open-source, Python-based CLI tool designed as a “terminal’s debugging companion” to provide instant, context-aware explanations for error messages without requiring users to search external resources like StackOverflow or documentation. DeBugBuddy focuses on local processing for privacy (unless AI mode is opted in) and supports a wide range of error types across multiple programming languages.    
-DeBugBuddy also emphasizes ease of use for developers, reducing context-switching during debugging by integrating features like error prediction, file watching, and history tracking directly in the terminal.
+DeBugBuddy is an open-source, Python-based CLI tool designed as a “terminal’s debugging companion” to provide instant, context-aware explanations for error messages without requiring users to search external resources like StackOverflow or documentation. DeBugBuddy focuses on local processing for privacy (unless AI mode is opted in) and supports a wide range of error types across multiple programming languages. DeBugBuddy also emphasizes ease of use for developers, reducing context-switching during debugging by integrating features like error prediction, file watching, and history tracking directly in the terminal.
 
 ## Installation
 
