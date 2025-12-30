@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/DevArqf/DeBugBuddy/blob/main/DeBugBuddy%20Logo.png" />
+<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://raw.githubusercontent.com/DevArqf/DeBugBuddy/refs/heads/main/DeBugBuddy%20Logo.png" />
 
 ### Your terminal’s debugging companion
 
