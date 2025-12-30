@@ -114,7 +114,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ### v0.4.0 ❌
 
-- [ ] Java, HTML and Lua Language Support
+- [ ] Java, HTML and CSS Language Support
 
 ### v1.0.0 ❌
 
