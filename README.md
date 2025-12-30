@@ -163,12 +163,12 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 > [!NOTE]
 > The **Q** in brackets stands for **Quarter**.
-> This is a common convention in project roadmaps, product planning, and software release timelines:
->	•	Q1 → First quarter of the year (January–March)
->	•	Q2 → Second quarter (April–June)
->	•	Q3 → Third quarter (July–September)
->	•	Q4 → Fourth quarter (October–December)
-> I used it to indicate approximate target timeframes for each version’s release, starting from early 2026.
+> This is a __common__ convention in project roadmaps, product planning, and software release timelines:
+>	•	**Q1** → First quarter of the year (January–March)
+>	•	**Q2** → Second quarter (April–June)
+>	•	**Q3** → Third quarter (July–September)
+>	•	**Q4** → Fourth quarter (October–December)
+> I used it to indicate approximate target timeframes for each version’s release, starting from early **2026**.
 
 
 ## FAQ
