@@ -112,6 +112,10 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 - [x] Custom pattern training
 - [x] GitHub integration
 
+### v0.4.0 ✅
+
+- [ ] Java, HTML and Lua Language Support
+
 ### v1.0.0 ❌
 
 - [ ] 10 or more languages
