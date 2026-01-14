@@ -12,6 +12,8 @@ class ConfigManager:
         'ai_provider': 'anthropic',
         'openai_api_key': '',
         'anthropic_api_key': '',
+        'grok_api_key': '',
+        'grok_base_url': 'https://api.x.ai/v1',
         'ai_model': 'gpt-4',
         'default_language': 'python',
         'watch_exclude': ['__pycache__', '.git', 'node_modules', '.venv'],

@@ -1,0 +1,86 @@
+{
+  "language": "java",
+  "version": "1.0",
+  "errors": [
+    {
+      "type": "NullPointerException",
+      "keywords": ["nullpointerexception", "null", "null reference"],
+      "simple": "You're trying to use a null reference.",
+      "fix": "Initialize the object before use or add a null check.",
+      "example": "// Wrong\nString name = null;\nSystem.out.println(name.length());\n\n// Correct\nif (name != null) {\n  System.out.println(name.length());\n}",
+      "did_you_mean": ["Add null checks"]
+    },
+    {
+      "type": "ArrayIndexOutOfBoundsException",
+      "keywords": ["arrayindexoutofboundsexception", "index out of bounds"],
+      "simple": "Array index is outside valid range.",
+      "fix": "Check array length before indexing.",
+      "example": "// Wrong\nint[] nums = {1, 2, 3};\nSystem.out.println(nums[3]);\n\n// Correct\nif (idx >= 0 && idx < nums.length) {\n  System.out.println(nums[idx]);\n}",
+      "did_you_mean": ["Check array bounds"]
+    },
+    {
+      "type": "ClassNotFoundException",
+      "keywords": ["classnotfoundexception", "class not found"],
+      "simple": "JVM cannot find the class at runtime.",
+      "fix": "Verify classpath and dependency setup.",
+      "example": "",
+      "did_you_mean": ["Check classpath"]
+    },
+    {
+      "type": "NoClassDefFoundError",
+      "keywords": ["noclassdeffounderror", "no class def found"],
+      "simple": "Class was present at compile time but missing at runtime.",
+      "fix": "Ensure the dependency is available in runtime classpath.",
+      "example": "",
+      "did_you_mean": ["Verify runtime dependencies"]
+    },
+    {
+      "type": "NumberFormatException",
+      "keywords": ["numberformatexception", "for input string"],
+      "simple": "String cannot be parsed to a number.",
+      "fix": "Validate input before parsing.",
+      "example": "// Wrong\nint n = Integer.parseInt(\"abc\");\n\n// Correct\nif (str.matches(\"\\\\d+\")) {\n  int n = Integer.parseInt(str);\n}",
+      "did_you_mean": ["Validate input"]
+    },
+    {
+      "type": "IllegalArgumentException",
+      "keywords": ["illegalargumentexception", "illegal argument"],
+      "simple": "Method received an invalid argument.",
+      "fix": "Validate arguments before calling the method.",
+      "example": "",
+      "did_you_mean": ["Check method arguments"]
+    },
+    {
+      "type": "IllegalStateException",
+      "keywords": ["illegalstateexception", "illegal state"],
+      "simple": "Method called at an inappropriate time.",
+      "fix": "Check object state before calling the method.",
+      "example": "",
+      "did_you_mean": ["Verify object state"]
+    },
+    {
+      "type": "StackOverflowError",
+      "keywords": ["stackoverflowerror", "stack overflow"],
+      "simple": "Stack overflow from too much recursion.",
+      "fix": "Add a base case or convert recursion to iteration.",
+      "example": "",
+      "did_you_mean": ["Add base case"]
+    },
+    {
+      "type": "OutOfMemoryError",
+      "keywords": ["outofmemoryerror", "java heap space"],
+      "simple": "JVM ran out of heap memory.",
+      "fix": "Reduce memory usage or increase heap size.",
+      "example": "",
+      "did_you_mean": ["Increase heap size"]
+    },
+    {
+      "type": "ArithmeticException",
+      "keywords": ["arithmeticexception", "/ by zero"],
+      "simple": "Invalid arithmetic operation, like division by zero.",
+      "fix": "Check divisor before dividing.",
+      "example": "",
+      "did_you_mean": ["Avoid divide by zero"]
+    }
+  ]
+}

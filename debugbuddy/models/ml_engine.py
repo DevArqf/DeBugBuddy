@@ -212,7 +212,9 @@ class FeatureExtractor:
             'javascript': ['js', 'javascript', 'node', 'referenceerror'],
             'typescript': ['ts', 'typescript', 'interface', 'generic'],
             'c': ['gcc', 'segfault', 'undefined reference'],
-            'php': ['php', 'parse error', 'fatal error']
+            'php': ['php', 'parse error', 'fatal error'],
+            'java': ['java', 'exception in thread', 'nullpointerexception'],
+            'ruby': ['ruby', 'nomethoderror', 'undefined method']
         }
 
     def extract(self, error_text: str, language: str = None) -> np.ndarray:
@@ -248,7 +250,7 @@ class FeatureExtractor:
 
 class MLEngine:
 
-    def __init__(self, model_dir: Path = None):
+    def __init__(self, model_dir: Path = None, quantize: bool = True, cache_size: int = 500):
         self.model_dir = model_dir or Path.home() / '.debugbuddy' / 'models'
         self.model_dir.mkdir(parents=True, exist_ok=True)
 
@@ -258,6 +260,10 @@ class MLEngine:
         self.error_types = []
         self.type_to_idx = {}
         self.trained = False
+        self.quantize = quantize
+        self._prediction_cache = {}
+        self._cache_order = []
+        self._cache_size = cache_size
 
     def prepare_data(self, examples: List[TrainingExample]) -> Tuple[np.ndarray, np.ndarray]:
         X = []
@@ -299,6 +305,9 @@ class MLEngine:
         losses = self.classifier.train(X_norm, y, epochs=epochs)
         self.trained = True
 
+        if self.quantize:
+            self._quantize_model()
+
         print(f"Training complete. Final loss: {losses[-1]:.4f}")
         return losses
 
@@ -315,6 +324,11 @@ class MLEngine:
         if not self.trained or self.classifier is None:
             return {'error': 'Model not trained'}
 
+        cache_key = (error_text, language)
+        cached = self._prediction_cache.get(cache_key)
+        if cached:
+            return cached
+
         features = self.feature_extractor.extract(error_text, language)
         features_norm = (features - self.feature_mean) / self.feature_std
         features_norm = features_norm.reshape(1, -1)
@@ -329,10 +343,12 @@ class MLEngine:
                 'confidence': float(probs[idx])
             })
 
-        return {
+        result = {
             'predictions': predictions,
             'top_prediction': predictions[0] if predictions else None
         }
+        self._set_cache(cache_key, result)
+        return result
 
     def get_similar_errors(self, error_text: str, top_k: int = 5) -> List[Dict]:
         if self.embedding_model is None:
@@ -398,6 +414,28 @@ class MLEngine:
             self.embedding_model.vocab_size = len(data['word_to_idx'])
 
             print("Embeddings loaded successfully")
+
+        if self.quantize:
+            self._quantize_model()
+
+    def _quantize_model(self):
+        if self.classifier:
+            for layer in self.classifier.layers:
+                layer['w'] = layer['w'].astype(np.float32)
+                layer['b'] = layer['b'].astype(np.float32)
+            self.feature_mean = self.feature_mean.astype(np.float32)
+            self.feature_std = self.feature_std.astype(np.float32)
+        if self.embedding_model and self.embedding_model.embeddings is not None:
+            self.embedding_model.embeddings = self.embedding_model.embeddings.astype(np.float32)
+
+    def _set_cache(self, key, value):
+        if key in self._prediction_cache:
+            return
+        self._prediction_cache[key] = value
+        self._cache_order.append(key)
+        if len(self._cache_order) > self._cache_size:
+            oldest = self._cache_order.pop(0)
+            self._prediction_cache.pop(oldest, None)
 
 if __name__ == '__main__':
     examples = [

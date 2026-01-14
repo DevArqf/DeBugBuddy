@@ -1,6 +1,7 @@
 import click
 from rich.console import Console
 from ...core.explainer import ErrorExplainer
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -13,8 +14,13 @@ def search(keyword):
     if not results:
         console.print(f"[yellow]No patterns found for '{keyword}'[/yellow]")
         console.print("\n[dim]Try searching for:[/dim]")
-        console.print("  • Error names: syntax, name, type")
-        console.print("  • Keywords: import, undefined, indentation")
+        console.print("  - Error names: syntax, name, type")
+        console.print("  - Keywords: import, undefined, indentation")
+        return
+
+    if should_use_tui():
+        from ...tui.views import run_search_view
+        run_search_view(results)
         return
 
     console.print(f"\n[bold green]Found {len(results)} patterns for '{keyword}':[/bold green]\n")

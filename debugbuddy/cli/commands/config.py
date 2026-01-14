@@ -3,6 +3,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.prompt import Confirm
 from ...storage.config import ConfigManager
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -22,6 +23,11 @@ def config(key, value, show, reset):
 
     if show or (not key and not value):
         cfg = config_mgr.get_all()
+
+        if should_use_tui():
+            from ...tui.views import run_config_view
+            run_config_view(cfg)
+            return
 
         console.print("\n[bold green]Current Configuration[/bold green]\n")
 

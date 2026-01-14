@@ -10,6 +10,7 @@ dist/
 *.egg-info/
 *.whl
 *.tar.gz
+.venv_build
 
 # Testing
 .pytest_cache/

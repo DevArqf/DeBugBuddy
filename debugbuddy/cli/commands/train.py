@@ -5,6 +5,7 @@ from rich.progress import Progress
 from ...core.trainer import PatternTrainer
 from ...storage.config import ConfigManager
 from ...models.training import TrainingData
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -34,6 +35,10 @@ def train(interactive, language, ml, from_history):
         console.print("[yellow]No custom patterns yet[/yellow]")
         console.print("[dim]Use --interactive to create one[/dim]")
         console.print("[dim]Use --ml to train ML models[/dim]")
+        return
+    if should_use_tui():
+        from ...tui.views import run_train_view
+        run_train_view(patterns)
         return
 
     console.print("\n[bold cyan]Custom Patterns[/bold cyan]\n")

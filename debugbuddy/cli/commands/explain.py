@@ -6,6 +6,7 @@ from ...core.parsers import ErrorParser
 from ...core.explainer import ErrorExplainer
 from ...storage.history import HistoryManager
 from ...storage.config import ConfigManager
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -70,6 +71,12 @@ def explain(error_input, file, ai, language):
             console.print("[yellow]AI dependencies not installed[/yellow]")
 
     history.add(parsed, explanation)
+
+    if should_use_tui():
+        from ...tui.views import run_explain_view
+        similar = history.find_similar(parsed)
+        run_explain_view(parsed, explanation, similar)
+        return
 
     title = f"DeBugBuddy {parsed['type']}"
     if parsed.get('file') and parsed.get('line'):

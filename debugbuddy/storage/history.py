@@ -1,8 +1,7 @@
 import sqlite3
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Optional
-
 
 class HistoryManager:
     def __init__(self):
@@ -111,7 +110,7 @@ class HistoryManager:
         conn.commit()
         conn.close()
 
-    def get_stats(self) -> Dict:
+    def get_stats(self, days: int = 7, top_n: int = 5) -> Dict:
         conn = sqlite3.connect(self.db_file)
         cursor = conn.cursor()
 
@@ -128,12 +127,38 @@ class HistoryManager:
         )
         by_language = dict(cursor.fetchall())
 
+        cursor.execute(
+            """
+            SELECT file, COUNT(*) FROM history
+            WHERE file IS NOT NULL AND file != ''
+            GROUP BY file
+            ORDER BY COUNT(*) DESC
+            LIMIT ?
+            """,
+            (top_n,),
+        )
+        by_file = dict(cursor.fetchall())
+
+        cutoff = (datetime.now() - timedelta(days=days)).isoformat()
+        cursor.execute(
+            """
+            SELECT date(timestamp) as day, COUNT(*) FROM history
+            WHERE timestamp >= ?
+            GROUP BY day
+            ORDER BY day DESC
+            """,
+            (cutoff,),
+        )
+        recent_days = cursor.fetchall()
+
         conn.close()
 
         return {
             "total": total,
             "by_type": by_type,
             "by_language": by_language,
+            "by_file": by_file,
+            "recent_days": recent_days,
         }
 
     def _rows_to_dicts(self, rows: List[tuple]) -> List[Dict]:

@@ -1,0 +1,86 @@
+{
+  "language": "ruby",
+  "version": "1.0",
+  "errors": [
+    {
+      "type": "NoMethodError",
+      "keywords": ["nomethoderror", "undefined method"],
+      "simple": "You called a method that doesn't exist on the object.",
+      "fix": "Check object type or guard against nil.",
+      "example": "# Wrong\nuser = nil\nuser.name\n\n# Correct\nif user\n  user.name\nend",
+      "did_you_mean": ["Check for nil"]
+    },
+    {
+      "type": "NameError",
+      "keywords": ["nameerror", "uninitialized constant", "undefined local variable"],
+      "simple": "You referenced a constant or variable that is not defined.",
+      "fix": "Define it or check for typos.",
+      "example": "",
+      "did_you_mean": ["Check spelling"]
+    },
+    {
+      "type": "TypeError",
+      "keywords": ["typeerror", "no implicit conversion"],
+      "simple": "Ruby cannot convert between the given types.",
+      "fix": "Convert values explicitly before using them.",
+      "example": "",
+      "did_you_mean": ["Use to_s, to_i, to_a"]
+    },
+    {
+      "type": "ArgumentError",
+      "keywords": ["argumenterror", "wrong number of arguments"],
+      "simple": "Method called with wrong number or type of arguments.",
+      "fix": "Check method signature and arguments.",
+      "example": "",
+      "did_you_mean": ["Verify method arguments"]
+    },
+    {
+      "type": "LoadError",
+      "keywords": ["loaderror", "cannot load such file"],
+      "simple": "Ruby couldn't load a file or gem.",
+      "fix": "Check file path, gem install, and require statements.",
+      "example": "",
+      "did_you_mean": ["Check require path"]
+    },
+    {
+      "type": "RuntimeError",
+      "keywords": ["runtimeerror"],
+      "simple": "Generic runtime error raised by the program.",
+      "fix": "Inspect the message and surrounding code.",
+      "example": "",
+      "did_you_mean": ["Check raise message"]
+    },
+    {
+      "type": "SyntaxError",
+      "keywords": ["syntaxerror", "unexpected", "unterminated"],
+      "simple": "There's a syntax mistake in your Ruby code.",
+      "fix": "Look for missing end, parentheses, or quotes.",
+      "example": "",
+      "did_you_mean": ["Check missing end"]
+    },
+    {
+      "type": "ZeroDivisionError",
+      "keywords": ["zerodivisionerror", "divided by 0"],
+      "simple": "Division by zero occurred.",
+      "fix": "Ensure the divisor is not zero.",
+      "example": "",
+      "did_you_mean": ["Check divisor"]
+    },
+    {
+      "type": "IndexError",
+      "keywords": ["indexerror", "index out of range"],
+      "simple": "Index is outside the array bounds.",
+      "fix": "Check array size before indexing.",
+      "example": "",
+      "did_you_mean": ["Check bounds"]
+    },
+    {
+      "type": "KeyError",
+      "keywords": ["keyerror", "key not found"],
+      "simple": "A hash key was not found.",
+      "fix": "Check for key existence before access.",
+      "example": "",
+      "did_you_mean": ["Use hash.key?"]
+    }
+  ]
+}

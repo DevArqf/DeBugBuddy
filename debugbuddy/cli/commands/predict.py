@@ -4,6 +4,7 @@ from rich.console import Console
 from rich.table import Table
 from ...core.predictor import ErrorPredictor
 from ...storage.config import ConfigManager
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -29,6 +30,10 @@ def predict(path, severity, limit):
 
     if not predictions:
         console.print("[green]No potential errors detected![/green]")
+        return
+    if should_use_tui():
+        from ...tui.views import run_predict_view
+        run_predict_view(predictions)
         return
 
     table = Table(title="Potential Errors")

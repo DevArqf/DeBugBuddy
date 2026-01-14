@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://github.com/DevArqf/DeBugBuddy/blob/main/DeBugBuddy%20Logo.png" />
+<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://raw.githubusercontent.com/DevArqf/DeBugBuddy/refs/heads/main/DeBugBuddy%20Logo.png" />
 
 ### Your terminal’s debugging companion
 
@@ -16,6 +16,9 @@ Stop Googling. Understand your errors.
 [Docs](#documentation)
 
 </div>
+
+## Overview and Purpose
+DeBugBuddy is an open-source, Python-based CLI tool designed as a “terminal’s debugging companion” to provide instant, context-aware explanations for error messages without requiring users to search external resources like StackOverflow or documentation. DeBugBuddy focuses on local processing for privacy (unless AI mode is opted in) and supports a wide range of error types across multiple programming languages. DeBugBuddy also emphasizes ease of use for developers, reducing context-switching during debugging by integrating features like error prediction, file watching, and history tracking directly in the terminal.
 
 ## Installation
 
@@ -103,31 +106,80 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ### v0.2.0 ✅
 
-- Typescript, C and PHP Language Support
-- AI support
+- [x] Typescript, C and PHP Language Support
+- [x] AI support
 
 ### v0.3.0 ✅
 
-- Error prediction
-- Custom pattern training
-- GitHub integration
+- [x] Error prediction
+- [x] Custom pattern training
+- [x] GitHub integration
 
-### v1.0.0 ❌
+### v0.4.0 (Q1 2026) ✅
 
-- 10 or more languages
-- Enterprise features
-- Error analytics dashboard
-- Slack and Discord bots
+- [x] Java and Ruby Language Support
+- [x] ML prediction optimization for faster inference (e.g., model quantization, caching improvements).
+- [x] Introduce basic error analytics in CLI (e.g., stats on frequent errors from history).
+- [x] Introduce Grok as an AI Provider for the AI Mode.
+- [x] Full test coverage for new languages; refactor pattern manager for easier additions.
+
+### v0.5.0 (Q2 2026) ❌
+- [ ] Go and Rust Language Support
+- [ ] Implement IDE integrations (e.g., VS Code extension for seamless CLI calls).
+- [ ] Improve custom training with user-friendly wizards and example datasets.
+- [ ] Add multi-file/project scanning for prediction/watch.
+- [ ] Security audit and fixes (e.g., safe error message parsing to prevent injection).
+
+### v0.6.0 (Q3 2026) ❌
+- [ ] Introduce a basic web-based error analytics dashboard (e.g., using Flask/Dash; local server mode) for visualizing history, patterns, and predictions.
+- [ ] Swift Language Support
+- [ ] Enable export/import of patterns and history (e.g., JSON/CSV).
+- [ ] Introduce performance benchmarks and optimizations for large projects.
+- [ ] Community features: Template for contributing new language patterns.
+
+### v0.7.0 (Q3 2026) ❌
+- [ ] Kotlin and C# Language Support
+- [ ] Implement Slack bot for error explanations/predictions (e.g., slash commands to query from chat).
+- [ ] Enhance dashboard with interactive charts (e.g., error frequency over time, language breakdowns).
+- [ ] Add collaborative mode (e.g., share prediction reports via links).
+- [ ] Extensive documentation updates, including API reference for extensions.
+
+### v0.8.0 (Q4 2026) ❌
+- [ ] Implement Discord bot with similar features to Slack (e.g., error queries, notifications).
+- [ ] Dashboard enhancements: User authentication, cloud sync option (opt-in for privacy).
+- [ ] Introduce advanced ML features (e.g., auto-suggest fixes based on history).
+
+### v0.9.0 (Q4 2026) ❌
+- [ ] Scala and Elixir Language Support
+- [ ] Full integration testing for dashboard.
+- [ ] Performance profiling and optimizations (e.g., reduce startup time <1s).
+- [ ] User feedback loop: Add in-app surveys or GitHub issue templates.
+
+### v1.0.0 (Q1 2027) - Stable Release ❌
+
+- [ ] Official support for 12+ languages.
+- [ ] Fully featured error analytics dashboard (local/web, with visualizations and exports).
+- [ ] Slack and Discord bots support for real-time debugging assistance.
+
+> [!NOTE]
+> The **Q** in brackets stands for **Quarter**.
+> This is a __common__ convention in project roadmaps, product planning, and software release timelines:
+>	•	**Q1** → First quarter of the year (January–March)
+>	•	**Q2** → Second quarter (April–June)
+>	•	**Q3** → Third quarter (July–September)
+>	•	**Q4** → Fourth quarter (October–December)
+> I used it to indicate approximate target timeframes for each version’s release, starting from early **2026**.
+
 
 ## FAQ
 
-**Q:** **Is my code private?**
+**Q:** **Is my code private?**  
 **A:** Yes. Everything stays local unless you opt into AI mode.
 
-**Q:** **Does it replace StackOverflow?**
+**Q:** **Does it replace StackOverflow?**  
 **A:** For debugging, yes. You stop switching tools.
 
-**Q:** **Can I add custom patterns?**
+**Q:** **Can I add custom patterns?**  
 **A:** Yes. Edit the JSON files in `./patterns`.
 
 ## Support
