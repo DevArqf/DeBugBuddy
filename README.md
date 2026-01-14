@@ -115,7 +115,7 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 - [x] Custom pattern training
 - [x] GitHub integration
 
-### v0.4.0 (Q1 2026) ❌
+### v0.4.0 (Q1 2026) ✅
 
 - [x] Java and Ruby Language Support
 - [x] ML prediction optimization for faster inference (e.g., model quantization, caching improvements).
