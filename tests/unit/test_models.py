@@ -202,7 +202,7 @@ class TestTrainingDataModel:
         assert data.timestamp == custom_time
 
     def test_multiple_languages(self):
-        languages = ['python', 'javascript', 'typescript', 'c', 'php']
+        languages = ['python', 'javascript', 'typescript', 'c', 'php', 'java', 'ruby']
 
         for lang in languages:
             data = TrainingData(

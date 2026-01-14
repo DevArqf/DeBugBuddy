@@ -1,27 +1,17 @@
-import json
 import difflib
-from pathlib import Path
 from typing import Dict, List, Optional
 import builtins
 import re
+from ..storage.patterns import PatternManager
 
 class ErrorExplainer:
 
     def __init__(self):
+        self.pattern_mgr = PatternManager()
         self.patterns = self._load_patterns()
 
     def _load_patterns(self) -> Dict:
-        patterns = {}
-        pattern_dir = Path(__file__).parent.parent.parent / 'patterns'
-
-        for pattern_file in pattern_dir.glob('*.json'):
-            try:
-                with open(pattern_file, 'r', encoding='utf-8') as f:
-                    patterns[pattern_file.stem] = json.load(f)
-            except Exception as e:
-                print(f"Warning: Could not load {pattern_file}: {e}")
-
-        return patterns
+        return self.pattern_mgr.load_patterns()
 
     def explain(self, parsed_error: Dict) -> Dict:
 
@@ -42,12 +32,12 @@ class ErrorExplainer:
     def _match_pattern(self, error_type: str, message: str, language: str) -> Optional[Dict]:
 
         if language in self.patterns:
-            for pattern in self.patterns[language].get('errors', []):
+            for pattern in self.patterns[language]:
                 if self._matches(error_type, message, pattern):
                     return pattern.copy()
 
         if 'common' in self.patterns:
-            for pattern in self.patterns['common'].get('errors', []):
+            for pattern in self.patterns['common']:
                 if self._matches(error_type, message, pattern):
                     return pattern.copy()
 
@@ -110,7 +100,7 @@ class ErrorExplainer:
         keyword_lower = keyword.lower()
 
         for lang, data in self.patterns.items():
-            for pattern in data.get('errors', []):
+            for pattern in data:
                 searchable = [
                     pattern.get('type', ''),
                     pattern.get('simple', ''),

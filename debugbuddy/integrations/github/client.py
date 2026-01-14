@@ -12,9 +12,10 @@ class GitHubClient:
         if token:
             self.headers["Authorization"] = f"token {token}"
 
-    def search_issues(self, error_type: str, language: str) -> List[Dict]:
-        query = f"{error_type} language:{language}"
-        url = f"{self.base_url}/search/issues?q={query}&sort=reactions"
+    def search_issues(self, query: str, sort: Optional[str] = None) -> List[Dict]:
+        url = f"{self.base_url}/search/issues?q={query}"
+        if sort:
+            url += f"&sort={sort}"
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:

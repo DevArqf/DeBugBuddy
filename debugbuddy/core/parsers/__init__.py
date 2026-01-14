@@ -6,6 +6,8 @@ from .javascript import JavaScriptParser
 from .typescript import TypeScriptParser
 from .c import CParser
 from .php import PHPParser
+from .java import JavaParser
+from .ruby import RubyParser
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 
@@ -17,6 +19,8 @@ class ErrorParser:
             'typescript': TypeScriptParser(),
             'c': CParser(),
             'php': PHPParser(),
+            'java': JavaParser(),
+            'ruby': RubyParser(),
         }
 
     def parse(self, error_text: str, language=None):
@@ -54,6 +58,20 @@ class ErrorParser:
                 result['language'] = 'python'
                 return result
         
+        java_indicators = ['exception in thread', 'java.lang.', 'nullpointerexception', '.java:']
+        if any(indicator in lower_text for indicator in java_indicators):
+            result = self.parsers['java'].parse(error_text)
+            if result:
+                result['language'] = 'java'
+                return result
+
+        ruby_indicators = ['nomethoderror', 'ruby', '.rb:', 'undefined method', 'syntaxerror']
+        if any(indicator in lower_text for indicator in ruby_indicators):
+            result = self.parsers['ruby'].parse(error_text)
+            if result:
+                result['language'] = 'ruby'
+                return result
+
         if any(err in lower_text for err in ['typeerror', 'syntaxerror']):
             if any(clue in lower_text for clue in ['cannot read property', 'undefined', 'null', 'javascript', 'js', 'node']):
                 result = self.parsers['javascript'].parse(error_text)

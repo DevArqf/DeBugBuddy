@@ -29,15 +29,16 @@ class ErrorPredictor:
 
     def predict_file(self, file_path: Path) -> List[Prediction]:
         predictions = []
-        
-        static_preds = self._analyze_static(file_path)
+        content = self._read_file(file_path)
+
+        static_preds = self._analyze_static(file_path, content)
         predictions.extend(static_preds)
-        
-        pattern_preds = self._analyze_patterns(file_path)
+
+        pattern_preds = self._analyze_patterns(file_path, content)
         predictions.extend(pattern_preds)
-        
+
         if self.ml_engine:
-            ml_preds = self._analyze_ml(file_path)
+            ml_preds = self._analyze_ml(file_path, content)
             predictions.extend(ml_preds)
         
         predictions = self._deduplicate_predictions(predictions)
@@ -45,15 +46,15 @@ class ErrorPredictor:
         
         return predictions
 
-    def _analyze_static(self, file_path: Path) -> List[Prediction]:
+    def _analyze_static(self, file_path: Path, content: str = None) -> List[Prediction]:
         predictions = []
         
         if file_path.suffix != '.py':
             return predictions
             
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
+            if content is None:
+                content = self._read_file(file_path)
             
             if not content.strip():
                 return predictions
@@ -107,14 +108,18 @@ class ErrorPredictor:
             
         return predictions
 
-    def _analyze_patterns(self, file_path: Path) -> List[Prediction]:
-        lang = file_path.suffix[1:] if file_path.suffix else 'unknown'
+    def _analyze_patterns(self, file_path: Path, content: str = None) -> List[Prediction]:
+        lang = self.pattern_mgr.get_language_for_file(file_path)
         patterns = self.pattern_mgr.load_patterns(lang)
         predictions = []
         
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
+            lang = self.pattern_mgr.get_language_for_file(file_path)
+            if content is None:
+                content = self._read_file(file_path)
+            if not content:
+                return predictions
+            lines = content.splitlines()
                 
             for i, line in enumerate(lines, 1):
                 line_lower = line.lower()
@@ -139,21 +144,24 @@ class ErrorPredictor:
             
         return predictions
 
-    def _analyze_ml(self, file_path: Path) -> List[Prediction]:
+    def _analyze_ml(self, file_path: Path, content: str = None) -> List[Prediction]:
         if not self.ml_engine:
             return []
             
         predictions = []
         
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
+            if content is None:
+                content = self._read_file(file_path)
+            if not content:
+                return predictions
+            lines = content.splitlines()
             
             for i, line in enumerate(lines, 1):
                 if not line.strip() or line.strip().startswith('#'):
                     continue
                 
-                result = self.ml_engine.classify_error(line, 'python')
+                result = self.ml_engine.classify_error(line, lang)
                 
                 if result and result.get('top_prediction'):
                     top = result['top_prediction']
@@ -173,6 +181,13 @@ class ErrorPredictor:
             pass
             
         return predictions
+
+    def _read_file(self, file_path: Path) -> str:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        except Exception:
+            return ""
 
     def _deduplicate_predictions(self, predictions: List[Prediction]) -> List[Prediction]:
         seen = set()

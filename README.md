@@ -117,11 +117,11 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 
 ### v0.4.0 (Q1 2026) ❌
 
-- [ ] Java and Ruby Language Support
-- [ ] ML prediction optimization for faster inference (e.g., model quantization, caching improvements).
-- [ ] Introduce basic error analytics in CLI (e.g., stats on frequent errors from history).
-- [ ] Introduce Grok as an AI Provider for the AI Mode.
-- [ ] Full test coverage for new languages; refactor pattern manager for easier additions.
+- [x] Java and Ruby Language Support
+- [x] ML prediction optimization for faster inference (e.g., model quantization, caching improvements).
+- [x] Introduce basic error analytics in CLI (e.g., stats on frequent errors from history).
+- [x] Introduce Grok as an AI Provider for the AI Mode.
+- [x] Full test coverage for new languages; refactor pattern manager for easier additions.
 
 ### v0.5.0 (Q2 2026) ❌
 - [ ] Go and Rust Language Support

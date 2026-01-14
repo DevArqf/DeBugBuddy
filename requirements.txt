@@ -2,6 +2,7 @@
 click>=8.0.0  
 colorama>=0.4.6  
 rich>=13.0.0  
+textual>=0.55.0  
 watchdog>=3.0.0  
 requests>=2.31.0  
 pyflakes>=3.4.0  

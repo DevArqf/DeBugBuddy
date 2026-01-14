@@ -2,6 +2,7 @@ import click
 from rich.console import Console
 from rich.prompt import Confirm
 from ...storage.history import HistoryManager
+from ...tui.runner import should_use_tui
 
 console = Console()
 
@@ -20,22 +21,40 @@ def history(clear, stats, search):
 
     if stats:
         stats_data = history_mgr.get_stats()
+        if should_use_tui():
+            from ...tui.views import run_history_stats_view
+            run_history_stats_view(stats_data)
+            return
         console.print("\n[bold green]Error Statistics[/bold green]\n")
         console.print(f"Total errors: {stats_data['total']}\n")
 
         console.print("[cyan]By Type:[/cyan]")
         for typ, count in sorted(stats_data['by_type'].items(), key=lambda x: x[1], reverse=True):
-            console.print(f"  • {typ}: {count}")
+            console.print(f"  - {typ}: {count}")
 
         console.print("\n[cyan]By Language:[/cyan]")
         for lang, count in sorted(stats_data['by_language'].items(), key=lambda x: x[1], reverse=True):
-            console.print(f"  • {lang}: {count}")
+            console.print(f"  - {lang}: {count}")
+
+        if stats_data.get('by_file'):
+            console.print("\n[cyan]Top Files:[/cyan]")
+            for file, count in stats_data['by_file'].items():
+                console.print(f"  - {file}: {count}")
+
+        if stats_data.get('recent_days'):
+            console.print("\n[cyan]Last 7 Days:[/cyan]")
+            for day, count in stats_data['recent_days']:
+                console.print(f"  - {day}: {count}")
         return
 
     if search:
         results = history_mgr.search(search)
         if not results:
             console.print(f"[yellow]No history found for '{search}'[/yellow]")
+            return
+        if should_use_tui():
+            from ...tui.views import run_history_entries_view
+            run_history_entries_view(results, f"Search: {search}")
             return
 
         console.print(f"\n[bold green]Search Results for '{search}':[/bold green]\n")
@@ -51,6 +70,10 @@ def history(clear, stats, search):
     recent = history_mgr.get_recent()
     if not recent:
         console.print("[yellow]No history yet[/yellow]")
+        return
+    if should_use_tui():
+        from ...tui.views import run_history_entries_view
+        run_history_entries_view(recent, "Recent errors")
         return
 
     console.print("\n[bold green]Recent Errors[/bold green]\n")

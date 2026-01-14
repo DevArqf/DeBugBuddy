@@ -11,14 +11,16 @@ from ..utils.helpers import detect_all_errors
 console = Console()
 
 class ErrorWatcher:
-    def __init__(self, path='.'):
+    def __init__(self, path='.', emit=None, stop_event=None):
         self.directory = Path(path).resolve() if Path(path).is_dir() else Path(path).parent.resolve()
         self.target_file = Path(path).resolve() if not Path(path).is_dir() else None
         self.extensions = ['.py',]
         self.exclude = ['__pycache__', '.git', '.venv']
+        self.emit = emit or console.print
+        self.stop_event = stop_event
 
     def start(self):
-        event_handler = ErrorFileHandler()
+        event_handler = ErrorFileHandler(emit=self.emit)
         observer = Observer()
         observer.schedule(event_handler, str(self.directory), recursive=True)
         observer.start()
@@ -28,16 +30,21 @@ class ErrorWatcher:
 
         try:
             while True:
+                if self.stop_event and self.stop_event.is_set():
+                    break
                 time.sleep(1)
         except KeyboardInterrupt:
+            pass
+        finally:
             observer.stop()
         observer.join()
 
 class ErrorFileHandler(FileSystemEventHandler):
-    def __init__(self):
+    def __init__(self, emit=None):
         self.parser = ErrorParser()
         self.explainer = ErrorExplainer()
         self.last_check = {}
+        self.emit = emit or console.print
 
     def on_modified(self, event):
         self._handle_event(event)
@@ -65,11 +72,11 @@ class ErrorFileHandler(FileSystemEventHandler):
         all_errors = detect_all_errors(file_path)
         if all_errors:
             timestamp = time.strftime("%H:%M:%S")
-            console.print(f"\n[{timestamp}] Found {len(all_errors)} error(s) in {file_path.name}")
+            self.emit(f"\n[{timestamp}] Found {len(all_errors)} error(s) in {file_path.name}")
             for i, error_text in enumerate(all_errors, 1):
                 parsed = self.parser.parse(error_text)
                 if parsed:
                     explanation = self.explainer.explain(parsed)
                     line_info = f" (line {parsed['line']})" if parsed.get('line') else ""
-                    console.print(f"           [{i}] [red]{parsed['type']}[/red]{line_info}")
-                    console.print(f"                [dim]{explanation['simple'][:70]}...[/dim]")
+                    self.emit(f"           [{i}] {parsed['type']}{line_info}")
+                    self.emit(f"                {explanation['simple'][:70]}...")
