@@ -21,7 +21,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install build tools
-        run: python -m pip install --upgrade pip build
+        run: python -m pip install --upgrade pip setuptools wheel
 
       - name: Run tests
         run: |
@@ -30,6 +30,15 @@ jobs:
 
       - name: Build package distributions
         run: python setup.py sdist bdist_wheel
+
+      - name: Verify dist output
+        run: |
+          ls -la dist
+          python - <<'PY'
+          import os, sys
+          if not os.path.isdir("dist") or not os.listdir("dist"):
+              sys.exit("dist/ is empty after build")
+          PY
 
       - name: Upload distributions as artifact
         uses: actions/upload-artifact@v4
