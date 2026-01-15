@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1000" height="650" alt="DeBugBuddy Logo" src="https://raw.githubusercontent.com/DevArqf/DeBugBuddy/refs/heads/main/DeBugBuddy%20Logo.png" />
+<img width="720" alt="DeBugBuddy Logo" src="https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/DeBugBuddy%20Logo.png" />
 
 ### Your terminal's debugging companion
 
@@ -25,13 +25,13 @@ DeBugBuddy is an open-source CLI + TUI that explains errors in plain English, pr
 ## Screenshots
 
 - **TUI dashboard**
-  ![TUI dashboard](docs-static/assets/tui-hero.png)
+  ![TUI dashboard](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-hero.png)
 - **Explain view**
-  ![Explain view](docs-static/assets/tui-explain.png)
+  ![Explain view](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-explain.png)
 - **Predict view**
-  ![Predict view](docs-static/assets/tui-predict.png)
+  ![Predict view](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-predict.png)
 - **History analytics**
-  ![History analytics](docs-static/assets/tui-history.png)
+  ![History analytics](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-history.png)
 
 ## Installation
 
