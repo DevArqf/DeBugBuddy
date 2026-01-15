@@ -27,7 +27,7 @@ def get_version():
             from debugbuddy import __version__
             return __version__
         except (ImportError, AttributeError):
-            return "0.4.6"
+            return "0.4.7"
 
 def _detect_all_errors(file_path):
     all_errors = []
