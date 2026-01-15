@@ -25,13 +25,13 @@ DeBugBuddy is an open-source CLI + TUI that explains errors in plain English, pr
 ## Screenshots
 
 - **TUI dashboard**
-  ![TUI dashboard](docs/assets/tui-dashboard.png)
+  ![TUI dashboard](docs-static/assets/tui-hero.png)
 - **Explain view**
-  ![Explain view](docs/assets/tui-explain.png)
+  ![Explain view](docs-static/assets/tui-explain.png)
 - **Predict view**
-  ![Predict view](docs/assets/tui-predict.png)
+  ![Predict view](docs-static/assets/tui-predict.png)
 - **History analytics**
-  ![History analytics](docs/assets/tui-history.png)
+  ![History analytics](docs-static/assets/tui-history.png)
 
 ## Installation
 
