@@ -26,10 +26,10 @@ jobs:
       - name: Run tests
         run: |
           pip install pytest pytest-cov
-          pytest src/tests/ || echo "No tests found or tests failed – continuing to build"
+          pytest tests/ || echo "No tests found or tests failed - continuing to build"
 
       - name: Build package distributions
-        run: python -m build
+        run: python setup.py sdist bdist_wheel
 
       - name: Upload distributions as artifact
         uses: actions/upload-artifact@v4
