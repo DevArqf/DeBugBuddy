@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="debugbuddy-cli",
-    version="0.4.5",
+    version="0.4.6",
     license='MIT',
     author="DevArqf",
     author_email="devarqf@gmail.com",
@@ -13,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/DevArqf/DeBugBuddy",
-    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.4.5.tar.gz",
+    download_url="https://github.com/DevArqf/DeBugBuddy/archive/refs/tags/v0.4.6.tar.gz",
     keywords = ['python', 'debugging', 'cli'],
     packages=find_packages(),
     classifiers=[

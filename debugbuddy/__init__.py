@@ -1,4 +1,4 @@
-__version__ = "0.4.5"
+__version__ = "0.4.6"
 
 def __getattr__(name):
     if name == "ErrorParser":

@@ -12,7 +12,7 @@ def get_version():
             from debugbuddy import __version__
             return __version__
         except (ImportError, AttributeError):
-            return "0.4.5"
+            return "0.4.6"
 
 @click.group(invoke_without_command=True)
 @click.option('--version', '-v', is_flag=True, help='Show version')
