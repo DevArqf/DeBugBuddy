@@ -40,25 +40,25 @@ class DebugBuddyGUI(App):
     SUB_TITLE = "Terminal debugging companion"
     CSS = """
     Screen {
-        background: #0b0f14;
-        color: #e6eef8;
+        background: #07100b;
+        color: #e9f5ee;
     }
     #layout {
         height: 100%;
     }
     #sidebar {
         width: 28;
-        background: #0f1622;
-        border: solid #1c2736;
+        background: #0b1710;
+        border: none;
         padding: 1 1;
     }
     #content {
-        background: #0f1520;
-        border: solid #1b2635;
+        background: #0a140f;
+        border: none;
         padding: 1 2;
     }
     .section-title {
-        color: #1f6b3a;
+        color: #6ee7b7;
         text-style: bold;
         margin: 1 0 0 0;
     }
@@ -71,16 +71,62 @@ class DebugBuddyGUI(App):
     }
     Input, Select {
         width: 1fr;
+        border: none;
+        background: #0f1f16;
+        color: #e9f5ee;
+    }
+    Select * {
+        border: none;
     }
     Button {
         min-width: 10;
+        border: none;
+        background: #1f6b3a;
+        color: #f1fff7;
+    }
+    #explain-actions {
+        margin-left: 2;
+    }
+    #explain-actions > * {
+        margin-right: 2;
+    }
+    #explain-row {
+        height: auto;
+        margin: 1 0;
+    }
+    #explain-lang {
+        width: 36;
+    }
+    #explain-spacer {
+        width: 1fr;
+    }
+    .button, .input, .select, .select--button, .select--dropdown, .switch {
+        border: none;
+    }
+    Switch, Switch * {
+        border: none;
     }
     DataTable {
-        border: solid #1b2635;
-        background: #0f1520;
+        border: none;
+        background: #0a140f;
     }
     ListView {
-        background: #0f1622;
+        background: #0b1710;
+        border: none;
+    }
+    TextArea {
+        border: none;
+        background: #0f1f16;
+    }
+    ListItem.--highlight {
+        background: #1f6b3a;
+        color: #f1fff7;
+    }
+    ListItem {
+    }
+    RichLog {
+        background: #0f1f16;
+        color: #d9fbe7;
     }
     """
 
@@ -134,7 +180,7 @@ class ExplainView(VerticalScroll):
     def compose(self) -> ComposeResult:
         yield Label("Explain an error", classes="section-title")
         yield TextArea(placeholder="Paste the error message here...", id="explain-input")
-        with Horizontal(classes="form-row"):
+        with Horizontal(id="explain-row"):
             yield Select(
                 [
                     ("Auto", Select.BLANK),
@@ -149,9 +195,11 @@ class ExplainView(VerticalScroll):
                 id="explain-lang",
                 allow_blank=True,
             )
-            yield Label("AI")
-            yield Switch(id="explain-ai")
-            yield Button("Explain", id="explain-run", variant="primary")
+            yield Static("", id="explain-spacer")
+            with Horizontal(id="explain-actions"):
+                yield Label("AI")
+                yield Switch(id="explain-ai")
+                yield Button("Explain", id="explain-run", variant="primary")
         yield Label("Tip: Press Ctrl+Enter to run.", id="explain-tip")
         yield Markdown("", id="explain-output")
 

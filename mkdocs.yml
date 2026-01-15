@@ -1,0 +1,62 @@
+site_name: DeBugBuddy
+site_url: https://debugbuddy-docs.vercel.app
+site_description: Local-first CLI & TUI debugging companion.
+
+# Repository
+repo_name: DevArqf/DeBugBuddy
+repo_url: https://github.com/DevArqf/DeBugBuddy
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  language: en
+  # Brand Colors: Green (Teal) for primary, Slate for dark mode background
+  palette: 
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: green
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+    - content.code.copy
+    - content.action.edit
+    - content.tooltips
+  font:
+    text: Inter
+    code: JetBrains Mono
+  favicon: assets/favicon.png
+  logo: assets/logo.png
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/extra.js
+
+nav:
+  - Home: index.md
+  - CLI Guide: cli.md
+  - TUI Guide: tui.md
+  - GitHub Integration: github.md
+  - Privacy & Security: privacy.md

@@ -24,17 +24,17 @@ class ResultApp(App):
     #sidebar {
         width: 32;
         background: #0f1622;
-        border: solid #1c2736;
+        border: none;
         padding: 1 1;
         margin-right: 1;
     }
     #body {
         background: #0f1520;
-        border: solid #1b2635;
+        border: none;
         padding: 1 2;
     }
     DataTable {
-        border: solid #1b2635;
+        border: none;
         background: #0f1520;
     }
     .table-title {

@@ -1,0 +1,7 @@
+(function () {
+  var links = document.querySelectorAll("a[href^='http']");
+  for (var i = 0; i < links.length; i++) {
+    links[i].setAttribute("target", "_blank");
+    links[i].setAttribute("rel", "noopener noreferrer");
+  }
+})();

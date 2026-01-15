@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeBugBuddy Docs</title>
+    <meta name="description" content="DeBugBuddy documentation and usage guides." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="brand">
+          <span class="brand-mark">DB</span>
+          <div>
+            <div class="brand-title">DeBugBuddy</div>
+            <div class="brand-subtitle">Documentation</div>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html" class="active">Home</a>
+          <a href="cli.html">CLI</a>
+          <a href="tui.html">TUI</a>
+          <a href="github.html">GitHub</a>
+          <a href="privacy.html">Privacy</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <h1>Stop Googling.<br />Understand your errors.</h1>
+            <p>
+              DeBugBuddy is a local-first CLI and TUI that explains stack traces, predicts
+              bugs, and keeps your debugging history private.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="cli.html">Get started</a>
+              <a class="btn secondary" href="https://github.com/DevArqf/DeBugBuddy">View on GitHub</a>
+            </div>
+          </div>
+          <div class="hero-image">
+            <img src="assets/tui-hero.png" alt="DeBugBuddy TUI hero" />
+            <p class="img-caption">DeBugBuddy TUI overview</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container cards">
+        <article class="card">
+          <h3>Explain fast</h3>
+          <p>Plain-English explanations with fixes and examples.</p>
+        </article>
+        <article class="card">
+          <h3>Predict issues</h3>
+          <p>Static checks, pattern scans, and optional ML.</p>
+        </article>
+        <article class="card">
+          <h3>Local-first</h3>
+          <p>Everything stays on your machine unless you opt in.</p>
+        </article>
+        <article class="card">
+          <h3>History analytics</h3>
+          <p>Track frequent errors and languages.</p>
+        </article>
+      </section>
+
+      <section class="container split">
+        <div>
+          <h2>Quick start</h2>
+          <pre><code>pip install debugbuddy-cli
+
+# Explain an error
+python script.py 2&gt;&amp;1 | dbug explain
+
+# Predict errors
+ dbug predict app.py
+
+# Launch GUI
+ debugbuddy</code></pre>
+        </div>
+        <div>
+          <h2>Supported languages</h2>
+          <ul>
+            <li>Python, JavaScript, TypeScript</li>
+            <li>C/C++, PHP</li>
+            <li>Java, Ruby</li>
+          </ul>
+          <div class="image-block">
+            <img src="assets/tui-sidebar.png" alt="TUI navigation" />
+            <p class="img-caption">TUI navigation overview</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>DeBugBuddy is MIT licensed. Contributions are welcome.</span>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
