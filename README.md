@@ -1,24 +1,37 @@
 <div align="center">
 <img width="1000" height="650" alt="DeBugBuddy Logo" src="https://raw.githubusercontent.com/DevArqf/DeBugBuddy/refs/heads/main/DeBugBuddy%20Logo.png" />
 
-### Your terminal’s debugging companion
-
-Stop Googling. Understand your errors.
+### Your terminal's debugging companion
 
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Install](#installation) •
-[Quick Start](#quick-start) •
-[Docs](#documentation)
+[Install](#installation) • [Quick Start](#quick-start) • [Commands](#commands) • [TUI](#tui-textual-gui) • [Docs](#documentation) • [Roadmap](#roadmap)
 
 </div>
 
-## Overview and Purpose
-DeBugBuddy is an open-source, Python-based CLI tool designed as a “terminal’s debugging companion” to provide instant, context-aware explanations for error messages without requiring users to search external resources like StackOverflow or documentation. DeBugBuddy focuses on local processing for privacy (unless AI mode is opted in) and supports a wide range of error types across multiple programming languages. DeBugBuddy also emphasizes ease of use for developers, reducing context-switching during debugging by integrating features like error prediction, file watching, and history tracking directly in the terminal.
+## Overview
+DeBugBuddy is an open-source CLI + TUI that explains errors in plain English, predicts issues before they break, and keeps a searchable local history. It runs locally by default for privacy and supports multiple languages with extensible pattern libraries.
+
+## Why DeBugBuddy
+- **Faster debugging**: See the cause and fix without searching the web.
+- **Predictive checks**: Catch likely errors in a file before running it.
+- **Local-first privacy**: AI is opt-in, not required.
+- **History & analytics**: Track frequent errors and languages over time.
+- **TUI workflow**: Full-screen [Textual GUI](https://textual.textualize.io/) for focused debugging.
+
+## Screenshots
+
+- **TUI dashboard**
+  ![TUI dashboard](docs-static/assets/tui-hero.png)
+- **Explain view**
+  ![Explain view](docs-static/assets/tui-explain.png)
+- **Predict view**
+  ![Predict view](docs-static/assets/tui-predict.png)
+- **History analytics**
+  ![History analytics](docs-static/assets/tui-history.png)
 
 ## Installation
 
@@ -26,7 +39,24 @@ DeBugBuddy is an open-source, Python-based CLI tool designed as a “terminal’
 pip install debugbuddy-cli
 ```
 
-## Documentation
+## Quick Start
+
+```bash
+# Explain an error
+python script.py
+dbug explain
+
+# Predict errors in a file
+dbug predict app.py
+
+# View history and stats
+dbug history --stats
+
+# Launch the full-screen GUI
+debugbuddy
+```
+
+## Commands
 
 ```bash
 All Commands
@@ -41,82 +71,67 @@ dbug config      Manage configuration
 dbug github      GitHub integration
 ```
 
-## Supported Error Types
+## TUI (Textual GUI)
+Run the GUI and switch between commands without leaving the terminal:
 
-### Python (60+ built-in exceptions & common issues)
+```bash
+debugbuddy
+```
 
-- `ArithmeticError` • `AssertionError` • `AttributeError` • `BlockingIOError`
-- `BrokenPipeError` • `BufferError` • `ChildProcessError` • `ConnectionAbortedError`
-- `ConnectionError` • `ConnectionRefusedError` • `ConnectionResetError`
-- `EOFError` • `FileExistsError` • `FileNotFoundError` • `FloatingPointError`
-- `ImportError` • `IndentationError` • `IndexError` • `InterruptedError`
-- `IsADirectoryError` • `KeyError` • `KeyboardInterrupt` • `MemoryError`
-- `ModuleNotFoundError` • `NameError` • `NotADirectoryError` • `NotImplementedError`
-- `OSError` • `OverflowError` • `PermissionError` • `ProcessLookupError`
-- `RecursionError` • `ReferenceError` • `RuntimeError` • `StopIteration`
-- `SyntaxError` • `TabError` • `TimeoutError` • `TypeError`
-- `UnboundLocalError` • `UnicodeDecodeError` • `UnicodeEncodeError`
-- `ValueError` • `ZeroDivisionError` • and many more warnings (DeprecationWarning, FutureWarning, etc.)
+- Use the left sidebar to switch between Explain, Predict, History, Search, Config, GitHub, Watch, and Train commands.
+- Results stay in the TUI so you can keep iterating without reopening.
 
-### JavaScript / Node.js (All 7 built-in errors)
+## AI Providers
+AI is optional and opt-in. Set a provider and API key:
 
-- `AggregateError` • `EvalError` • `InternalError` • `RangeError`
-- `ReferenceError` • `SyntaxError` • `TypeError` • `URIError`
+```bash
+dbug config ai_provider grok
 
-### TypeScript (Core compiler errors & type issues)
+dbug config grok_api_key YOUR_KEY
+```
 
-- Type Error (`TS2345`: not assignable) • Declaration Error (`TS2304`: cannot find name, `TS1008`: expected)
-- Module Resolution (`TS2307`: cannot find module) • Interface Error (`TS2322/2324`: missing property)
-- Generic Type Error (`TS2322`: constraint violated) • Union Type Error (`TS2322/2345`: not assignable)
-- Async Type Error (`TS2322`: promise mismatch) • Syntax Error (`TS1003/1005`: invalid token)
-- Null/Undefined Error (`TS2532/2533`: strict null checks) • Import/Export Error (`TS2305/1192`: not found)
+Supported providers:
+- OpenAI
+- Anthropic
+- Grok
 
-### C / C++ (Compiler, linker & runtime)
+## GitHub Search Accuracy
+Use repo scoping and exact matching for precision:
 
-- Syntax Error • Undefined Reference / Linker Error
-- Segmentation Fault (segfault) • Null Pointer Dereference
-- Type Mismatch • Array Bounds Error • Memory Leak
-- Format String Mismatch • Division by Zero • Uninitialized Variable
-- Include Error • Undefined Behavior
+```bash
+dbug github search "TypeError: unsupported operand type(s) for +" \
+  -l python --repo yourorg/yourrepo --exact --include-closed
+```
 
-### PHP (All 16+ error levels)
+## Supported Languages
+- Python, JavaScript, TypeScript, C/C++, PHP, Java and Ruby
 
-- Parse Error (`E_PARSE`) • Fatal Error (`E_ERROR`) • Warning (`E_WARNING`)
-- Notice (`E_NOTICE`) • Deprecated (`E_DEPRECATED`) • Type Error (`E_RECOVERABLE_ERROR`)
-- Division by Zero • Out of Memory • Strict (`E_STRICT`) • Core Error (`E_CORE_ERROR`)
-- Core Warning (`E_CORE_WARNING`) • Compile Error (`E_COMPILE_ERROR`)
-- Compile Warning (`E_COMPILE_WARNING`) • User Error (`E_USER_ERROR`)
-- User Warning (`E_USER_WARNING`) • User Notice (`E_USER_NOTICE`) • User Deprecated (`E_USER_DEPRECATED`)
+> **Total supported error patterns:** **150+** and growing.
 
-### Universal / Common Errors (cross-language)
-
-- Compilation Error • Logic Error • Runtime Error • Linkage Error
-- Segmentation Fault • Network Error • Permission Error
-- Timeout Error • Memory Error • Database Error
-- API Key Error • SSL/Certificate Error • Input/Validation Error
-- Off-by-One Error • Infinite Loop
-
-> **Total supported error patterns:** **150+** and growing (expanded via official docs & common patterns)
+## Configuration
+All settings are stored locally in `~/.debugbuddy/config.json`.
+Common settings:
+- `ai_provider`
+- `openai_api_key` / `anthropic_api_key` / `grok_api_key`
+- `use_ml_prediction`
+- `max_history`
 
 ## Contributing
-
-Contribute in any way you want. You can report bugs, add patterns, write docs, or extend support for other languages. See [CONTRIBUTING.md](https://github.com/DevArqf/DeBugBuddy/blob/main/docs/CONTRIBUTING.md) for the full guide.
+Contributions are welcome. You can report bugs, add patterns, improve docs, or add new languages.
+See [CONTRIBUTING.md](https://github.com/DevArqf/DeBugBuddy/blob/main/docs/CONTRIBUTING.md).
 
 ## Roadmap
 
 ### v0.2.0 ✅
-
 - [x] Typescript, C and PHP Language Support
 - [x] AI support
 
 ### v0.3.0 ✅
-
 - [x] Error prediction
 - [x] Custom pattern training
 - [x] GitHub integration
 
 ### v0.4.0 (Q1 2026) ✅
-
 - [x] Java and Ruby Language Support
 - [x] ML prediction optimization for faster inference (e.g., model quantization, caching improvements).
 - [x] Introduce basic error analytics in CLI (e.g., stats on frequent errors from history).
@@ -155,40 +170,29 @@ Contribute in any way you want. You can report bugs, add patterns, write docs, o
 - [ ] Performance profiling and optimizations (e.g., reduce startup time <1s).
 - [ ] User feedback loop: Add in-app surveys or GitHub issue templates.
 
-### v1.0.0 (Q1 2027) - Stable Release ❌
-
+### v1.0.0 (Q1 2027) ❌
 - [ ] Official support for 12+ languages.
 - [ ] Fully featured error analytics dashboard (local/web, with visualizations and exports).
 - [ ] Slack and Discord bots support for real-time debugging assistance.
 
-> [!NOTE]
-> The **Q** in brackets stands for **Quarter**.
-> This is a __common__ convention in project roadmaps, product planning, and software release timelines:
->	•	**Q1** → First quarter of the year (January–March)
->	•	**Q2** → Second quarter (April–June)
->	•	**Q3** → Third quarter (July–September)
->	•	**Q4** → Fourth quarter (October–December)
-> I used it to indicate approximate target timeframes for each version’s release, starting from early **2026**.
-
+> **Q** stands for quarter: Q1 (Jan-Mar), Q2 (Apr-Jun), Q3 (Jul-Sep), Q4 (Oct-Dec).
 
 ## FAQ
 
-**Q:** **Is my code private?**  
+**Q: Is my code private?**  
 **A:** Yes. Everything stays local unless you opt into AI mode.
 
-**Q:** **Does it replace StackOverflow?**  
+**Q: Does it replace StackOverflow?**   
 **A:** For debugging, yes. You stop switching tools.
 
-**Q:** **Can I add custom patterns?**  
+**Q: Can I add custom patterns?**   
 **A:** Yes. Edit the JSON files in `./patterns`.
 
 ## Support
-
 If DeBugBuddy helps you, star the GitHub repo. Stars help other developers discover the tool.
 
 <div align="center">
-Made with ❤️ by DevArqf
+❤ Made with love by DevArqf
 
 Stop Googling. Understand your errors.
-
 </div>

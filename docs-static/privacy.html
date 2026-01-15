@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeBugBuddy Privacy</title>
+    <meta name="description" content="Privacy and security for DeBugBuddy." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="brand">
+          <span class="brand-mark">DB</span>
+          <div>
+            <div class="brand-title">DeBugBuddy</div>
+            <div class="brand-subtitle">Privacy</div>
+          </div>
+        </div>
+        <nav class="site-nav">
+          <a href="index.html">Home</a>
+          <a href="cli.html">CLI</a>
+          <a href="tui.html">TUI</a>
+          <a href="github.html">GitHub</a>
+          <a href="privacy.html" class="active">Privacy</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container content">
+      <h1>Privacy and Security</h1>
+      <p>DeBugBuddy is local-first and only sends data when you opt into AI.</p>
+
+      <section>
+        <h2>Local by default</h2>
+        <ul>
+          <li>Parsing, pattern matching, prediction, and history stay on your machine.</li>
+          <li>AI is optional and controlled by your configuration.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>History storage</h2>
+        <ul>
+          <li>Windows: <code>%USERPROFILE%\.debugbuddy\history.db</code></li>
+          <li>macOS/Linux: <code>~/.debugbuddy/history.db</code></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Safe usage</h2>
+        <ul>
+          <li>Avoid sending secrets to AI providers.</li>
+          <li>Rotate API keys if compromised.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>Report vulnerabilities via GitHub Security Advisories.</span>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
