@@ -8,7 +8,7 @@
 [![PyPI downloads](https://img.shields.io/pypi/dm/debugbuddy-cli.svg)](https://pypi.org/project/debugbuddy-cli/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[Install](#installation) • [Quick Start](#quick-start) • [Commands](#commands) • [TUI](#tui-textual-gui) • [Docs](#https://debugbuddy.vercel.app) • [Roadmap](#roadmap)
+[Install](#installation) • [Quick Start](#quick-start) • [Commands](#commands) • [TUI](#tui-textual-gui) • [Docs](https://debugbuddy.vercel.app) • [Roadmap](#roadmap)
 
 </div>
 
