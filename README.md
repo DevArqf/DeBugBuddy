@@ -190,9 +190,3 @@ See [CONTRIBUTING.md](https://github.com/DevArqf/DeBugBuddy/blob/main/docs/CONTR
 
 ## Support
 If DeBugBuddy helps you, star the GitHub repo. Stars help other developers discover the tool.
-
-<div align="center">
-❤ Made with love by DevArqf
-
-Stop Googling. Understand your errors.
-</div>
