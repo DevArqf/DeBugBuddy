@@ -144,6 +144,7 @@ See [CONTRIBUTING.md](https://github.com/DevArqf/DeBugBuddy/blob/main/docs/CONTR
 - [ ] Improve custom training with user-friendly wizards and example datasets.
 - [ ] Add multi-file/project scanning for prediction/watch.
 - [ ] Security audit and fixes (e.g., safe error message parsing to prevent injection).
+- [ ] Introduce Mistral as an AI Provider for the AI Mode.
 
 ### v0.6.0 (Q3 2026) ❌
 - [ ] Introduce a basic web-based error analytics dashboard (e.g., using Flask/Dash; local server mode) for visualizing history, patterns, and predictions.
