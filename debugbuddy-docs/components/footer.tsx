@@ -3,7 +3,13 @@
 import Link from "next/link"
 import { Bug, Github, Heart, ExternalLink } from "lucide-react"
 
-const footerLinks = {
+interface FooterLink {
+  name: string
+  href: string
+  external?: boolean
+}
+
+const footerLinks: Record<string, FooterLink[]> = {
   Documentation: [
     { name: "Getting Started", href: "#installation" },
     { name: "CLI Reference", href: "#cli" },
@@ -61,9 +67,9 @@ export function Footer() {
             <div key={category}>
               <h4 className="font-semibold text-foreground mb-4">{category}</h4>
               <ul className="space-y-3">
-                {links.map((link) => (
+                {links.map((link: FooterLink) => (
                   <li key={link.name}>
-                    {link.external ? (
+                    {"external" in link && link.external ? (
                       <a
                         href={link.href}
                         target="_blank"
