@@ -22,17 +22,6 @@ DeBugBuddy is an open-source CLI + TUI that explains errors in plain English, pr
 - **History & analytics**: Track frequent errors and languages over time.
 - **TUI workflow**: Full-screen [Textual GUI](https://textual.textualize.io/) for focused debugging.
 
-## Screenshots
-
-- **TUI dashboard**
-  ![TUI dashboard](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-hero.png)
-- **Explain view**
-  ![Explain view](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-explain.png)
-- **Predict view**
-  ![Predict view](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-predict.png)
-- **History analytics**
-  ![History analytics](https://raw.githubusercontent.com/DevArqf/DeBugBuddy/main/docs-static/assets/tui-history.png)
-
 ## Installation
 
 ```bash
