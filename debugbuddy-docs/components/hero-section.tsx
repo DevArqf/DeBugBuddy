@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Terminal, Github, Copy, Check, Sparkles, ArrowRight, Bug, Zap, Shield, BarChart3 } from "lucide-react"
 import Link from "next/link"
@@ -112,8 +113,20 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-32">
         <div className="max-w-5xl mx-auto text-center">
+          {/* Banner Logo */}
+          <div className="mb-8 animate-fade-up">
+            <Image
+              src="/debugbuddy-branding/DeBugBuddy Banner.png"
+              alt="DeBugBuddy Banner"
+              width={400}
+              height={100}
+              className="mx-auto h-auto w-auto max-w-[280px] md:max-w-[400px] drop-shadow-[0_0_30px_var(--glow)]"
+              priority
+            />
+          </div>
+
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-up" style={{ animationDelay: "50ms" }}>
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">v0.4.7 — Now with Grok AI Support</span>
           </div>

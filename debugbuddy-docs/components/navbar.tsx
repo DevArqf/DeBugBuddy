@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Bug, Menu, X, Github, Terminal, BookOpen, Shield, Command, Sparkles, ChevronDown } from "lucide-react"
+import Image from "next/image"
+import { Menu, X, Github, Terminal, Bug } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -61,8 +62,15 @@ export function Navbar() {
             className="flex items-center gap-3 group"
           >
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:shadow-[0_0_20px_var(--glow)]">
-                <Bug className="w-5 h-5 text-primary" />
+              <div className="w-11 h-11 rounded-xl overflow-hidden border border-primary/30 group-hover:border-primary/60 transition-all duration-300 group-hover:shadow-[0_0_20px_var(--glow)]">
+                <Image
+                  src="/debugbuddy-branding/DeBugBuddy Logo.png"
+                  alt="DeBugBuddy Logo"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-cover"
+                  priority
+                />
               </div>
               <div className="absolute -inset-1 bg-primary/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
@@ -105,19 +113,12 @@ export function Navbar() {
               <span>GitHub</span>
             </Link>
             
-            <Button
-              size="sm"
-              asChild
+            <Button 
+              size="sm" 
               className="hidden md:flex bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-[0_0_20px_var(--glow)] hover:shadow-[0_0_30px_var(--glow)] transition-all duration-300"
             >
-              <Link
-                href="https://pypi.org/project/debugbuddy-cli/0.4.7/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Terminal className="w-4 h-4" />
-                pip install
-              </Link>
+              <Terminal className="w-4 h-4" />
+              pip install
             </Button>
 
             {/* Mobile Menu Toggle */}
