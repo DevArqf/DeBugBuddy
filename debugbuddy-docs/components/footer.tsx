@@ -3,7 +3,13 @@
 import Link from "next/link"
 import { Bug, Github, Heart, ExternalLink } from "lucide-react"
 
-const footerLinks = {
+interface FooterLink {
+  name: string
+  href: string
+  external?: boolean
+}
+
+const footerLinks: Record<string, FooterLink[]> = {
   Documentation: [
     { name: "Getting Started", href: "#installation" },
     { name: "CLI Reference", href: "#cli" },
